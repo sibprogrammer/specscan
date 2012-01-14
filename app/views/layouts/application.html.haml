@@ -1,0 +1,29 @@
+!!!
+%html
+  %head
+    %meta{ :charset => "utf-8" }
+    %title= t 'project.title'
+    = favicon_link_tag '/favicon.ico?2'
+    = stylesheet_link_tag 'application'
+    = csrf_meta_tags
+
+  %body
+    .topbar
+      .topbar-inner
+        .container-fluid
+          = link_to(t('project.title'), '/admin/dashboard', :class => 'brand')
+          %ul.nav
+            - @menu.each do |menu|
+              %li{ :class => (menu[:name] == @menu_section) ? 'active' : '' }= link_to t('menu.' + menu[:name]), menu[:link]
+          %form.pull-left
+            %input{ :type => 'text', :placeholder => t('menu.search') }
+          %p.pull-right= raw t('menu.logged_in', :login => link_to('Client123', 'profile'))
+
+    .container-fluid
+      .sidebar
+        .well
+          %h5 Sidebar
+          %ul
+            %li= link_to('Test')
+      .content
+        = yield

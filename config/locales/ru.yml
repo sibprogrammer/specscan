@@ -1,0 +1,21 @@
+ru:
+  language:
+    title: "Русский"
+  project:
+    title: "СпецСкан"
+  menu:
+    overview: "Обзор"
+    clients: "Клиенты"
+    resellers: "Дилеры"
+    cars: "Машины"
+    settings: "Настройки"
+    support: "Техподдержка"
+    logout: "Выход"
+    search: "Поиск"
+    logged_in: "Вошли как %{login}"
+  dashboard:
+    index:
+      page_title: "Обзор"
+  clients:
+    list:
+      page_title: "Список клиентов"

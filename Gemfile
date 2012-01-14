@@ -6,7 +6,6 @@ gem 'rails', '3.1.3'
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
-
 gem 'json'
 
 # Gems used only for assets and not required
@@ -32,3 +31,4 @@ gem 'jquery-rails'
 # gem 'ruby-debug'
 
 gem 'therubyracer'
+gem 'haml'
