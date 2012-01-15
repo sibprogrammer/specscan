@@ -2,9 +2,9 @@
 
 = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
   .clearfix
-    = f.label :email, t('login.field_email')
+    = f.label :login, t('login.field_login')
     .input
-      = f.email_field :email
+      = f.text_field :login
 
   .clearfix
     = f.label :password, t('login.field_password')

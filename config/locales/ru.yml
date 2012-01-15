@@ -16,7 +16,7 @@ ru:
   login:
     page_title: "Вход в систему"
     button_login: "Войти"
-    field_email: "E-mail"
+    field_login: "Логин"
     field_password: "Пароль"
     field_remember_me: "Запомнить"
   dashboard:
