@@ -10,20 +10,11 @@ class Admin::Base < ApplicationController
         :name => 'overview',
         :link => '/',
       }, {
-        :name => 'clients',
-        :link => '/admin/clients/list',
-      }, {
-        :name => 'resellers',
-        :link => '/admin/reseller',
+        :name => 'users',
+        :link => '/admin/users/list',
       }, {
         :name => 'cars',
         :link => '/admin/cars',
-      }, {
-        :name => 'settings',
-        :link => '/admin/settings',
-      }, {
-        :name => 'support',
-        :link => '/admin/tickets',
       }, {
         :name => 'logout',
         :link => '/logout'
@@ -32,7 +23,8 @@ class Admin::Base < ApplicationController
     end
 
     def set_search
-      @show_search = true
+      # TODO: implement
+      @show_search = false
     end
 
     def self.menu_section(section)

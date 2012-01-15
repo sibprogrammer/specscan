@@ -5,11 +5,8 @@ ru:
     title: "СпецСкан"
   menu:
     overview: "Обзор"
-    clients: "Клиенты"
-    resellers: "Дилеры"
+    users: "Пользователи"
     cars: "Машины"
-    settings: "Настройки"
-    support: "Техподдержка"
     logout: "Выход"
     search: "Поиск"
     logged_in: "Вошли как %{login}"
