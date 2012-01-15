@@ -1,7 +1,9 @@
 class User < ActiveRecord::Base
-  devise :database_authenticatable, :rememberable, :trackable, :validatable
 
-  attr_accessible :login, :password, :password_confirmation, :remember_me
+  validates :login, :presence => true, :uniqueness => true, :length => { :minimum => 3 }
+  devise :database_authenticatable, :rememberable, :trackable, :validatable
+  attr_accessible :login, :name, :email, :password, :password_confirmation, :remember_me
+  validates :password, :presence => true, :confirmation => true, :on => :create
 
   protected
 

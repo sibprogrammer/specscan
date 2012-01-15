@@ -1,0 +1,19 @@
+- @page_title = t '.page_title'
+
+%table.bordered-table.zebra-striped
+  %thead
+    %tr
+      %th #
+      %th= t '.column.login'
+      %th= t '.column.name'
+      %th= t '.column.email'
+      %th= t '.column.cars'
+
+  %tbody
+    - @users.each do |user|
+      %tr
+        %td= user.id
+        %td= link_to user.login, admin_user_path(user)
+        %td= user.name
+        %td= mail_to user.email
+        %td 0

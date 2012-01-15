@@ -1,0 +1,10 @@
+.sidebar
+  .well
+    - unless @sidebar_actions.empty?
+      %h5= t '.actions'
+      %ul
+        - @sidebar_actions.each do |sidebar_action|
+          %li= link_to sidebar_action[:title], sidebar_action[:link]
+
+    %h5= t '.help'
+    %div Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

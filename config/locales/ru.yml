@@ -3,6 +3,23 @@ ru:
     title: "Русский"
   project:
     title: "СпецСкан"
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            password:
+              blank: "Не указан пароль."
+              too_short: "Пароль слишком короткий (минимум %{count} символов)."
+              confirmation: "Пароль и подтверждение не совпадают."
+            login:
+              blank: "Не указан логин."
+              too_short: "Логин слишком короткий (минимум %{count} символа)."
+              taken: "Пользователь с таким логином уже существует."
+  layouts:
+    sidebar:
+      actions: "Действия"
+      help: "Помощь"
   menu:
     overview: "Обзор"
     users: "Пользователи"
@@ -16,9 +33,45 @@ ru:
     field_login: "Логин"
     field_password: "Пароль"
     field_remember_me: "Запомнить"
-  dashboard:
-    index:
-      page_title: "Обзор"
-  clients:
-    list:
-      page_title: "Список клиентов"
+  admin:
+    dashboard:
+      index:
+        page_title: "Обзор"
+    users:
+      form:
+        field:
+          login: "Логин"
+          name: "Название"
+          email: "E-mail"
+          password: "Пароль"
+          password_confirmation: "Подтверждение"
+        button:
+          create: "Добавить"
+          update: "Обновить"
+          back: "Назад"
+          delete: "Удалить"
+      index:
+        page_title: "Список пользователей"
+        column:
+          login: "Логин"
+          name: "Название"
+          cars: "Машины"
+        action:
+          add_user: "Добавить пользователя"
+      show:
+        page_title: "Пользователь %{login}"
+        button:
+          back: "Назад"
+          edit: "Редактировать"
+          lock: "Заблокировать"
+        action:
+          list: "Список пользователей"
+          edit: "Редактировать"
+      new:
+        page_title: "Добавление пользователя"
+      create:
+        user_created: "Пользователь с логином %{login} создан."
+      edit:
+        page_title: "Редактирование пользователя %{login}"
+      update:
+        user_updated: "Пользовтель с логином %{login} обновлен."

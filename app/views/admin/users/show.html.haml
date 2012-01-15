@@ -1,0 +1,13 @@
+- @page_title = t '.page_title', :login => @user.login
+
+%form
+  - %w{ login name email }.each do |field_name|
+    .clearfix
+      %label= t('admin.users.form.field.' + field_name)
+      .input
+        %span.uneditable-input= @user.send(field_name)
+
+  .actions
+    = link_to t('.button.back'), admin_users_path, :class => 'btn primary'
+    = link_to t('.button.edit'), edit_admin_user_path(@user), :class => 'btn'
+    = link_to t('.button.lock'), '#', :class => 'btn'
