@@ -1,13 +1,14 @@
 class Admin::Base < ApplicationController
 
-  before_filter :set_menu
+  layout 'admin'
+  before_filter :authenticate_user!, :set_menu, :set_search
 
   protected
 
     def set_menu
       @menu = [{
         :name => 'overview',
-        :link => '/admin/dashboard',
+        :link => '/',
       }, {
         :name => 'clients',
         :link => '/admin/clients/list',
@@ -25,9 +26,13 @@ class Admin::Base < ApplicationController
         :link => '/admin/tickets',
       }, {
         :name => 'logout',
-        :link => '/sessions/logout'
+        :link => '/logout'
       }]
       @menu_section = @@menu_section
+    end
+
+    def set_search
+      @show_search = true
     end
 
     def self.menu_section(section)

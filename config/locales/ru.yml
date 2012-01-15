@@ -13,6 +13,12 @@ ru:
     logout: "Выход"
     search: "Поиск"
     logged_in: "Вошли как %{login}"
+  login:
+    page_title: "Вход в систему"
+    button_login: "Войти"
+    field_email: "E-mail"
+    field_password: "Пароль"
+    field_remember_me: "Запомнить"
   dashboard:
     index:
       page_title: "Обзор"

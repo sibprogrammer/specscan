@@ -32,3 +32,4 @@ gem 'jquery-rails'
 
 gem 'therubyracer'
 gem 'haml'
+gem 'devise'

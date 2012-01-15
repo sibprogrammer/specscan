@@ -1,0 +1,23 @@
+- @page_title = t 'login.page_title'
+
+= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+  .clearfix
+    = f.label :email, t('login.field_email')
+    .input
+      = f.email_field :email
+
+  .clearfix
+    = f.label :password, t('login.field_password')
+    .input
+      = f.password_field :password
+
+  - if devise_mapping.rememberable?
+    .clearfix
+      = f.label :remember_me, t('login.field_remember_me')
+      .input
+        = f.check_box :remember_me
+
+  .actions
+    = f.submit t('login.button_login'), :class => 'btn primary'
+
+= render :partial => "devise/shared/links"
