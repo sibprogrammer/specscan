@@ -13,8 +13,8 @@ class Admin::Base < ApplicationController
         :name => 'users',
         :link => '/admin/users',
       }, {
-        :name => 'cars',
-        :link => '/admin/cars',
+        :name => 'vehicles',
+        :link => '/admin/vehicles',
       }, {
         :name => 'logout',
         :link => '/logout'

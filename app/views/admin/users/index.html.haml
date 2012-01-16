@@ -16,4 +16,4 @@
         %td= link_to user.login, admin_user_path(user)
         %td= user.name
         %td= mail_to user.email
-        %td 0
+        %td= user.vehicles.count

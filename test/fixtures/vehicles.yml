@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  imei: MyString
+  reg_number: MyString
+  description: MyString
+  user: 
+
+two:
+  imei: MyString
+  reg_number: MyString
+  description: MyString
+  user: 

@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   attr_accessible :login, :name, :email, :password, :password_confirmation, :remember_me
   validates :password, :presence => true, :confirmation => true, :on => :create
 
+  has_many :vehicles
+
   protected
 
     def email_required?

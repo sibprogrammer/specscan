@@ -1,0 +1,11 @@
+- @page_title = t '.page_title', :reg_number => @vehicle.reg_number
+
+%form
+  - %w{ imei reg_number }.each do |field_name|
+    .clearfix
+      %label= t('admin.vehicles.form.field.' + field_name)
+      .input
+        %span.uneditable-input= @vehicle.send(field_name)
+
+  .actions
+    = link_to t('.button.edit'), edit_admin_vehicle_path(@vehicle), :class => 'btn'

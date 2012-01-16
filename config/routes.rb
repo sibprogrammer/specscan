@@ -8,6 +8,7 @@ Specscan::Application.routes.draw do
 
   namespace :admin do
     resources :users
+    resources :vehicles
   end
 
   root :to => 'admin/dashboard#index'

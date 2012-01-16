@@ -23,7 +23,7 @@ ru:
   menu:
     overview: "Обзор"
     users: "Пользователи"
-    cars: "Машины"
+    vehicles: "Машины"
     logout: "Выход"
     search: "Поиск"
     logged_in: "Вошли как %{login}"
@@ -75,3 +75,21 @@ ru:
         page_title: "Редактирование пользователя %{login}"
       update:
         user_updated: "Пользовтель с логином %{login} обновлен."
+    vehicles:
+      form:
+        field:
+          imei: "IMEI"
+          reg_number: "Гос. номер"
+      index:
+        page_title: "Машины"
+        column:
+          imei: "IMEI"
+          reg_number: "Гос. номер"
+          owner: "Владелец"
+        action:
+          add_vehicle: "Добавить машину"
+      show:
+        page_title: "Машина %{reg_number}"
+        button:
+          edit: "Редактировать"
+        
