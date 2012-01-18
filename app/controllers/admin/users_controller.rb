@@ -30,7 +30,12 @@ class Admin::UsersController < Admin::Base
   end
 
   def edit
-    @user = User.find(params[:id])
+    if !params.key?(:id)
+      @user = current_user
+      @profile = true
+    else
+      @user = User.find(params[:id])
+    end
   end
 
   def update
@@ -42,7 +47,11 @@ class Admin::UsersController < Admin::Base
     end
 
     if @user.update_attributes(params[:user])
-      redirect_to(admin_users_path, :notice => t('admin.users.update.user_updated', :login => @user.login))
+      if params.key?(:profile)
+        redirect_to(admin_profile_path, :notice => t('admin.profile.updated'))
+      else
+        redirect_to(admin_users_path, :notice => t('admin.users.update.user_updated', :login => @user.login))
+      end
     else
       render :action => 'edit'
     end

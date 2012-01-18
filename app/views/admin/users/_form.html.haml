@@ -29,6 +29,10 @@
     .input
       = f.password_field :password_confirmation
 
+  - if @profile
+    = hidden_field_tag :profile, true
+
   .actions
     = f.submit t('.button.' + (@user.new_record? ? 'create' : 'update')), :class => 'btn primary'
-    = link_to t('.button.back'), admin_users_path, :class => 'btn'
+    - if !@profile
+      = link_to t('.button.back'), admin_users_path, :class => 'btn'

@@ -110,3 +110,6 @@ ru:
         page_title: "Машина %{reg_number}"
       update:
         vehicle_updated: "Информация о машине обновлена."
+    profile:
+      page_title: "Профиль"
+      updated: "Профиль был обновлен."

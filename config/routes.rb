@@ -9,6 +9,7 @@ Specscan::Application.routes.draw do
   namespace :admin do
     resources :users
     resources :vehicles
+    match "profile" => "users#edit"
   end
 
   root :to => 'admin/dashboard#index'
