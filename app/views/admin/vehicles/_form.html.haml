@@ -1,0 +1,17 @@
+= form_for([:admin, @vehicle]) do |f|
+  = render :partial => 'partials/form_errors', :locals => { :resource => @vehicle, :locale_scope => 'admin.vehicles.form' }
+
+  - %w{ imei reg_number }.each do |field|
+    .clearfix
+      = f.label field.to_sym, t('.field.' + field)
+      .input
+        = f.text_field field.to_sym
+
+  .clearfix
+    = f.label :user, t('.field.user')
+    .input
+      = select('vehicle', 'user_id', User.all.collect { |user| [user.login, user.id] })
+
+  .actions
+    = f.submit t('.button.' + (@vehicle.new_record? ? 'create' : 'update')), :class => 'btn primary'
+    = link_to t('.button.back'), admin_vehicles_path, :class => 'btn'

@@ -16,6 +16,10 @@ ru:
               blank: "Не указан логин."
               too_short: "Логин слишком короткий (минимум %{count} символа)."
               taken: "Пользователь с таким логином уже существует."
+        vehicle:
+          attributes:
+            imei:
+              blank: "Не указан IMEI."
   layouts:
     sidebar:
       actions: "Действия"
@@ -80,6 +84,11 @@ ru:
         field:
           imei: "IMEI"
           reg_number: "Гос. номер"
+          user: "Владелец"
+        button:
+          create: "Добавить"
+          back: "Назад"
+          update: "Обновить"
       index:
         page_title: "Машины"
         column:
@@ -91,5 +100,13 @@ ru:
       show:
         page_title: "Машина %{reg_number}"
         button:
+          back: "Назад"
           edit: "Редактировать"
-        
+      new:
+        page_title: "Добавление машины"
+      create:
+        vehicle_created: "Машина добавлена."
+      edit:
+        page_title: "Машина %{reg_number}"
+      update:
+        vehicle_updated: "Информация о машине обновлена."

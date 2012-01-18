@@ -1,12 +1,5 @@
 = form_for([:admin, @user]) do |f|
-  - if @user.errors.any?
-    .alert-message.block-message.error
-      - @user.errors.messages.each do |field, messages|
-        %p
-          %strong= t('.field.' + field.to_s)
-        %ul
-          - messages.each do |message|
-            %li= message
+  = render :partial => 'partials/form_errors', :locals => { :resource => @user, :locale_scope => 'admin.users.form' }
 
   .clearfix
     = f.label :login, t('.field.login')
@@ -39,5 +32,3 @@
   .actions
     = f.submit t('.button.' + (@user.new_record? ? 'create' : 'update')), :class => 'btn primary'
     = link_to t('.button.back'), admin_users_path, :class => 'btn'
-    - unless @user.new_record?
-      = link_to t('.button.delete'), admin_users_path, :method => :delete, :class => 'btn danger'

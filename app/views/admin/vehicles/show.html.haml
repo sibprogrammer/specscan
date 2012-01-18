@@ -7,5 +7,11 @@
       .input
         %span.uneditable-input= @vehicle.send(field_name)
 
+  .clearfix
+    %label= t('admin.vehicles.form.field.user')
+    .input
+      %span.uneditable-input= @vehicle.user.login
+
   .actions
+    = link_to t('.button.back'), admin_vehicles_path, :class => 'btn primary'
     = link_to t('.button.edit'), edit_admin_vehicle_path(@vehicle), :class => 'btn'

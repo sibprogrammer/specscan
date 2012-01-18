@@ -15,4 +15,32 @@ class Admin::VehiclesController < Admin::Base
     @vehicle = Vehicle.find(params[:id])
   end
 
+  def new
+    @vehicle = Vehicle.new
+  end
+
+  def create
+    @vehicle = Vehicle.new(params[:vehicle])
+
+    if @vehicle.save
+      redirect_to(admin_vehicles_path, :notice => t('admin.vehicles.create.vehicle_created'))
+    else
+      render :action => 'new'
+    end
+  end
+
+  def edit
+    @vehicle = Vehicle.find(params[:id])
+  end
+
+  def update
+    @vehicle = Vehicle.find(params[:id])
+
+    if @vehicle.update_attributes(params[:vehicle])
+      redirect_to(admin_vehicles_path, :notice => t('admin.vehicles.update.vehicle_updated'))
+    else
+      render :action => 'edit'
+    end
+  end
+
 end
