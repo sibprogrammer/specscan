@@ -41,6 +41,11 @@ ru:
     dashboard:
       index:
         page_title: "Обзор"
+        stats_title: "Статистика"
+        stats:
+          column:
+            users: "Пользователи"
+            vehicles: "Машины"
     users:
       form:
         field:
