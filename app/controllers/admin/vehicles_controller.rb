@@ -13,6 +13,11 @@ class Admin::VehiclesController < Admin::Base
 
   def show
     @vehicle = Vehicle.find(params[:id])
+
+    @sidebar_actions = [{
+      :title => t('admin.vehicles.show.action.show_map'),
+      :link => map_admin_vehicle_path(@vehicle)
+    }]
   end
 
   def new
@@ -41,6 +46,12 @@ class Admin::VehiclesController < Admin::Base
     else
       render :action => 'edit'
     end
+  end
+
+  def map
+    @vehicle = Vehicle.find(params[:id])
+    lan_request = 'spec.rails3.lan' == request.host
+    @api_key = AppConfig.maps.yandex.send('api_key' + (lan_request ? '_local' : ''))
   end
 
 end

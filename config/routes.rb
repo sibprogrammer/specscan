@@ -8,7 +8,9 @@ Specscan::Application.routes.draw do
 
   namespace :admin do
     resources :users
-    resources :vehicles
+    resources :vehicles do
+      get 'map', :on => :member
+    end
     match "profile" => "users#edit"
   end
 

@@ -107,6 +107,8 @@ ru:
         button:
           back: "Назад"
           edit: "Редактировать"
+        action:
+          show_map: "Показать карту"
       new:
         page_title: "Добавление машины"
       create:
@@ -115,6 +117,10 @@ ru:
         page_title: "Машина %{reg_number}"
       update:
         vehicle_updated: "Информация о машине обновлена."
+      map:
+        page_title: "Машина %{reg_number}"
+        button:
+          show_track: "Показать трек"
     profile:
       page_title: "Профиль"
       updated: "Профиль был обновлен."
