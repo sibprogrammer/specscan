@@ -133,7 +133,7 @@ module TrackerServer
           when 0x44
             value_length = 4
             # TODO: implement
-            packet[:acceleration] = { :x => 0, :y => 0, :z => 0 }
+            packet[:acceleration] = 0
           when 0x45
             value_length = 2
             packet[:output_statuses] = data[index,value_length].unpack('v')[0]
