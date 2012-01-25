@@ -42,14 +42,15 @@ module TrackerServer
     end
 
     def process_data(client)
-      packet = read_packet(client)
-      p packet
+      head_packet = read_packet(client)
+      logger.debug head_packet.inspect
 
-      # TODO: check IMEI
+      raise "Head packet has no IMEI" unless head_packet.key?(:imei)
 
       loop do
         packet = read_packet(client)
-        p packet
+        packet.merge! head_packet
+        logger.debug packet.inspect
       end
     end
 
