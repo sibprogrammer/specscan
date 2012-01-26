@@ -52,6 +52,12 @@ class Admin::VehiclesController < Admin::Base
     @vehicle = Vehicle.find(params[:id])
     lan_request = 'spec.rails3.lan' == request.host
     @api_key = AppConfig.maps.yandex.send('api_key' + (lan_request ? '_local' : ''))
+
+    @points = WayPoint.where({
+      :imei => @vehicle.imei,
+      :coors_valid => true,
+      :speed => { :$ne => 0 }
+    }).sort(:timestamp.desc).limit(500).all.collect{ |point| [point[:longitude], point[:latitude]] }
   end
 
 end

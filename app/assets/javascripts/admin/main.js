@@ -19,13 +19,13 @@ $(function() {
     s.lineStyle.strokeWidth = '5';
     YMaps.Styles.add("map-canvas#CustomLine", s);
 
-    var pl = new YMaps.Polyline([ 
-      new YMaps.GeoPoint(82.936641,55.008459),
-      new YMaps.GeoPoint(82.901279,55.02503),
-      new YMaps.GeoPoint(82.910892,55.031735),
-      new YMaps.GeoPoint(82.919132,55.036862),
-      new YMaps.GeoPoint(82.962734,55.041003)
-    ]);
+    var mapPoints = [];
+
+    $.each(wayPoints, function(index, point) {
+      mapPoints.push(new YMaps.GeoPoint(point[0], point[1]));
+    });
+
+    var pl = new YMaps.Polyline(mapPoints);
 
     pl.setStyle('map-canvas#CustomLine');
 

@@ -51,6 +51,8 @@ module TrackerServer
         packet = read_packet(client)
         packet.merge! head_packet
         logger.debug packet.inspect
+        point = WayPoint.new(packet)
+        point.save
       end
     end
 
