@@ -1,16 +1,6 @@
-require "getoptlong"
-require 'tracker_server/galileo'
+#!/usr/bin/env ruby
 
-$PORT = 1234
+require File.dirname(__FILE__) + '/../lib/tracker_server/control'
 
-opts = GetoptLong.new(
-  ["--port", "-p", GetoptLong::REQUIRED_ARGUMENT]
-)
-
-opts.each do |opt, arg|
-  $PORT = arg if '--port' == opt
-end
-
-server = TrackerServer::Galileo.new($PORT)
-server.start
+TrackerServer::Control.new
 

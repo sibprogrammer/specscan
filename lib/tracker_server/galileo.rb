@@ -1,4 +1,5 @@
 require 'socket'
+require 'tracker_server/logger'
 
 module TrackerServer
   class Galileo
@@ -12,13 +13,22 @@ module TrackerServer
     end
 
     def logger
-      @logger ||= Logger.new(STDERR)
+      return @logger if @logger
+      file = File.open("#{Rails.root}/log/tracker-server.log", 'a')
+      file.sync = true
+      @logger = TrackerServer::Logger.new(file)
     end
 
     def start
+      # workaround for clients with incorrect DNS records
+      Socket.do_not_reverse_lookup = true
+
       loop do
         client = @server.accept
         logger.debug "#{client} connected."
+
+        port, ip = Socket.unpack_sockaddr_in(client.getpeername)
+        logger.debug "Client address: #{ip}:#{port}"
 
         begin
           process_data client
@@ -50,7 +60,10 @@ module TrackerServer
       loop do
         packet = read_packet(client)
         packet.merge! head_packet
+
         logger.debug packet.inspect
+        logger.debug "IMEI #{packet[:imei]} record id: #{packet[:record_id]}" if packet.key?(:record_id)
+
         point = WayPoint.new(packet)
         point.save
       end
