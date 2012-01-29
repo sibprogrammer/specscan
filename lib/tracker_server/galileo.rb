@@ -24,20 +24,21 @@ module TrackerServer
       Socket.do_not_reverse_lookup = true
 
       loop do
-        client = @server.accept
-        logger.debug "#{client} connected."
+        Thread.start(@server.accept) do |client|
+          logger.debug "#{client} connected."
 
-        port, ip = Socket.unpack_sockaddr_in(client.getpeername)
-        logger.debug "Client address: #{ip}:#{port}"
+          port, ip = Socket.unpack_sockaddr_in(client.getpeername)
+          logger.debug "Client address: #{ip}:#{port}"
 
-        begin
-          process_data client
-        rescue Exception => e
-          logger.debug "Error: #{e.message}"
+          begin
+            process_data client
+          rescue Exception => e
+            logger.debug "Error: #{e.message}"
+          end
+
+          client.close
+          logger.debug "#{client} connection closed."
         end
-
-        client.close
-        logger.debug "#{client} connection closed."
       end
     end
 
