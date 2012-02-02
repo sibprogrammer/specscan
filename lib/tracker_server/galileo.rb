@@ -1,5 +1,6 @@
 require 'socket'
 require 'tracker_server/logger'
+require 'digest/crc16_modbus'
 
 module TrackerServer
   class Galileo
@@ -234,9 +235,16 @@ module TrackerServer
     end
 
     def send_accept(client, data)
-      # TODO: validate checksum
-      check_sum = data[-2,2]
-      accept_data = "\x02" + check_sum
+      logger.debug get_human_data(data[0, data.length-2])
+      calculated_sum = Digest::CRC16Modbus.hexdigest(data[0, data.length-2]).hex
+      logger.debug "calculated checksum: #{calculated_sum}"
+
+      check_sum = data[-2,2].unpack("v")[0]
+      logger.debug "packet checksum: #{check_sum}"
+
+      raise "Invalid checksum (#{check_sum} vs #{calculated_sum})" unless calculated_sum == check_sum
+
+      accept_data = "\x02" + data[-2,2]
       logger.debug get_human_data(accept_data)
       client.write(accept_data)
     end
