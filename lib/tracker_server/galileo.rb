@@ -136,7 +136,20 @@ module TrackerServer
             packet[:hdop] = data[index].to_f / 10
           when 0x40
             value_length = 2
-            packet[:status] = data[index,value_length].unpack('v')[0]
+            status = data[index,value_length].unpack('v')[0]
+            packet[:status] = status
+            packet[:sens_moving] = 1 == (status & 1)
+            packet[:bad_angle] = 2 == (status & 2)
+            packet[:int_power_low] = 32 == (status & 32)
+            packet[:gps_antenna] = 0 == (status & 64)
+            packet[:int_bus_power_low] = 128 == (status & 128)
+            packet[:ext_power_low] = 256 == (status & 256)
+            packet[:enigne_on] = 512 == (status & 512)
+            packet[:sens_hit] = 1024 == (status & 1024)
+            packet[:glonass] = 2048 == (status & 2048)
+            packet[:signal] = (status & 12288) >> 12
+            packet[:alarm_mode] = 16384 == (status & 16384)
+            packet[:alarm] = 32768 == (status & 32768)
           when 0x41
             value_length = 2
             packet[:int_power] = data[index,value_length].unpack('v')[0]
@@ -148,8 +161,10 @@ module TrackerServer
             packet[:temperature] = data[index,value_length].unpack('c')[0]
           when 0x44
             value_length = 4
-            # TODO: implement
-            packet[:acceleration] = 0
+            acceleration = data[index,value_length].unpack('V')[0]
+            packet[:acceleration_x] = acceleration & 1023
+            packet[:acceleration_y] = (acceleration & (1023 << 10)) >> 10
+            packet[:acceleration_z] = (acceleration & (1023 << 20)) >> 20
           when 0x45
             value_length = 2
             packet[:output_statuses] = data[index,value_length].unpack('v')[0]
@@ -177,18 +192,18 @@ module TrackerServer
           when 0x70..0x77
             value_length = 2
             therm_id = tag - 0x70
-            # TODO: implement
-            packet["thermometer_#{therm_id}".to_sym] = 0
+            packet["thermometer_#{therm_id}".to_sym] = data[index+1,1].unpack('c')[0]
           when 0x90
             value_length = 4
             packet[:ibutton] = data[index,value_length].unpack('V')[0]
           when 0xc0
             value_length = 4
-            packet[:fms_fuel] = data[index,value_length].unpack('V')[0].to_f / 2
+            packet[:fms_fuel_consumed] = data[index,value_length].unpack('V')[0].to_f / 2
           when 0xc1
             value_length = 4
-            # TODO: implement
-            packet[:fms_info] = {}
+            packet[:fms_fuel] = (data[index,1].unpack('C')[0] * 0.4).to_i
+            packet[:antifreeze] = (data[index+1,1].unpack('C')[0] - 40).to_i
+            packet[:eninge_rpm] = (data[index+2,2].unpack('v')[0] * 0.125).to_i
           when 0xc2
             value_length = 4
             packet[:fms_distance] = data[index,value_length].unpack('V')[0] * 5
