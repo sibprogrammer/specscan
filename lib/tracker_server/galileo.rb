@@ -6,6 +6,7 @@ module TrackerServer
   class Galileo
 
     CHECKSUM_BYTES = 2
+    HEADER_SIZE = 3
 
     def initialize(port)
       @port = port
@@ -72,11 +73,11 @@ module TrackerServer
     end
 
     def read_packet(client)
-      data = read_data(client, 3)
+      data = read_data(client, HEADER_SIZE)
       packet_size = get_packet_size(data[1,2])
 
       data += read_data(client, packet_size + CHECKSUM_BYTES)
-      packet = parse_packet(data)
+      packet = parse_packet(data[HEADER_SIZE, data.length - CHECKSUM_BYTES - HEADER_SIZE])
       send_accept(client, data)
       packet
     end
@@ -91,11 +92,9 @@ module TrackerServer
 
     def parse_packet(data)
       packet = {}
+      index = 1
 
-      index = 4
-      packet_lengh = data.length - CHECKSUM_BYTES
-
-      while index < packet_lengh do
+      while index < data.length do
         tag = data[index-1]
 
         case tag
