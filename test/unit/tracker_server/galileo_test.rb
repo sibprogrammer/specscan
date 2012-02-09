@@ -103,391 +103,287 @@ class TrackerServer::GalileoTest < ActiveSupport::TestCase
 
   test "parse packet status0 tag" do
     packet = @server.parse_packet("\x40\x00\x00")
-    assert(packet.key? :status)
+    %w{status sens_moving bad_angle int_power_low
+    gps_antenna int_bus_power_low ext_power_low
+    enigne_on sens_hit glonass signal alarm_mode alarm}.each {
+      |key| assert(packet.key? key.to_sym )
+    }
     assert_equal(0, packet[:status])
-    assert(packet.key? :sens_moving)
     assert_equal(false, packet[:sens_moving])
-    assert(packet.key? :bad_angle)
     assert_equal(false, packet[:bad_angle])
-    assert(packet.key? :int_power_low)
     assert_equal(false, packet[:int_power_low])
-    assert(packet.key? :gps_antenna)
     assert_equal(true, packet[:gps_antenna])
-    assert(packet.key? :int_bus_power_low)
     assert_equal(false, packet[:int_bus_power_low])
-    assert(packet.key? :ext_power_low)
     assert_equal(false, packet[:ext_power_low])
-    assert(packet.key? :enigne_on)
     assert_equal(false, packet[:enigne_on])
-    assert(packet.key? :sens_hit)
     assert_equal(false, packet[:sens_hit])
-    assert(packet.key? :glonass)
     assert_equal(false, packet[:glonass])
-    assert(packet.key? :signal)
     assert_equal(0, packet[:signal])
-    assert(packet.key? :alarm_mode)
     assert_equal(false, packet[:alarm_mode])
-    assert(packet.key? :alarm)
     assert_equal(false, packet[:alarm])
   end
 
   test "parse packet status1 tag" do
     packet = @server.parse_packet("\x40\x01\x00")
-    assert(packet.key? :status)
+    %w{status sens_moving bad_angle int_power_low
+    gps_antenna int_bus_power_low ext_power_low
+    enigne_on sens_hit glonass signal alarm_mode alarm}.each {
+      |key| assert(packet.key? key.to_sym )
+    }
     assert_equal(1, packet[:status])
-    assert(packet.key? :sens_moving)
     assert_equal(true, packet[:sens_moving])
-    assert(packet.key? :bad_angle)
     assert_equal(false, packet[:bad_angle])
-    assert(packet.key? :int_power_low)
     assert_equal(false, packet[:int_power_low])
-    assert(packet.key? :gps_antenna)
     assert_equal(true, packet[:gps_antenna])
-    assert(packet.key? :int_bus_power_low)
     assert_equal(false, packet[:int_bus_power_low])
-    assert(packet.key? :ext_power_low)
     assert_equal(false, packet[:ext_power_low])
-    assert(packet.key? :enigne_on)
     assert_equal(false, packet[:enigne_on])
-    assert(packet.key? :sens_hit)
     assert_equal(false, packet[:sens_hit])
-    assert(packet.key? :glonass)
     assert_equal(false, packet[:glonass])
-    assert(packet.key? :signal)
     assert_equal(0, packet[:signal])
-    assert(packet.key? :alarm_mode)
     assert_equal(false, packet[:alarm_mode])
-    assert(packet.key? :alarm)
     assert_equal(false, packet[:alarm])
   end
 
   test "parse packet status2 tag" do
     packet = @server.parse_packet("\x40\x02\x00")
-    assert(packet.key? :status)
+    %w{status sens_moving bad_angle int_power_low
+    gps_antenna int_bus_power_low ext_power_low
+    enigne_on sens_hit glonass signal alarm_mode alarm}.each {
+      |key| assert(packet.key? key.to_sym )
+    }
     assert_equal(2, packet[:status])
-    assert(packet.key? :sens_moving)
     assert_equal(false, packet[:sens_moving])
-    assert(packet.key? :bad_angle)
     assert_equal(true, packet[:bad_angle])
-    assert(packet.key? :int_power_low)
     assert_equal(false, packet[:int_power_low])
-    assert(packet.key? :gps_antenna)
     assert_equal(true, packet[:gps_antenna])
-    assert(packet.key? :int_bus_power_low)
     assert_equal(false, packet[:int_bus_power_low])
-    assert(packet.key? :ext_power_low)
     assert_equal(false, packet[:ext_power_low])
-    assert(packet.key? :enigne_on)
     assert_equal(false, packet[:enigne_on])
-    assert(packet.key? :sens_hit)
     assert_equal(false, packet[:sens_hit])
-    assert(packet.key? :glonass)
     assert_equal(false, packet[:glonass])
-    assert(packet.key? :signal)
     assert_equal(0, packet[:signal])
-    assert(packet.key? :alarm_mode)
     assert_equal(false, packet[:alarm_mode])
-    assert(packet.key? :alarm)
     assert_equal(false, packet[:alarm])
   end
 
   test "parse packet status3 tag" do
     packet = @server.parse_packet("\x40\x20\x00")
-    assert(packet.key? :status)
+    %w{status sens_moving bad_angle int_power_low
+    gps_antenna int_bus_power_low ext_power_low
+    enigne_on sens_hit glonass signal alarm_mode alarm}.each {
+      |key| assert(packet.key? key.to_sym )
+    }
     assert_equal(32, packet[:status])
-    assert(packet.key? :sens_moving)
     assert_equal(false, packet[:sens_moving])
-    assert(packet.key? :bad_angle)
     assert_equal(false, packet[:bad_angle])
-    assert(packet.key? :int_power_low)
     assert_equal(true, packet[:int_power_low])
-    assert(packet.key? :gps_antenna)
     assert_equal(true, packet[:gps_antenna])
-    assert(packet.key? :int_bus_power_low)
     assert_equal(false, packet[:int_bus_power_low])
-    assert(packet.key? :ext_power_low)
     assert_equal(false, packet[:ext_power_low])
-    assert(packet.key? :enigne_on)
     assert_equal(false, packet[:enigne_on])
-    assert(packet.key? :sens_hit)
     assert_equal(false, packet[:sens_hit])
-    assert(packet.key? :glonass)
     assert_equal(false, packet[:glonass])
-    assert(packet.key? :signal)
     assert_equal(0, packet[:signal])
-    assert(packet.key? :alarm_mode)
     assert_equal(false, packet[:alarm_mode])
-    assert(packet.key? :alarm)
     assert_equal(false, packet[:alarm])
   end
 
   test "parse packet status4 tag" do
     packet = @server.parse_packet("\x40\x40\x00")
-    assert(packet.key? :status)
+    %w{status sens_moving bad_angle int_power_low
+    gps_antenna int_bus_power_low ext_power_low
+    enigne_on sens_hit glonass signal alarm_mode alarm}.each {
+      |key| assert(packet.key? key.to_sym )
+    }
     assert_equal(64, packet[:status])
-    assert(packet.key? :sens_moving)
     assert_equal(false, packet[:sens_moving])
-    assert(packet.key? :bad_angle)
     assert_equal(false, packet[:bad_angle])
-    assert(packet.key? :int_power_low)
     assert_equal(false, packet[:int_power_low])
-    assert(packet.key? :gps_antenna)
     assert_equal(false, packet[:gps_antenna])
-    assert(packet.key? :int_bus_power_low)
     assert_equal(false, packet[:int_bus_power_low])
-    assert(packet.key? :ext_power_low)
     assert_equal(false, packet[:ext_power_low])
-    assert(packet.key? :enigne_on)
     assert_equal(false, packet[:enigne_on])
-    assert(packet.key? :sens_hit)
     assert_equal(false, packet[:sens_hit])
-    assert(packet.key? :glonass)
     assert_equal(false, packet[:glonass])
-    assert(packet.key? :signal)
     assert_equal(0, packet[:signal])
-    assert(packet.key? :alarm_mode)
     assert_equal(false, packet[:alarm_mode])
-    assert(packet.key? :alarm)
     assert_equal(false, packet[:alarm])
   end
 
   test "parse packet status5 tag" do
     packet = @server.parse_packet("\x40\x80\x00")
-    assert(packet.key? :status)
+    %w{status sens_moving bad_angle int_power_low
+    gps_antenna int_bus_power_low ext_power_low
+    enigne_on sens_hit glonass signal alarm_mode alarm}.each {
+      |key| assert(packet.key? key.to_sym )
+    }
     assert_equal(128, packet[:status])
-    assert(packet.key? :sens_moving)
     assert_equal(false, packet[:sens_moving])
-    assert(packet.key? :bad_angle)
     assert_equal(false, packet[:bad_angle])
-    assert(packet.key? :int_power_low)
     assert_equal(false, packet[:int_power_low])
-    assert(packet.key? :gps_antenna)
     assert_equal(true, packet[:gps_antenna])
-    assert(packet.key? :int_bus_power_low)
     assert_equal(true, packet[:int_bus_power_low])
-    assert(packet.key? :ext_power_low)
     assert_equal(false, packet[:ext_power_low])
-    assert(packet.key? :enigne_on)
     assert_equal(false, packet[:enigne_on])
-    assert(packet.key? :sens_hit)
     assert_equal(false, packet[:sens_hit])
-    assert(packet.key? :glonass)
     assert_equal(false, packet[:glonass])
-    assert(packet.key? :signal)
     assert_equal(0, packet[:signal])
-    assert(packet.key? :alarm_mode)
     assert_equal(false, packet[:alarm_mode])
-    assert(packet.key? :alarm)
     assert_equal(false, packet[:alarm])
   end
 
   test "parse packet status6 tag" do
     packet = @server.parse_packet("\x40\x00\x01")
-    assert(packet.key? :status)
+    %w{status sens_moving bad_angle int_power_low
+    gps_antenna int_bus_power_low ext_power_low
+    enigne_on sens_hit glonass signal alarm_mode alarm}.each {
+      |key| assert(packet.key? key.to_sym )
+    }
     assert_equal(256, packet[:status])
-    assert(packet.key? :sens_moving)
     assert_equal(false, packet[:sens_moving])
-    assert(packet.key? :bad_angle)
     assert_equal(false, packet[:bad_angle])
-    assert(packet.key? :int_power_low)
     assert_equal(false, packet[:int_power_low])
-    assert(packet.key? :gps_antenna)
     assert_equal(true, packet[:gps_antenna])
-    assert(packet.key? :int_bus_power_low)
     assert_equal(false, packet[:int_bus_power_low])
-    assert(packet.key? :ext_power_low)
     assert_equal(true, packet[:ext_power_low])
-    assert(packet.key? :enigne_on)
     assert_equal(false, packet[:enigne_on])
-    assert(packet.key? :sens_hit)
     assert_equal(false, packet[:sens_hit])
-    assert(packet.key? :glonass)
     assert_equal(false, packet[:glonass])
-    assert(packet.key? :signal)
     assert_equal(0, packet[:signal])
-    assert(packet.key? :alarm_mode)
     assert_equal(false, packet[:alarm_mode])
-    assert(packet.key? :alarm)
     assert_equal(false, packet[:alarm])
   end
 
   test "parse packet status7 tag" do
     packet = @server.parse_packet("\x40\x00\x02")
-    assert(packet.key? :status)
+    %w{status sens_moving bad_angle int_power_low
+    gps_antenna int_bus_power_low ext_power_low
+    enigne_on sens_hit glonass signal alarm_mode alarm}.each {
+      |key| assert(packet.key? key.to_sym )
+    }
     assert_equal(512, packet[:status])
-    assert(packet.key? :sens_moving)
     assert_equal(false, packet[:sens_moving])
-    assert(packet.key? :bad_angle)
     assert_equal(false, packet[:bad_angle])
-    assert(packet.key? :int_power_low)
     assert_equal(false, packet[:int_power_low])
-    assert(packet.key? :gps_antenna)
     assert_equal(true, packet[:gps_antenna])
-    assert(packet.key? :int_bus_power_low)
     assert_equal(false, packet[:int_bus_power_low])
-    assert(packet.key? :ext_power_low)
     assert_equal(false, packet[:ext_power_low])
-    assert(packet.key? :enigne_on)
     assert_equal(true, packet[:enigne_on])
-    assert(packet.key? :sens_hit)
     assert_equal(false, packet[:sens_hit])
-    assert(packet.key? :glonass)
     assert_equal(false, packet[:glonass])
-    assert(packet.key? :signal)
     assert_equal(0, packet[:signal])
-    assert(packet.key? :alarm_mode)
     assert_equal(false, packet[:alarm_mode])
-    assert(packet.key? :alarm)
     assert_equal(false, packet[:alarm])
   end
 
   test "parse packet status8 tag" do
     packet = @server.parse_packet("\x40\x00\x04")
-    assert(packet.key? :status)
+    %w{status sens_moving bad_angle int_power_low
+    gps_antenna int_bus_power_low ext_power_low
+    enigne_on sens_hit glonass signal alarm_mode alarm}.each {
+      |key| assert(packet.key? key.to_sym )
+    }
     assert_equal(1024, packet[:status])
-    assert(packet.key? :sens_moving)
     assert_equal(false, packet[:sens_moving])
-    assert(packet.key? :bad_angle)
     assert_equal(false, packet[:bad_angle])
-    assert(packet.key? :int_power_low)
     assert_equal(false, packet[:int_power_low])
-    assert(packet.key? :gps_antenna)
     assert_equal(true, packet[:gps_antenna])
-    assert(packet.key? :int_bus_power_low)
     assert_equal(false, packet[:int_bus_power_low])
-    assert(packet.key? :ext_power_low)
     assert_equal(false, packet[:ext_power_low])
-    assert(packet.key? :enigne_on)
     assert_equal(false, packet[:enigne_on])
-    assert(packet.key? :sens_hit)
     assert_equal(true, packet[:sens_hit])
-    assert(packet.key? :glonass)
     assert_equal(false, packet[:glonass])
-    assert(packet.key? :signal)
     assert_equal(0, packet[:signal])
-    assert(packet.key? :alarm_mode)
     assert_equal(false, packet[:alarm_mode])
-    assert(packet.key? :alarm)
     assert_equal(false, packet[:alarm])
   end
 
   test "parse packet status9 tag" do
     packet = @server.parse_packet("\x40\x00\x08")
-    assert(packet.key? :status)
+    %w{status sens_moving bad_angle int_power_low
+    gps_antenna int_bus_power_low ext_power_low
+    enigne_on sens_hit glonass signal alarm_mode alarm}.each {
+      |key| assert(packet.key? key.to_sym )
+    }
     assert_equal(2048, packet[:status])
-    assert(packet.key? :sens_moving)
     assert_equal(false, packet[:sens_moving])
-    assert(packet.key? :bad_angle)
     assert_equal(false, packet[:bad_angle])
-    assert(packet.key? :int_power_low)
     assert_equal(false, packet[:int_power_low])
-    assert(packet.key? :gps_antenna)
     assert_equal(true, packet[:gps_antenna])
-    assert(packet.key? :int_bus_power_low)
     assert_equal(false, packet[:int_bus_power_low])
-    assert(packet.key? :ext_power_low)
     assert_equal(false, packet[:ext_power_low])
-    assert(packet.key? :enigne_on)
     assert_equal(false, packet[:enigne_on])
-    assert(packet.key? :sens_hit)
     assert_equal(false, packet[:sens_hit])
-    assert(packet.key? :glonass)
     assert_equal(true, packet[:glonass])
-    assert(packet.key? :signal)
     assert_equal(0, packet[:signal])
-    assert(packet.key? :alarm_mode)
     assert_equal(false, packet[:alarm_mode])
-    assert(packet.key? :alarm)
     assert_equal(false, packet[:alarm])
   end
 
   test "parse packet status10 tag" do
     packet = @server.parse_packet("\x40\x00\x30")
-    assert(packet.key? :status)
+    %w{status sens_moving bad_angle int_power_low
+    gps_antenna int_bus_power_low ext_power_low
+    enigne_on sens_hit glonass signal alarm_mode alarm}.each {
+      |key| assert(packet.key? key.to_sym )
+    }
     assert_equal(12288, packet[:status])
-    assert(packet.key? :sens_moving)
     assert_equal(false, packet[:sens_moving])
-    assert(packet.key? :bad_angle)
     assert_equal(false, packet[:bad_angle])
-    assert(packet.key? :int_power_low)
     assert_equal(false, packet[:int_power_low])
-    assert(packet.key? :gps_antenna)
     assert_equal(true, packet[:gps_antenna])
-    assert(packet.key? :int_bus_power_low)
     assert_equal(false, packet[:int_bus_power_low])
-    assert(packet.key? :ext_power_low)
     assert_equal(false, packet[:ext_power_low])
-    assert(packet.key? :enigne_on)
     assert_equal(false, packet[:enigne_on])
-    assert(packet.key? :sens_hit)
     assert_equal(false, packet[:sens_hit])
-    assert(packet.key? :glonass)
     assert_equal(false, packet[:glonass])
-    assert(packet.key? :signal)
     assert_equal(3, packet[:signal])
-    assert(packet.key? :alarm_mode)
     assert_equal(false, packet[:alarm_mode])
-    assert(packet.key? :alarm)
     assert_equal(false, packet[:alarm])
   end
 
   test "parse packet status11 tag" do
     packet = @server.parse_packet("\x40\x00\x40")
-    assert(packet.key? :status)
+    %w{status sens_moving bad_angle int_power_low
+    gps_antenna int_bus_power_low ext_power_low
+    enigne_on sens_hit glonass signal alarm_mode alarm}.each {
+      |key| assert(packet.key? key.to_sym )
+    }
     assert_equal(16384, packet[:status])
-    assert(packet.key? :sens_moving)
     assert_equal(false, packet[:sens_moving])
-    assert(packet.key? :bad_angle)
     assert_equal(false, packet[:bad_angle])
-    assert(packet.key? :int_power_low)
     assert_equal(false, packet[:int_power_low])
-    assert(packet.key? :gps_antenna)
     assert_equal(true, packet[:gps_antenna])
-    assert(packet.key? :int_bus_power_low)
     assert_equal(false, packet[:int_bus_power_low])
-    assert(packet.key? :ext_power_low)
     assert_equal(false, packet[:ext_power_low])
-    assert(packet.key? :enigne_on)
     assert_equal(false, packet[:enigne_on])
-    assert(packet.key? :sens_hit)
     assert_equal(false, packet[:sens_hit])
-    assert(packet.key? :glonass)
     assert_equal(false, packet[:glonass])
-    assert(packet.key? :signal)
     assert_equal(0, packet[:signal])
-    assert(packet.key? :alarm_mode)
     assert_equal(true, packet[:alarm_mode])
-    assert(packet.key? :alarm)
     assert_equal(false, packet[:alarm])
   end
 
   test "parse packet status12 tag" do
     packet = @server.parse_packet("\x40\x00\x80")
-    assert(packet.key? :status)
+    %w{status sens_moving bad_angle int_power_low
+    gps_antenna int_bus_power_low ext_power_low
+    enigne_on sens_hit glonass signal alarm_mode alarm}.each {
+      |key| assert(packet.key? key.to_sym )
+    }
     assert_equal(32768, packet[:status])
-    assert(packet.key? :sens_moving)
     assert_equal(false, packet[:sens_moving])
-    assert(packet.key? :bad_angle)
     assert_equal(false, packet[:bad_angle])
-    assert(packet.key? :int_power_low)
     assert_equal(false, packet[:int_power_low])
-    assert(packet.key? :gps_antenna)
     assert_equal(true, packet[:gps_antenna])
-    assert(packet.key? :int_bus_power_low)
     assert_equal(false, packet[:int_bus_power_low])
-    assert(packet.key? :ext_power_low)
     assert_equal(false, packet[:ext_power_low])
-    assert(packet.key? :enigne_on)
     assert_equal(false, packet[:enigne_on])
-    assert(packet.key? :sens_hit)
     assert_equal(false, packet[:sens_hit])
-    assert(packet.key? :glonass)
     assert_equal(false, packet[:glonass])
-    assert(packet.key? :signal)
     assert_equal(0, packet[:signal])
-    assert(packet.key? :alarm_mode)
     assert_equal(false, packet[:alarm_mode])
-    assert(packet.key? :alarm)
     assert_equal(true, packet[:alarm])
   end
 
