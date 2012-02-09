@@ -568,51 +568,51 @@ class TrackerServer::GalileoTest < ActiveSupport::TestCase
   end
 
   test "parse packet thermometer_0 tag" do
-    packet = @server.parse_packet("\x70\x00\xD8")
+    packet = @server.parse_packet("\x70\x00\x10")
     assert(packet.key? :thermometer_0)
-    assert_equal(23130, packet[:thermometer_0])
+    assert_equal(16, packet[:thermometer_0])
   end
 
   test "parse packet thermometer_1 tag" do
     packet = @server.parse_packet("\x71\x01\xD8")
     assert(packet.key? :thermometer_1)
-    assert_equal(23130, packet[:thermometer_1])
+    assert_equal(-40, packet[:thermometer_1])
   end
 
   test "parse packet thermometer_2 tag" do
     packet = @server.parse_packet("\x72\x02\xD8")
     assert(packet.key? :thermometer_2)
-    assert_equal(23130, packet[:thermometer_2])
+    assert_equal(-40, packet[:thermometer_2])
   end
 
   test "parse packet thermometer_3 tag" do
     packet = @server.parse_packet("\x73\x03\xD8")
     assert(packet.key? :thermometer_3)
-    assert_equal(23130, packet[:thermometer_3])
+    assert_equal(-40, packet[:thermometer_3])
   end
 
   test "parse packet thermometer_4 tag" do
     packet = @server.parse_packet("\x74\x04\xD8")
     assert(packet.key? :thermometer_4)
-    assert_equal(23130, packet[:thermometer_4])
+    assert_equal(-40, packet[:thermometer_4])
   end
 
   test "parse packet thermometer_5 tag" do
     packet = @server.parse_packet("\x75\x05\xD8")
     assert(packet.key? :thermometer_5)
-    assert_equal(23130, packet[:thermometer_5])
+    assert_equal(-40, packet[:thermometer_5])
   end
 
   test "parse packet thermometer_6 tag" do
     packet = @server.parse_packet("\x76\x06\xD8")
     assert(packet.key? :thermometer_6)
-    assert_equal(23130, packet[:thermometer_6])
+    assert_equal(-40, packet[:thermometer_6])
   end
 
   test "parse packet thermometer_7 tag" do
     packet = @server.parse_packet("\x77\x07\xD8")
     assert(packet.key? :thermometer_7)
-    assert_equal(23130, packet[:thermometer_7])
+    assert_equal(-40, packet[:thermometer_7])
   end
 
   test "parse packet ibutton tag" do
