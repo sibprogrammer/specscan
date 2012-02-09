@@ -56,8 +56,11 @@ class Admin::VehiclesController < Admin::Base
     @points = WayPoint.where({
       :imei => @vehicle.imei,
       :coors_valid => true,
+      :sens_moving => true,
       :speed => { :$ne => 0 }
     }).sort(:timestamp.desc).limit(500).all.collect{ |point| [point[:longitude], point[:latitude]] }
+
+    @movements = Movement.sort(:to_timestamp.desc).limit(20)
   end
 
 end

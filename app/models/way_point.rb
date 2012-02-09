@@ -6,5 +6,11 @@ class WayPoint
   key :latitude
   key :longitude
   key :timestamp
+  key :speed
+  key :sens_moving
+
+  def zero_speed?
+    speed.to_f.abs < 0.1
+  end
 
 end

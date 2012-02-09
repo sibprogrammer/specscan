@@ -12,3 +12,7 @@
 %p
   Путевых точек:
   = @vehicle.total_way_points
+
+%p
+  - @movements.each do |movement|
+    %div= (movement.parking ? "P" : "M") + " - #{Time.at(movement.from_timestamp)} - #{Time.at(movement.to_timestamp)}"
