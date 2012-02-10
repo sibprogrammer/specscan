@@ -130,7 +130,7 @@ module TrackerServer
             packet[:direction] = data[index+2,2].unpack('s<')[0].to_f / 10
           when 0x34
             value_length = 2
-            packet[:height] = data[index,value_length].unpack('v')[0]
+            packet[:height] = data[index,value_length].unpack('s<')[0]
           when 0x35
             value_length = 1
             packet[:hdop] = data[index].to_f / 10
