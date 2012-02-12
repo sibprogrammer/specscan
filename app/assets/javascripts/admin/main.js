@@ -2,6 +2,13 @@ var map;
 
 function initMap() {
   $(function() {
+    var resizeMap = function() {
+      $('#map-canvas').height($(window).height() - $('#map-canvas').offset().top - 20);
+    }
+
+    resizeMap();
+    $(window).resize(resizeMap);
+
     map = new YMaps.Map(document.getElementById("map-canvas"));
     map.addControl(new YMaps.TypeControl());
     map.addControl(new YMaps.Zoom());

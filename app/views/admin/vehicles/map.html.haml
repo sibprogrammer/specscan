@@ -4,15 +4,5 @@
 %script{ :type => "text/javascript" } initMap();
 %script{ :type => "text/javascript" }= "var wayPoints = #{@points.to_json};"
 
-#map-canvas{ :style => "width: 100%; height: 500px;" }
+#map-canvas{ :style => "width: 100%; height: 0px;" }
 
-%p
-  #show-track.btn= t('.button.show_track')
-
-%p
-  Путевых точек:
-  = @vehicle.total_way_points
-
-%p
-  - @movements.each do |movement|
-    %div= (movement.parking ? "P" : "M") + " - #{Time.at(movement.from_timestamp)} - #{Time.at(movement.to_timestamp)}"
