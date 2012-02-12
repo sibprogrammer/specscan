@@ -144,7 +144,7 @@ module TrackerServer
             packet[:gps_antenna] = 0 == (status & 64)
             packet[:int_bus_power_low] = 128 == (status & 128)
             packet[:ext_power_low] = 256 == (status & 256)
-            packet[:enigne_on] = 512 == (status & 512)
+            packet[:engine_on] = 512 == (status & 512)
             packet[:sens_hit] = 1024 == (status & 1024)
             packet[:glonass] = 2048 == (status & 2048)
             packet[:signal] = (status & 12288) >> 12
