@@ -5,12 +5,9 @@
       %ul
         = yield :sidebar_actions
 
-    - unless @sidebar_actions.empty?
-      %h5= t '.actions'
-      %ul
-        - @sidebar_actions.each do |sidebar_action|
-          %li= link_to sidebar_action[:title], sidebar_action[:link]
+    = yield :sidebar
 
     - if context_help?(@help)
       %h5= t '.help'
       %div= context_help(@help)
+

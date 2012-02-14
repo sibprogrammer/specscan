@@ -1,5 +1,12 @@
 - @page_title = t '.page_title', :reg_number => @vehicle.reg_number
 
+- content_for :sidebar do
+  %h5= t '.movements_list'
+  %ul
+    %li= link_to "M 10:22 - 11:50"
+    %li= link_to "P 11:50 - 11:55"
+    %li= link_to "M 11:55 - 12:40"
+
 %script{ :type => "text/javascript", :src => "http://api-maps.yandex.ru/1.1/index.xml?key=#{@api_key}" }
 %script{ :type => "text/javascript" } initMap();
 %script{ :type => "text/javascript" }= "var wayPoints = #{@points.to_json};"
