@@ -4,20 +4,10 @@ class Admin::VehiclesController < Admin::Base
 
   def index
     @vehicles = Vehicle.all
-
-    @sidebar_actions = [{
-      :title => t('admin.vehicles.index.action.add_vehicle'),
-      :link => new_admin_vehicle_path
-    }]
   end
 
   def show
     @vehicle = Vehicle.find(params[:id])
-
-    @sidebar_actions = [{
-      :title => t('admin.vehicles.show.action.show_map'),
-      :link => map_admin_vehicle_path(@vehicle)
-    }]
   end
 
   def new

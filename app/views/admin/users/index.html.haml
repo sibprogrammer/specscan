@@ -1,5 +1,8 @@
 - @page_title = t '.page_title'
 
+- content_for :sidebar_actions do
+  %li= link_to t('.action.add_user'), new_admin_user_path 
+
 %table.bordered-table.zebra-striped
   %thead
     %tr

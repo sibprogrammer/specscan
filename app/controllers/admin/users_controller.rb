@@ -4,11 +4,6 @@ class Admin::UsersController < Admin::Base
 
   def index
     @users = User.all
-
-    @sidebar_actions = [{
-      :title => t('admin.users.index.action.add_user'),
-      :link => new_admin_user_path
-    }]
   end
 
   def new

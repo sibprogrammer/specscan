@@ -1,5 +1,10 @@
 .sidebar
   .well
+    - if content_for? :sidebar_actions
+      %h5= t '.actions'
+      %ul
+        = yield :sidebar_actions
+
     - unless @sidebar_actions.empty?
       %h5= t '.actions'
       %ul
