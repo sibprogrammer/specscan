@@ -1,3 +1,4 @@
 - @page_title = @profile ? t('admin.profile.page_title') : t('.page_title', :login => @user.login)
+- @help = @profile ? t('admin.profile.help') : t('.help')
 
 = render 'form'
