@@ -10,6 +10,7 @@ Specscan::Application.routes.draw do
     resources :users
     resources :vehicles do
       get 'map', :on => :member
+      get 'reports', :on => :member
     end
     match "profile" => "users#edit"
   end

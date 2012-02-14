@@ -51,6 +51,15 @@ class Admin::VehiclesController < Admin::Base
     }).sort(:timestamp.desc).limit(500).all.collect{ |point| [point[:longitude], point[:latitude]] }
 
     @movements = Movement.sort(:to_timestamp.desc).limit(20)
+
+    @sidebar_actions = [{
+      :title => t('admin.vehicles.map.action.reports'),
+      :link => reports_admin_vehicle_path
+    }]
+  end
+
+  def reports
+    @vehicle = Vehicle.find(params[:id])
   end
 
 end
