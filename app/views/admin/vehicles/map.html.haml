@@ -1,5 +1,8 @@
 - @page_title = t '.page_title', :reg_number => @vehicle.reg_number
 
+- content_for :sidebar_actions do
+  %li= link_to t('.action.reports'), reports_admin_vehicle_path
+
 - content_for :sidebar do
   %h5= t '.movements_list'
   %ul
