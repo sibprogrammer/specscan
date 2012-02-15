@@ -14,6 +14,7 @@ function initMap() {
     map.addControl(new YMaps.Zoom());
     map.addControl(new YMaps.ScaleLine());
     map.addControl(new YMaps.ToolBar());
+    map.enableScrollZoom();
     map.setCenter(new YMaps.GeoPoint(82.933957,55.007224), 12);
   });
 }
