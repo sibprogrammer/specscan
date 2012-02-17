@@ -5,14 +5,10 @@
 
 - content_for :sidebar do
   %h5= t '.movements_list'
-  %ul
-    %li= link_to "M 10:22 - 11:50"
-    %li= link_to "P 11:50 - 11:55"
-    %li= link_to "M 11:55 - 12:40"
+  %ul.movements-list
+    - @movements.each do |movement|
+      %li= link_to timeframe(movement), "#", 'data-info' => movement.info.to_json, :class => (movement.parking ? 'icon-parking' : 'icon-moving')
 
-%script{ :type => "text/javascript", :src => "http://api-maps.yandex.ru/1.1/index.xml?key=#{@api_key}" }
-%script{ :type => "text/javascript" } initMap();
-%script{ :type => "text/javascript" }= "var wayPoints = #{@points.to_json};"
-
+= javascript_include_tag "http://api-maps.yandex.ru/1.1/index.xml?key=#{@api_key}"
 #map-canvas{ :style => "width: 100%; height: 0px;" }
 
