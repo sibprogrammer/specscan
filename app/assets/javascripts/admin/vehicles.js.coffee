@@ -27,15 +27,16 @@ $ ->
     map.setCenter(new YMaps.GeoPoint(82.933957,55.007224), 12)
     createLineStyle()
 
-    placemark = null
-    polyline = null
-
     $('.movements-list a').each (index, element) ->
       $(element).on 'click', ->
-        move = $(this).data('info')
+        $(this).parent('li').toggleClass('icon-watch')
 
-        map.removeOverlay(placemark) if placemark
-        map.removeOverlay(polyline) if polyline
+        overlay = $(this).data('overlay')
+        if overlay && !$(this).parent('li').hasClass('icon-watch')
+          map.removeOverlay(overlay)
+          return
+
+        move = $(this).data('info')
 
         if move.parking
           point = move.first_point
@@ -47,6 +48,7 @@ $ ->
           placemark.setBounds(bounds)
           map.addOverlay(placemark)
           map.setBounds(placemark.getBounds())
+          $(this).data('overlay', placemark)
         else
           firstGeoPoint = new YMaps.GeoPoint(move.first_point.longitude, move.first_point.latitude)
           lastGeoPoint = new YMaps.GeoPoint(move.last_point.longitude, move.last_point.latitude)
@@ -58,3 +60,4 @@ $ ->
           map.addOverlay(polyline)
           bounds = new YMaps.GeoCollectionBounds(mapPoints)
           map.setBounds(bounds)
+          $(this).data('overlay', polyline)
