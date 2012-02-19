@@ -35,10 +35,11 @@ private
     [x, y, z]
   end
 
-  def coors_to_distance_iw(lat1, long1, lat2, long2)
+  def coors_to_distance_vector(lat1, long1, lat2, long2)
+    # hand-made algorythm by Igor Vayzert
     r = 6_371_000 # radius of the Earth
-    x1, y1, z1 = geosph2xyz(r, lat1, long1)
-    x2, y2, z2 = geosph2xyz(r, lat2, long2)
+    x1, y1, z1 = geosph_to_xyz(r, lat1, long1)
+    x2, y2, z2 = geosph_to_xyz(r, lat2, long2)
     vector_module(x2 - x1, y2 - y1, z2 - z1)
   end
 
