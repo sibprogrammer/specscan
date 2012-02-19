@@ -14,7 +14,7 @@ class WayPoint
   end
 
   def distance(to_point)
-    coors_to_distance_iw(latitude, longitude, to_point.latitude, to_point.longitude)
+    coors_to_distance_handmade(latitude, longitude, to_point.latitude, to_point.longitude)
   end
 
 private
@@ -42,7 +42,7 @@ private
     vector_module(x2 - x1, y2 - y1, z2 - z1)
   end
 
-  def coors_to_distance_js(lat1, long1, lat2, long2)
+  def coors_to_distance_haversine(lat1, long1, lat2, long2)
     # source: http://www.movable-type.co.uk/scripts/latlong.html
     r = 6_371_000 # radius of the Earth
     lat1, long1 = to_rad(lat1), to_rad(long1)
