@@ -43,6 +43,7 @@ private
   end
 
   def coors_to_distance_js(lat1, long1, lat2, long2)
+    # source: http://www.movable-type.co.uk/scripts/latlong.html
     r = 6_371_000 # radius of the Earth
     lat1, long1 = to_rad(lat1), to_rad(long1)
     lat2, long2 = to_rad(lat2), to_rad(long2)
