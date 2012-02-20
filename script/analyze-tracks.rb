@@ -8,7 +8,7 @@ def close_point?(way_point, imei)
   prev_point = WayPoint.first(conditions)
   return true if (way_point.timestamp - prev_point.timestamp) < 2.minutes
 
-  ((way_point.latitude - prev_point.latitude).abs < 0.0002) and ((way_point.longitude - prev_point.longitude).abs < 0.0002)
+  way_point.distance(prev_point) < 70
 end
 
 Vehicle.all.each do |vehicle|
