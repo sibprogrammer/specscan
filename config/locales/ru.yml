@@ -47,6 +47,8 @@ ru:
           column:
             users: "Пользователи"
             vehicles: "Машины"
+        access_denied: "Доступ запрещен."
+        unknown_object: "Неизвестный объект."
     users:
       form:
         field:
@@ -55,6 +57,9 @@ ru:
           email: "E-mail"
           password: "Пароль"
           password_confirmation: "Подтверждение"
+          role: "Роль"
+          role_admin: "Администратор"
+          role_client: "Клиент"
         button:
           create: "Добавить"
           update: "Обновить"

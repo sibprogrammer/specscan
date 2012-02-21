@@ -18,4 +18,5 @@
 
   .actions
     = link_to t('.button.back'), admin_vehicles_path, :class => 'btn primary'
-    = link_to t('.button.edit'), edit_admin_vehicle_path(@vehicle), :class => 'btn'
+    - if can? :manage, Vehicle
+      = link_to t('.button.edit'), edit_admin_vehicle_path(@vehicle), :class => 'btn'

@@ -12,7 +12,7 @@ Specscan::Application.routes.draw do
       get 'map', :on => :member
       get 'reports', :on => :member
     end
-    match "profile" => "users#edit"
+    match "profile" => "users#profile"
   end
 
   root :to => 'admin/dashboard#index'

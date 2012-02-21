@@ -3,10 +3,11 @@
 %h3= t '.stats_title'
 
 %table.zebra-striped
-  %tr
-    %th= t '.stats.column.users'
-    %td= User.count(:all)
+  - if can? :manage, User
+    %tr
+      %th= t '.stats.column.users'
+      %td= @users_total
   %tr
     %th= t '.stats.column.vehicles'
-    %td= Vehicle.count(:all)
+    %td= @vehicles_total
 

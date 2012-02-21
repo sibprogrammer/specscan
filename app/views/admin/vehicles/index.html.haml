@@ -1,18 +1,21 @@
 - @page_title = t '.page_title'
 
 - content_for :sidebar_actions do
-  %li= link_to t('.action.add_vehicle'), new_admin_vehicle_path
+  - if can? :manage, Vehicle
+    %li= link_to t('.action.add_vehicle'), new_admin_vehicle_path
 
 %table.bordered-table.zebra-striped
   %thead
     %tr
       %th= t '.column.imei'
       %th= t '.column.reg_number'
-      %th= t '.column.owner'
+      - if can? :manage, User
+        %th= t '.column.owner'
 
   %tbody
     - @vehicles.each do |vehicle|
       %tr
         %td= link_to vehicle.imei, admin_vehicle_path(vehicle)
         %td= vehicle.reg_number
-        %td= link_to vehicle.user.login, admin_user_path(vehicle.user)
+        - if can? :manage, User
+          %td= link_to vehicle.user.login, admin_user_path(vehicle.user)

@@ -1,6 +1,8 @@
 class Admin::UsersController < Admin::Base
 
   menu_section :users
+  before_filter :check_manage_permission, :except => [:profile, :update]
+  before_filter :set_selected_user, :only => [:show, :edit, :update]
 
   def index
     @users = User.all
@@ -21,20 +23,18 @@ class Admin::UsersController < Admin::Base
   end
 
   def show
-    @user = User.find(params[:id])
   end
 
   def edit
-    if !params.key?(:id)
-      @user = current_user
-      @profile = true
-    else
-      @user = User.find(params[:id])
-    end
+  end
+
+  def profile
+    @user = current_user
+    @profile = true
   end
 
   def update
-    @user = User.find(params[:id])
+    authorize! :manage, User if @user.id != current_user.id
 
     if params[:user][:password].blank?
       params[:user].delete(:password)
@@ -51,5 +51,15 @@ class Admin::UsersController < Admin::Base
       render :action => 'edit'
     end
   end
+
+  private
+
+    def check_manage_permission
+      authorize! :manage, User
+    end
+
+    def set_selected_user
+      @user = User.find(params[:id])
+    end
 
 end
