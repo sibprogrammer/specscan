@@ -94,6 +94,9 @@ class VehicleTest < ActiveSupport::TestCase
 
     car.reg_number = '123-45XX 22'
     assert car.valid?
+
+    car.reg_number = 'Р000МУ'
+    assert car.valid?
   end
 
   test "vehicle with too short registration number" do
@@ -117,12 +120,6 @@ class VehicleTest < ActiveSupport::TestCase
   test "vehicle with too long registration number" do
     car = vehicles(:car)
     car.reg_number = '1234567890123456'
-    assert car.invalid?
-  end
-
-  test "registration number should not contain unexpected special characters" do
-    car = vehicles(:car)
-    car.reg_number = '!@#$%^'
     assert car.invalid?
   end
 
