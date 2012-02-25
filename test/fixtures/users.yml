@@ -1,11 +1,14 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+admin:
+  id: 1
+  role: 1
+  login: admin
+  name: System Administrator
+  email: admin@example.dom
 
-# This model initially had no columns defined.  If you add columns to the
-# model remove the '{}' from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+client:
+  id: 2
+  role: 2
+  login: trucks
+  name: Trucks Ltd.
+  email: info@trucks.dom
+
