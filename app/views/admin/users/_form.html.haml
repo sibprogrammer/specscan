@@ -5,29 +5,14 @@
     = f.label :login, t('.field.login')
     .input
       - if @user.new_record?
-        = f.text_field :login
+        = f.text_field :login, :required => true
       - else
         %span.uneditable-input= @user.login
 
-  .clearfix
-    = f.label :name, t('.field.name')
-    .input
-      = f.text_field :name
-
-  .clearfix
-    = f.label :email, t('.field.email')
-    .input
-      = f.email_field :email
-
-  .clearfix
-    = f.label :password, t('.field.password')
-    .input
-      = f.password_field :password
-
-  .clearfix
-    = f.label :password_confirmation, t('.field.password_confirmation')
-    .input
-      = f.password_field :password_confirmation
+  - form_field f, :name, :text_field
+  - form_field f, :email, :email_field
+  - form_field f, :password, :password_field
+  - form_field f, :password_confirmation, :password_field
 
   - unless @profile
     .clearfix
@@ -37,6 +22,12 @@
 
   - if @profile
     = hidden_field_tag :profile, true
+
+  - form_field f, :contact_name, :text_field
+  - form_field f, :phone, :text_field
+  - form_field f, :additional_info, :text_area, :rows => 2
+  - if @current_user.admin?
+    - form_field f, :comment, :text_area, :rows => 2
 
   .actions
     = f.submit t('.button.' + (@user.new_record? ? 'create' : 'update')), :class => 'btn primary'

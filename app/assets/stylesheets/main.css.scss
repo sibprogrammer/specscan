@@ -1,5 +1,16 @@
 body { padding-top: 60px; }
 
+.container-fluid {
+  label { width: 180px; }
+  form .input { margin-left: 200px; }
+  .actions { padding-left: 200px; }
+  .input {
+    input, textarea, select, .uneditable-input { width: 280px; }
+  }
+}
+
+.uneditable-input { border-color: #FFF; box-shadow: none; }
+
 .pull-right { color: white; }
 .topbar .brand { background: image-url('satellite.png') no-repeat 10px 4px; padding: 8px 20px 12px 48px; }
 .uneditable-input { cursor: default; }

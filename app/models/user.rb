@@ -10,7 +10,8 @@ class User < ActiveRecord::Base
     :length => { :minimum => 6, :maximum => 25 }, :format => { :with => /^[a-zA-Z\d]+$/ }
   validates :role, :presence => true
   devise :database_authenticatable, :rememberable, :trackable, :validatable
-  attr_accessible :login, :name, :email, :password, :password_confirmation, :remember_me, :role
+  attr_accessible :login, :name, :email, :password, :password_confirmation, :remember_me, :role, :contact_name,
+    :phone, :additional_info, :comment
 
   has_many :vehicles
 

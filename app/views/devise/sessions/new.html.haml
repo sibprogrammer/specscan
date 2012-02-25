@@ -1,21 +1,10 @@
 - @page_title = t 'login.page_title'
 
 = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
-  .clearfix
-    = f.label :login, t('login.field_login')
-    .input
-      = f.text_field :login
 
-  .clearfix
-    = f.label :password, t('login.field_password')
-    .input
-      = f.password_field :password
-
-  - if devise_mapping.rememberable?
-    .clearfix
-      = f.label :remember_me, t('login.field_remember_me')
-      .input
-        = f.check_box :remember_me
+  - form_field f, :login, :text_field, :required => true
+  - form_field f, :password, :password_field, :required => true
+  - form_field f, :remember_me, :check_box
 
   .actions
     = f.submit t('login.button_login'), :class => 'btn primary'

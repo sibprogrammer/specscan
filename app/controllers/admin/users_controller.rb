@@ -9,7 +9,7 @@ class Admin::UsersController < Admin::Base
   end
 
   def new
-    @user = User.new
+    @user = User.new(:role => User::ROLE_CLIENT)
   end
 
   def create

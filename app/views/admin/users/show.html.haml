@@ -1,14 +1,16 @@
 - @page_title = t '.page_title', :login => @user.login
 
 %form
-  - %w{ login name email role }.each do |field_name|
+  - %w{ login name email role contact_name phone additional_info comment created_at updated_at }.each do |field_name|
     .clearfix
       %label= t('admin.users.form.field.' + field_name)
       .input
         - if 'role' == field_name
           %span.uneditable-input= t('admin.users.form.field.role_' + @user.send(field_name + '_name'))
+        - elsif %w{ created_at updated_at }.include? field_name
+          %span.uneditable-input= l @user.send(field_name).localtime
         - else
-          %span.uneditable-input= @user.send(field_name)
+          %span.uneditable-input= simple_format @user.send(field_name)
 
   .actions
     = link_to t('.button.back'), admin_users_path, :class => 'btn primary'

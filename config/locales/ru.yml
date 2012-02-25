@@ -1,6 +1,9 @@
 ru:
   language:
     title: "Русский"
+  time:
+    formats:
+      default: "%Y-%m-%d %H:%M"
   project:
     title: "СпецСкан"
   activerecord:
@@ -45,9 +48,6 @@ ru:
   login:
     page_title: "Вход в систему"
     button_login: "Войти"
-    field_login: "Логин"
-    field_password: "Пароль"
-    field_remember_me: "Запомнить"
   admin:
     dashboard:
       index:
@@ -71,6 +71,12 @@ ru:
           role: "Роль"
           role_admin: "Администратор"
           role_client: "Клиент"
+          contact_name: "Контактное лицо"
+          phone: "Телефон"
+          additional_info: "Дополнительная информация"
+          comment: "Примечание администратора"
+          created_at: "Дата создания"
+          updated_at: "Дата обновления"
         button:
           create: "Добавить"
           update: "Обновить"

@@ -16,8 +16,13 @@ ru:
       invalid_token: 'Invalid authentication token.'
       timeout: 'Your session expired, please sign in again to continue.'
     sessions:
-      signed_in: 'Вы успешно вошли в систему.'
-      signed_out: 'Вы успешно вышли из системы.'
+      signed_in: ""
+      signed_out: ""
+      new:
+        field:
+          login: "Логин"
+          password: "Пароль"
+          remember_me: "Запомнить"
     passwords:
       send_instructions: 'You will receive an email with instructions about how to reset your password in a few minutes.'
       updated: 'Your password was changed successfully. You are now signed in.'
