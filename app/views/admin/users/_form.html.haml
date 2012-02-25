@@ -26,7 +26,7 @@
   - form_field f, :contact_name, :text_field
   - form_field f, :phone, :text_field
   - form_field f, :additional_info, :text_area, :rows => 2
-  - if @current_user.admin?
+  - if can? :manage, @user
     - form_field f, :comment, :text_area, :rows => 2
 
   .actions
