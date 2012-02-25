@@ -2,6 +2,6 @@
   .alert-message.error
     %p= flash[:alert]
 
-- if flash[:notice] && flash[:notice].blank?
+- if flash[:notice] && !flash[:notice].blank?
   .alert-message.info
     %p= flash[:notice]
