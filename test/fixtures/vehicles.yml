@@ -1,13 +1,9 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+car:
+  imei: 100000001
+  reg_number: X222XX 54
+  user: 2
 
-one:
-  imei: MyString
-  reg_number: MyString
-  description: MyString
-  user: 
-
-two:
-  imei: MyString
-  reg_number: MyString
-  description: MyString
-  user: 
+truck:
+  imei: 100000002
+  reg_number: P999PP 154
+  user: 2
