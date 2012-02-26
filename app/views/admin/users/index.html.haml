@@ -6,14 +6,12 @@
 %table.bordered-table.zebra-striped
   %thead
     %tr
-      %th #
       - %w{ login name email cars created_at }.each do |column_name|
         %th= t ".column.#{column_name}"
 
   %tbody
     - @users.each do |user|
       %tr
-        %td= user.id
         %td
           - if user.locked
             = image_tag "icons/lock.png", :class => 'inline-icon', :title => t('.hint.locked')
