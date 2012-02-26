@@ -5,7 +5,8 @@ class Admin::VehiclesController < Admin::Base
   before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports]
 
   def index
-    @vehicles = can?(:manage, Vehicle) ? Vehicle.all : current_user.vehicles
+    conditions = { :order => 'created_at DESC' }
+    @vehicles = can?(:manage, Vehicle) ? Vehicle.all(conditions) : current_user.vehicles(conditions)
   end
 
   def show

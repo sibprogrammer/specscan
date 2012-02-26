@@ -11,6 +11,7 @@
       %th= t '.column.reg_number'
       - if can? :manage, User
         %th= t '.column.owner'
+      %th= t '.column.created_at'
 
   %tbody
     - @vehicles.each do |vehicle|
@@ -19,3 +20,4 @@
         %td= vehicle.reg_number
         - if can? :manage, User
           %td= link_to vehicle.user.login, admin_user_path(vehicle.user)
+        %td= l vehicle.created_at.localtime

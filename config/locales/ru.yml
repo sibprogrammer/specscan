@@ -130,6 +130,7 @@ ru:
           imei: "IMEI"
           reg_number: "Гос. номер"
           owner: "Владелец"
+          created_at: "Дата создания"
         action:
           add_vehicle: "Добавить машину"
       show:
