@@ -88,7 +88,9 @@ ru:
         column:
           login: "Логин"
           name: "Название"
+          email: "E-mail"
           cars: "Машины"
+          created_at: "Дата создания"
         action:
           add_user: "Добавить клиента"
       show:

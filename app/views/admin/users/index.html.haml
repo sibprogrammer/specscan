@@ -7,10 +7,8 @@
   %thead
     %tr
       %th #
-      %th= t '.column.login'
-      %th= t '.column.name'
-      %th= t '.column.email'
-      %th= t '.column.cars'
+      - %w{ login name email cars created_at }.each do |column_name|
+        %th= t ".column.#{column_name}"
 
   %tbody
     - @users.each do |user|
@@ -20,3 +18,4 @@
         %td= user.name
         %td= mail_to user.email
         %td= user.vehicles.count
+        %td= l user.created_at.localtime
