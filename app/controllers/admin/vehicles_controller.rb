@@ -13,7 +13,8 @@ class Admin::VehiclesController < Admin::Base
   end
 
   def new
-    @vehicle = Vehicle.new
+    user = params.key?(:user_id) ? User.find(params[:user_id]) : current_user
+    @vehicle = Vehicle.new :user => user
   end
 
   def create
