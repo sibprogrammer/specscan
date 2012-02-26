@@ -21,4 +21,5 @@ ul.movements-list { list-style: none outside none; margin: 0 0 0 10px; overflow-
 .icon-parking { background: image-url('icons/parking.png') no-repeat 0 2px; padding: 2px 22px; }
 .icon-moving { background: image-url('icons/moving.png') no-repeat 0 2px; padding: 2px 22px; }
 .icon-watch { background: image-url('icons/eye.png') no-repeat 105px 2px; }
-.icon-admin { background: image-url('icons/star.png') no-repeat 0 2px; padding: 2px 0 0 20px; }
+
+.inline-icon { vertical-align: middle; }

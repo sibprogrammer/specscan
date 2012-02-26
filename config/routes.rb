@@ -7,7 +7,10 @@ Specscan::Application.routes.draw do
   end
 
   namespace :admin do
-    resources :users
+    resources :users do
+      post 'lock', :on => :member
+      post 'unlock', :on => :member
+    end
     resources :vehicles do
       get 'map', :on => :member
       get 'reports', :on => :member

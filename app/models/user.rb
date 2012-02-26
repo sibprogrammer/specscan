@@ -34,6 +34,24 @@ class User < ActiveRecord::Base
     write_attribute :login, (value ? value.downcase : nil)
   end
 
+  def lock
+    self.locked = true
+    save
+  end
+
+  def unlock
+    self.locked = false
+    save
+  end
+
+  def unlocked
+    !locked
+  end
+
+  def active_for_authentication?
+    super && unlocked
+  end
+
   protected
 
     def email_required?

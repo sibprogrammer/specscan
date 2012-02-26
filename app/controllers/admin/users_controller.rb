@@ -2,7 +2,7 @@ class Admin::UsersController < Admin::Base
 
   menu_section :users
   before_filter :check_manage_permission, :except => [:profile, :update]
-  before_filter :set_selected_user, :only => [:show, :edit, :update]
+  before_filter :set_selected_user, :only => [:show, :edit, :update, :lock, :unlock]
 
   def index
     @users = User.all(:order => 'created_at DESC')
@@ -50,6 +50,16 @@ class Admin::UsersController < Admin::Base
     else
       render :action => 'edit'
     end
+  end
+
+  def lock
+    @user.lock
+    redirect_to(admin_user_path(@user), :notice => t('admin.users.lock.locked', :login => @user.login))
+  end
+
+  def unlock
+    @user.unlock
+    redirect_to(admin_user_path(@user), :notice => t('admin.users.unlock.unlocked', :login => @user.login))
   end
 
   private

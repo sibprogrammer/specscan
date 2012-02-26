@@ -1,7 +1,7 @@
 - @page_title = t '.page_title'
 
 - content_for :sidebar_actions do
-  %li= link_to t('.action.add_user'), new_admin_user_path 
+  %li= link_to t('.action.add_user'), new_admin_user_path
 
 %table.bordered-table.zebra-striped
   %thead
@@ -14,7 +14,12 @@
     - @users.each do |user|
       %tr
         %td= user.id
-        %td= link_to user.login, admin_user_path(user), :class => (user.admin? ? 'icon-admin' : '')
+        %td
+          - if user.locked
+            = image_tag "icons/lock.png", :class => 'inline-icon', :title => t('.hint.locked')
+          - if user.admin?
+            = image_tag "icons/star.png", :class => 'inline-icon', :title => t('.hint.admin')
+          = link_to user.login, admin_user_path(user)
         %td= user.name
         %td= mail_to user.email
         %td= user.vehicles.count
