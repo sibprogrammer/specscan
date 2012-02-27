@@ -41,6 +41,9 @@ class Admin::UsersController < Admin::Base
       params[:user].delete(:password_confirmation)
     end
 
+    params[:user].delete(:login)
+    params[:user].delete(:role_id) unless can? :manage, @user
+
     if @user.update_attributes(params[:user])
       if params.key?(:profile)
         redirect_to(admin_profile_path, :notice => t('admin.profile.updated'))
