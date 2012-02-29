@@ -7,8 +7,10 @@
 %table.bordered-table.zebra-striped
   %thead
     %tr
-      %th= t '.column.imei'
+      %th= t '.column.name'
       %th= t '.column.reg_number'
+      - if can? :manage, Vehicle
+        %th= t '.column.imei'
       - if can? :manage, User
         %th= t '.column.owner'
       %th= t '.column.created_at'
@@ -16,8 +18,10 @@
   %tbody
     - @vehicles.each do |vehicle|
       %tr
-        %td= link_to vehicle.imei, admin_vehicle_path(vehicle)
+        %td= link_to vehicle.name, admin_vehicle_path(vehicle)
         %td= vehicle.reg_number
+        - if can? :manage, Vehicle
+          %td= vehicle.imei
         - if can? :manage, User
           %td= link_to vehicle.user.login, admin_user_path(vehicle.user)
         %td= l vehicle.created_at.localtime

@@ -1,7 +1,7 @@
 class Admin::VehiclesController < Admin::Base
 
   menu_section :vehicles
-  before_filter :check_manage_permission, :only => [:new, :create, :edit, :update]
+  before_filter :check_manage_permission, :only => [:new, :create]
   before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports]
 
   def index
@@ -14,7 +14,8 @@ class Admin::VehiclesController < Admin::Base
 
   def new
     user = params.key?(:user_id) ? User.find(params[:user_id]) : current_user
-    @vehicle = Vehicle.new :user => user
+    generated_name = t('admin.vehicles.new.generated_name', :index => user.vehicles.count + 1)
+    @vehicle = Vehicle.new(:user_id => user.id, :name => generated_name)
   end
 
   def create
@@ -31,8 +32,11 @@ class Admin::VehiclesController < Admin::Base
   end
 
   def update
+    params[:vehicle].delete(:imei)
+    params[:vehicle].delete(:user_id) unless can? :manage, @vehicle
+
     if @vehicle.update_attributes(params[:vehicle])
-      redirect_to(admin_vehicles_path, :notice => t('admin.vehicles.update.vehicle_updated'))
+      redirect_to(admin_vehicle_path(@vehicle), :notice => t('admin.vehicles.update.vehicle_updated'))
     else
       render :action => 'edit'
     end
@@ -56,7 +60,7 @@ class Admin::VehiclesController < Admin::Base
 
     def set_selected_vehicle
       @vehicle = Vehicle.find(params[:id])
-      authorize! :read, @vehicle
+      authorize! :edit, @vehicle
     end
 
 end

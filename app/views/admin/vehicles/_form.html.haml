@@ -1,17 +1,25 @@
 = form_for([:admin, @vehicle]) do |f|
   = render :partial => 'partials/form_errors', :locals => { :resource => @vehicle, :locale_scope => 'admin.vehicles.form' }
 
-  - %w{ imei reg_number }.each do |field|
-    .clearfix
-      = f.label field.to_sym, t('.field.' + field)
-      .input
-        = f.text_field field.to_sym
-
   .clearfix
-    = f.label :user, t('.field.user')
+    = f.label :imei, t('.field.imei')
     .input
-      = select('vehicle', 'user_id', User.all.collect { |user| [user.login, user.id] })
+      - if can? :manage, @vehicle
+        = f.text_field :imei, :required => true
+      - else
+        %span.uneditable-input= @vehicle.imei
+
+  - form_field f, :name, :text_field, :required => true
+  - form_field f, :reg_number, :text_field
+
+  - if can? :manage, @vehicle
+    .clearfix
+      = f.label :user, t('.field.user')
+      .input
+        = select 'vehicle', 'user_id', User.all.collect { |user| [user.login, user.id] }
+
+  - form_field f, :description, :text_area, :rows => 2
 
   .actions
     = f.submit t('.button.' + (@vehicle.new_record? ? 'create' : 'update')), :class => 'btn primary'
-    = link_to t('.button.back'), admin_vehicles_path, :class => 'btn'
+    = link_to t('.button.back'), (@vehicle.new_record? ? admin_vehicles_path : admin_vehicle_path(@vehicle)), :class => 'btn'

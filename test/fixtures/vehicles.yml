@@ -1,9 +1,11 @@
 car:
   imei: 100000001
+  name: Car 1
   reg_number: X222XX 54
   user: 2
 
 truck:
   imei: 100000002
+  name: Truck 1
   reg_number: P999PP 154
   user: 2

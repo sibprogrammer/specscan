@@ -8,13 +8,20 @@ class VehicleTest < ActiveSupport::TestCase
   end
 
   test "valid vehicle with only required attributes filled" do
-    vehicle = Vehicle.new(:imei => '1234567890', :user => users(:client))
+    vehicle = Vehicle.new(:name => 'Car X', :imei => '1234567890', :user_id => users(:client).id)
     assert vehicle.valid?
   end
 
   test "valid vehicle with attributes filled" do
     assert vehicles(:car).valid?
     assert vehicles(:truck).valid?
+  end
+
+  test "vehicle name should be unique for same user" do
+    car = Vehicle.new(:name => 'Car X', :imei => '1234567890', :user_id => users(:client).id)
+    car.save
+    another_car = Vehicle.new(:name => 'Car X', :imei => '1234567899', :user_id => users(:client).id)
+    assert another_car.invalid?
   end
 
   test "vehicle should have imei" do
