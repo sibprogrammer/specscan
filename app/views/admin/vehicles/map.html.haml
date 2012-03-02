@@ -5,7 +5,7 @@
   %li= link_to t('.action.reports'), reports_admin_vehicle_path
 
 - content_for :sidebar do
-  %h5= t '.movements_list'
+  %h4= t '.movements_list'
   %ul.movements-list
     - @movements.each do |movement|
       %li= link_to timeframe(movement), "#", 'data-info' => movement.info.to_json, :class => (movement.parking ? 'ico-parking' : 'ico-moving')

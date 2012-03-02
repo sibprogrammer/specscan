@@ -1,13 +1,13 @@
 .sidebar
   .well
     - if content_for? :sidebar_actions
-      %h5= t '.actions'
+      %h4= t '.actions'
       %ul
         = yield :sidebar_actions
 
     = yield :sidebar
 
     - if context_help?(@help)
-      %h5= t '.help'
+      %h4= t '.help'
       %div= context_help(@help)
 
