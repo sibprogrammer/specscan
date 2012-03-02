@@ -8,7 +8,7 @@
   %h5= t '.movements_list'
   %ul.movements-list
     - @movements.each do |movement|
-      %li= link_to timeframe(movement), "#", 'data-info' => movement.info.to_json, :class => (movement.parking ? 'icon-parking' : 'icon-moving')
+      %li= link_to timeframe(movement), "#", 'data-info' => movement.info.to_json, :class => (movement.parking ? 'ico-parking' : 'ico-moving')
 
 = javascript_include_tag "http://api-maps.yandex.ru/1.1/index.xml?key=#{@api_key}"
 #map-canvas{ :style => "width: 100%; height: 0px;" }

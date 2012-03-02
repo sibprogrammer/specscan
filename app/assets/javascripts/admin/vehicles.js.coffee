@@ -29,10 +29,10 @@ $ ->
 
     $('.movements-list a').each (index, element) ->
       $(element).on 'click', ->
-        $(this).parent('li').toggleClass('icon-watch')
+        $(this).parent('li').toggleClass('ico-watch')
 
         overlay = $(this).data('overlay')
-        if overlay && !$(this).parent('li').hasClass('icon-watch')
+        if overlay && !$(this).parent('li').hasClass('ico-watch')
           map.removeOverlay(overlay)
           return
 
