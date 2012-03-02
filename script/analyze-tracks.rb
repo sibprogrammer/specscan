@@ -12,7 +12,7 @@ Vehicle.all.each do |vehicle|
       :imei => vehicle.imei,
       :from_timestamp => first_way_point.timestamp.to_i,
       :to_timestamp => first_way_point.timestamp.to_i,
-      :parking => !(way_point.engine_on && way_point.sens_moving)
+      :parking => !(first_way_point.engine_on && first_way_point.sens_moving)
     })
     last_movement.save
   end
@@ -59,7 +59,6 @@ Vehicle.all.each do |vehicle|
   movements_found[0].save
   last_saved_movement = movements_found[0]
   while index < (movements_found.count - 1) do
-    puts "index #{index} #{movements_found[index].parking}"
     if(movements_found[index].to_timestamp - movements_found[index].from_timestamp < 60) #less than one minute
       last_saved_movement.to_timestamp = movements_found[index + 1].to_timestamp
       last_saved_movement.save
