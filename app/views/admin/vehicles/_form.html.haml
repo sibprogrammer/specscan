@@ -1,9 +1,9 @@
-= form_for([:admin, @vehicle]) do |f|
+= form_for([:admin, @vehicle], :html => { :class => 'form-horizontal' }) do |f|
   = render :partial => 'partials/form_errors', :locals => { :resource => @vehicle, :locale_scope => 'admin.vehicles.form' }
 
-  .clearfix
-    = f.label :imei, t('.field.imei')
-    .input
+  .control-group
+    = f.label :imei, t('.field.imei'), :class => 'control-label'
+    .controls
       - if can? :manage, @vehicle
         = f.text_field :imei, :required => true
       - else
@@ -13,13 +13,13 @@
   - form_field f, :reg_number, :text_field
 
   - if can? :manage, @vehicle
-    .clearfix
-      = f.label :user, t('.field.user')
-      .input
+    .control-group
+      = f.label :user, t('.field.user'), :class => 'control-label'
+      .controls
         = select 'vehicle', 'user_id', User.all.collect { |user| [user.login, user.id] }
 
   - form_field f, :description, :text_area, :rows => 2
 
-  .actions
-    = f.submit t('.button.' + (@vehicle.new_record? ? 'create' : 'update')), :class => 'btn primary'
+  .form-actions
+    = f.submit t('.button.' + (@vehicle.new_record? ? 'create' : 'update')), :class => 'btn btn-primary'
     = link_to t('.button.back'), (@vehicle.new_record? ? admin_vehicles_path : admin_vehicle_path(@vehicle)), :class => 'btn'

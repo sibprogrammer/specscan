@@ -1,7 +1,7 @@
 - if flash[:alert] && !flash[:alert].blank?
-  .alert-message.error
-    %p= flash[:alert]
+  .alert.alert-error
+    = flash[:alert]
 
 - if flash[:notice] && !flash[:notice].blank?
-  .alert-message.info
-    %p= flash[:notice]
+  .alert.alert-info
+    = flash[:notice]

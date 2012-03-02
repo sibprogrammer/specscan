@@ -6,9 +6,11 @@
     = render 'layouts/topbar'
 
     .container-fluid
-      = render 'layouts/sidebar'
-      .content
-        .page-header
-          %h1= @page_title
-        = render :partial => 'layouts/flash', :locals => { :flash => flash }
-        = yield
+      .row-fluid
+        .span3= render 'layouts/sidebar'
+        .span9
+          .content
+            .page-header
+              %h1= @page_title
+            = render :partial => 'layouts/flash', :locals => { :flash => flash }
+            = yield

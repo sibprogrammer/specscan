@@ -3,7 +3,7 @@
 - content_for :sidebar_actions do
   %li= link_to t('.action.add_user'), new_admin_user_path
 
-%table.bordered-table.zebra-striped
+%table.table.table-bordered.table-striped
   %thead
     %tr
       - %w{ login name email cars created_at }.each do |column_name|

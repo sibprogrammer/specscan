@@ -4,25 +4,25 @@
   %li= link_to t('.action.reports'), reports_admin_vehicle_path(@vehicle)
   %li= link_to t('.action.map'), map_admin_vehicle_path(@vehicle)
 
-%form
+%form.form-horizontal
   - %w{ imei name reg_number }.each do |field_name|
-    .clearfix
-      %label= t('admin.vehicles.form.field.' + field_name)
-      .input
+    .control-group
+      %label.control-label= t('admin.vehicles.form.field.' + field_name)
+      .controls
         %span.uneditable-input= @vehicle.send(field_name)
 
   - if can? :manage, @vehicle
-    .clearfix
-      %label= t('admin.vehicles.form.field.user')
-      .input
+    .control-group
+      %label.control-label= t('admin.vehicles.form.field.user')
+      .controls
         %span.uneditable-input= @vehicle.user.login
 
-  .clearfix
-    %label= t('admin.vehicles.form.field.description')
-    .input
+  .control-group
+    %label.control-label= t('admin.vehicles.form.field.description')
+    .controls
       %span.uneditable-input= simple_format @vehicle.description
 
-  .actions
+  .form-actions
     - if can? :edit, @vehicle
-      = link_to t('.button.edit'), edit_admin_vehicle_path(@vehicle), :class => 'btn primary'
+      = link_to t('.button.edit'), edit_admin_vehicle_path(@vehicle), :class => 'btn btn-primary'
     = link_to t('.button.back'), admin_vehicles_path, :class => 'btn'

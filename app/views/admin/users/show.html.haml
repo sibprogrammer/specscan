@@ -4,11 +4,11 @@
   - if can? :manage, Vehicle
     %li= link_to t('.action.add_vehicle'), new_admin_vehicle_path(:user_id => @user)
 
-%form
+%form.form-horizontal
   - %w{ login name email role contact_name phone additional_info comment created_at updated_at }.each do |field_name|
-    .clearfix
-      %label= t('admin.users.form.field.' + field_name)
-      .input
+    .control-group
+      %label.control-label= t('admin.users.form.field.' + field_name)
+      .control
         - if 'role' == field_name
           %span.uneditable-input= t('admin.users.form.field.role_' + @user.send(field_name + '_name'))
         - elsif %w{ created_at updated_at }.include? field_name
@@ -16,10 +16,10 @@
         - else
           %span.uneditable-input= simple_format @user.send(field_name)
 
-  .actions
-    = link_to t('.button.back'), admin_users_path, :class => 'btn primary'
+  .form-actions
+    = link_to t('.button.back'), admin_users_path, :class => 'btn btn-primary'
     = link_to t('.button.edit'), edit_admin_user_path(@user), :class => 'btn'
     - if @user.unlocked
-      = link_to t('.button.lock'), lock_admin_user_path(@user), :class => 'btn danger', :method => :post
+      = link_to t('.button.lock'), lock_admin_user_path(@user), :class => 'btn btn-danger', :method => :post
     - else
-      = link_to t('.button.unlock'), unlock_admin_user_path(@user), :class => 'btn success', :method => :post
+      = link_to t('.button.unlock'), unlock_admin_user_path(@user), :class => 'btn btn-success', :method => :post

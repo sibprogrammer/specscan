@@ -1,9 +1,9 @@
-= form_for([:admin, @user]) do |f|
+= form_for([:admin, @user], :html => { :class => 'form-horizontal' }) do |f|
   = render :partial => 'partials/form_errors', :locals => { :resource => @user, :locale_scope => 'admin.users.form' }
 
-  .clearfix
-    = f.label :login, t('.field.login')
-    .input
+  .control-group
+    = f.label :login, t('.field.login'), :class => 'control-label'
+    .controls
       - if @user.new_record?
         = f.text_field :login, :required => true
       - else
@@ -15,9 +15,9 @@
   - form_field f, :password_confirmation, :password_field
 
   - unless @profile
-    .clearfix
-      = f.label :role, t('.field.role')
-      .input
+    .control-group
+      = f.label :role, t('.field.role'), :class => 'control-label'
+      .controls
         = f.select :role, options_for_select(User::ROLES.collect{ |role| [t('.field.role_' + role[0]), role[1]] }, { :selected => @user.role || User::ROLE_CLIENT })
 
   - if @profile
@@ -29,7 +29,7 @@
   - if can? :manage, @user
     - form_field f, :comment, :text_area, :rows => 2
 
-  .actions
-    = f.submit t('.button.' + (@user.new_record? ? 'create' : 'update')), :class => 'btn primary'
+  .form-actions
+    = f.submit t('.button.' + (@user.new_record? ? 'create' : 'update')), :class => 'btn btn-primary'
     - if !@profile
       = link_to t('.button.back'), admin_users_path, :class => 'btn'
