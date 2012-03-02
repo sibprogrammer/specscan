@@ -22,6 +22,7 @@ Vehicle.all.each do |vehicle|
 
   conditions = {
     :imei => vehicle.imei,
+    :coors_valid => true,
     :timestamp => { :$gt => last_movement.to_timestamp },
   }
 
@@ -59,7 +60,7 @@ Vehicle.all.each do |vehicle|
   movements_found[0].save
   last_saved_movement = movements_found[0]
   while index < (movements_found.count - 1) do
-    if(movements_found[index].to_timestamp - movements_found[index].from_timestamp < 60) #less than one minute
+    if(movements_found[index].to_timestamp - movements_found[index].from_timestamp < 120) #less than two minute
       last_saved_movement.to_timestamp = movements_found[index + 1].to_timestamp
       last_saved_movement.save
       index += 2
