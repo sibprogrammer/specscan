@@ -1,15 +1,3 @@
-def close_point?(way_point, imei)
-  conditions = {
-    :imei => imei,
-    :coors_valid => true,
-    :timestamp => { :$gt => way_point.timestamp - 3.minutes },
-    :order => :timestamp
-  }
-  prev_point = WayPoint.first(conditions)
-  return true if (way_point.timestamp - prev_point.timestamp) < 2.minutes
-
-  way_point.distance(prev_point) < 70
-end
 
 Vehicle.all.each do |vehicle|
 
@@ -24,24 +12,25 @@ Vehicle.all.each do |vehicle|
       :imei => vehicle.imei,
       :from_timestamp => first_way_point.timestamp.to_i,
       :to_timestamp => first_way_point.timestamp.to_i,
-      :parking => true
+      :parking => !(way_point.engine_on && way_point.sens_moving)
     })
     last_movement.save
   end
 
+  first_timestamp = last_movement.from_timestamp
+  movements_found = [last_movement]
+
   conditions = {
     :imei => vehicle.imei,
-    :coors_valid => true,
     :timestamp => { :$gt => last_movement.to_timestamp },
   }
 
   WayPoint.where(conditions).sort(:timestamp).each do |way_point|
-    is_parking = close_point?(way_point, vehicle.imei)
+    is_parking = !(way_point.engine_on && way_point.sens_moving)
 
     if last_movement.parking
       if is_parking
         last_movement.to_timestamp = way_point.timestamp
-        last_movement.save
       else
         last_movement = Movement.new({
           :imei => vehicle.imei,
@@ -49,12 +38,11 @@ Vehicle.all.each do |vehicle|
           :to_timestamp => way_point.timestamp,
           :parking => false
         })
-        last_movement.save
+        movements_found << last_movement
       end
     else
       if !is_parking
         last_movement.to_timestamp = way_point.timestamp
-        last_movement.save
       else
         last_movement = Movement.new({
           :imei => vehicle.imei,
@@ -62,9 +50,24 @@ Vehicle.all.each do |vehicle|
           :to_timestamp => way_point.timestamp,
           :parking => true
         })
-        last_movement.save
+        movements_found << last_movement
       end
     end
   end
 
+  index = 1
+  movements_found[0].save
+  last_saved_movement = movements_found[0]
+  while index < (movements_found.count - 1) do
+    puts "index #{index} #{movements_found[index].parking}"
+    if(movements_found[index].to_timestamp - movements_found[index].from_timestamp < 60) #less than one minute
+      last_saved_movement.to_timestamp = movements_found[index + 1].to_timestamp
+      last_saved_movement.save
+      index += 2
+    else
+      movements_found[index].save
+      last_saved_movement = movements_found[index]
+      index += 1
+    end
+  end
 end
