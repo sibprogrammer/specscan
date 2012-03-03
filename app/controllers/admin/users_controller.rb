@@ -5,7 +5,7 @@ class Admin::UsersController < Admin::Base
   before_filter :set_selected_user, :only => [:show, :edit, :update, :lock, :unlock]
 
   def index
-    @users = User.all(:order => 'created_at DESC')
+    @users = User.page(params[:page]).order('created_at DESC')
   end
 
   def new

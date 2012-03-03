@@ -25,3 +25,5 @@
         - if can? :manage, User
           %td= link_to vehicle.user.login, admin_user_path(vehicle.user)
         %td= l vehicle.created_at.localtime
+
+= will_paginate @vehicles

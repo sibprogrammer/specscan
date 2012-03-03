@@ -22,3 +22,5 @@
         %td= mail_to user.email
         %td= user.vehicles.count
         %td= l user.created_at.localtime
+
+= will_paginate @users

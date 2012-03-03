@@ -36,6 +36,10 @@ ru:
               invalid: "Регистрационный номер содержит недопустимые символы."
             name:
               blank: "Не указано название машины."
+  will_paginate:
+    next_label: "→"
+    previous_label: "←"
+    page_gap: ".."
   layouts:
     sidebar:
       actions: "Действия"
