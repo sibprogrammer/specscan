@@ -1,5 +1,6 @@
 - if resource.errors.any?
-  .alert-message.block-message.error
+  .alert.alert-block.alert-error.fade.in
+    = link_to '×', '#', :class => 'close', 'data-dismiss' => 'alert'
     - resource.errors.messages.each do |field, messages|
       %p
         %strong= t(locale_scope + '.field.' + field.to_s)
