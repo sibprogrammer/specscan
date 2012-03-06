@@ -5,7 +5,13 @@ class Admin::UsersController < Admin::Base
   before_filter :set_selected_user, :only => [:show, :edit, :update, :lock, :unlock]
 
   def index
-    @users = User.page(params[:page]).order('created_at DESC')
+    @columns = %w{ login name email vehicles_total created_at }
+    @sort_state = get_list_sort_state(@columns, :users_list, :dir => 'desc', :field => 'created_at')
+    @users = User.page(get_list_page).
+      joins("LEFT JOIN vehicles ON users.id = vehicles.user_id").
+      select("users.*, COUNT(vehicles.user_id) AS vehicles_total").
+      group("users.id").
+      order("#{@sort_state[:field]} #{@sort_state[:dir]}")
   end
 
   def new

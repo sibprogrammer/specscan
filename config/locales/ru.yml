@@ -95,7 +95,7 @@ ru:
           login: "Логин"
           name: "Название"
           email: "E-mail"
-          cars: "Машины"
+          vehicles_total: "Машины"
           created_at: "Дата создания"
         action:
           add_user: "Добавить клиента"

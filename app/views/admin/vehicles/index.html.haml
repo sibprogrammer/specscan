@@ -7,13 +7,11 @@
 %table.table.table-bordered.table-striped
   %thead
     %tr
-      %th= t '.column.name'
-      %th= t '.column.reg_number'
-      - if can? :manage, Vehicle
-        %th= t '.column.imei'
-      - if can? :manage, User
-        %th= t '.column.owner'
-      %th= t '.column.created_at'
+      - sortable_column 'name', t(".column.name"), @sort_state
+      - sortable_column 'reg_number', t(".column.reg_number"), @sort_state
+      - sortable_column 'imei', t(".column.imei"), @sort_state if can? :manage, Vehicle
+      - sortable_column 'owner', t(".column.owner"), @sort_state if can? :manage, User
+      - sortable_column 'created_at', t(".column.created_at"), @sort_state
 
   %tbody
     - @vehicles.each do |vehicle|

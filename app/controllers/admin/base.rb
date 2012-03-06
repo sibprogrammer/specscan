@@ -35,4 +35,23 @@ class Admin::Base < ApplicationController
       @@menu_section = section.to_s
     end
 
+    def get_list_sort_state(columns, list_name, defaults = {})
+      sort_state = {}
+
+      sort_state[:dir] = params[:sort_dir] || session["#{list_name}_sort_dir"]
+      sort_state[:dir] = %w{ asc desc }.include?(sort_state[:dir]) ? sort_state[:dir] : defaults[:dir]
+      session["#{list_name}_sort_dir"] = sort_state[:dir]
+
+      sort_state[:field] = params[:sort_field] || session["#{list_name}_sort_field"]
+      sort_state[:field] = columns.include?(sort_state[:field]) ? sort_state[:field] : defaults[:field]
+      session["#{list_name}_sort_field"] = sort_state[:field]
+
+      sort_state
+    end
+
+    def get_list_page
+      page = params[:page].to_i
+      page > 0 ? page : 1
+    end
+
 end

@@ -6,8 +6,8 @@
 %table.table.table-bordered.table-striped
   %thead
     %tr
-      - %w{ login name email cars created_at }.each do |column_name|
-        %th= t ".column.#{column_name}"
+      - @columns.each do |column_name|
+        - sortable_column column_name, t(".column.#{column_name}"), @sort_state
 
   %tbody
     - @users.each do |user|

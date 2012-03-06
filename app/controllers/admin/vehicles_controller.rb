@@ -5,8 +5,14 @@ class Admin::VehiclesController < Admin::Base
   before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports]
 
   def index
-    order = 'created_at DESC'
-    @vehicles = can?(:manage, Vehicle) ? Vehicle.page(params[:page]).order(order) : current_user.vehicles.page(params[:page]).order(order)
+    @columns = %w{ name reg_number imei owner created_at }
+    @sort_state = get_list_sort_state(@columns, :users_list, :dir => 'desc', :field => 'created_at')
+    order = "#{@sort_state[:field]} #{@sort_state[:dir]}"
+    if can?(:manage, Vehicle)
+      @vehicles = Vehicle.page(params[:page]).joins(:user).select('vehicles.*, users.login as owner').order(order)
+    else
+      @vehicles = current_user.vehicles.page(params[:page]).order(order)
+    end
   end
 
   def show

@@ -17,6 +17,16 @@ module ApplicationHelper
     end
   end
 
+  def sortable_column(name, title, sort_state)
+    sort_dir = 'desc' == sort_state[:dir] ? 'asc' : 'desc'
+    sort_link = link_to(title, url_for(:page => params[:page], :sort_dir => sort_dir, :sort_field => name))
+    sort_css_class = (sort_state[:field] == name) ? ('asc' == sort_dir ? 'sorting_desc' : 'sorting_asc') : 'sorting'
+
+    haml_tag "th.#{sort_css_class}" do
+      haml_concat sort_link
+    end
+  end
+
   private
 
     def get_locale_section_for_context
