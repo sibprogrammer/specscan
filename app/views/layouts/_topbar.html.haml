@@ -1,7 +1,7 @@
 .navbar.navbar-fixed-top
   .navbar-inner
     .container-fluid
-      .brand= t 'project.title'
+      %a.brand{ 'data-toggle' => 'modal', :href => '#about-box' }= t 'project.title'
       %ul.nav
         - @menu.each do |menu|
           %li{ :class => (menu[:name] == @menu_section) ? 'active' : '' }= link_to t('menu.' + menu[:name]), menu[:link]
@@ -10,3 +10,17 @@
           %input{ :type => 'text', :placeholder => t('menu.search') }
       - if user_signed_in?
         %p.navbar-text.pull-right= raw t('menu.logged_in', :login => link_to(current_user.login, admin_profile_path))
+
+#about-box.modal.hide.fade.in
+  .modal-header
+    %a.close{ 'data-dismiss' => 'modal' } ×
+    %h3= t 'project.title'
+  .modal-body
+    %p= t 'about_box.intro'
+    %p
+      E-mail:
+      = mail_to 'support@specscan.ru'
+    %p= t('about_box.phone_support', :phone => '(8 383) 0000 000')
+    %p= t 'project.copyright'
+  .modal-footer
+    %a.btn.btn-primary{ 'data-dissmiss' => 'modal' }= t 'about_box.close'

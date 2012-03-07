@@ -6,6 +6,7 @@ ru:
       default: "%Y-%m-%d %H:%M"
   project:
     title: "СпецСкан"
+    copyright: "Авторское право © 2012 СпецСкан"
   activerecord:
     errors:
       models:
@@ -51,6 +52,10 @@ ru:
     logout: "Выход"
     search: "Поиск"
     logged_in: "Вошли как %{login}"
+  about_box:
+    close: "Закрыть"
+    intro: "По вопросам функционирования программы обращайтесь в техническую поддержку."
+    phone_support: "Телефон: %{phone}"
   login:
     page_title: "Вход в систему"
     button_login: "Войти"
