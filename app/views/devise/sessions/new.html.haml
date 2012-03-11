@@ -2,7 +2,7 @@
 
 = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => 'form-horizontal' }) do |f|
 
-  - form_field f, :login, :text_field, :required => true
+  - form_field f, :login, :text_field, :required => true, :autofocus => true
   - form_field f, :password, :password_field, :required => true
   - form_field f, :remember_me, :check_box
 
