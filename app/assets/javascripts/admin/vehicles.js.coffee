@@ -43,12 +43,14 @@ $ ->
           geoPoint = new YMaps.GeoPoint(point.longitude, point.latitude)
           placemark = new YMaps.Placemark(geoPoint)
           placemark.name = "Стоянка"
-          placemark.description = "Данные по стоянке..."
+          placemark.description = "Время: " + move.timeframe + "<br/>"
+          placemark.description += "Продолжительность: " + move.timespan
           bounds = new YMaps.GeoBounds(geoPoint, geoPoint)
           placemark.setBounds(bounds)
           map.addOverlay(placemark)
           map.setBounds(placemark.getBounds())
           $(this).data('overlay', placemark)
+          placemark.openBalloon()
         else
           firstGeoPoint = new YMaps.GeoPoint(move.first_point.longitude, move.first_point.latitude)
           lastGeoPoint = new YMaps.GeoPoint(move.last_point.longitude, move.last_point.latitude)

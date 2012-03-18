@@ -16,12 +16,26 @@ class Movement
     Time.at(to_timestamp)
   end
 
+  def timespan_human(timespan)
+    seconds = timespan % 60
+    minutes = timespan / 60
+    hours = minutes / 60
+    minutes = minutes % 60
+    "%.2d:%.2d" % [hours, minutes]
+  end
+
   def info
+    first_point = get_point_by_timestamp(from_timestamp)
+    second_point = get_point_by_timestamp(to_timestamp)
+    timespan = to_timestamp - from_timestamp
+
     {
       :parking => parking,
-      :first_point => get_point_by_timestamp(from_timestamp),
-      :last_point => get_point_by_timestamp(to_timestamp),
-      :points => parking ? [] : get_points(from_timestamp, to_timestamp)
+      :first_point => first_point,
+      :last_point => second_point,
+      :points => parking ? [] : get_points(from_timestamp, to_timestamp),
+      :timeframe => "#{from_time.to_formatted_s(:time)} - #{to_time.to_formatted_s(:time)}",
+      :timespan => timespan_human(timespan),
     }
   end
 
