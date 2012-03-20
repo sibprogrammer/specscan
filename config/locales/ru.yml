@@ -185,6 +185,11 @@ ru:
         action:
           reports: "Отчеты"
           details: "Детали по машине"
+        movement:
+          movement_title: "Перемещение"
+          parking_title: "Стоянка"
+          time: "Время: %{time}"
+          duration: "Продолжительность: %{duration}"
       reports:
         page_title: "Отчеты по машине %{reg_number}"
         help: "Здесь представлены статистические отчеты по выбранной машине."

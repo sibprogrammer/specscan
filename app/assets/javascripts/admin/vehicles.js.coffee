@@ -42,9 +42,9 @@ $ ->
           point = move.first_point
           geoPoint = new YMaps.GeoPoint(point.longitude, point.latitude)
           placemark = new YMaps.Placemark(geoPoint)
-          placemark.name = "Стоянка"
-          placemark.description = "Время: " + move.timeframe + "<br/>"
-          placemark.description += "Продолжительность: " + move.timespan
+          placemark.name = move.title
+          placemark.description = move.timeframe + "<br/>"
+          placemark.description += move.duration
           bounds = new YMaps.GeoBounds(geoPoint, geoPoint)
           placemark.setBounds(bounds)
           map.addOverlay(placemark)
@@ -58,8 +58,12 @@ $ ->
           $(move.points).each (index, point) ->
             mapPoints.push(new YMaps.GeoPoint(point.longitude, point.latitude))
           polyline = new YMaps.Polyline(mapPoints)
+          polyline.name = move.title
+          polyline.description = move.timeframe + "<br/>"
+          polyline.description += move.duration
           polyline.setStyle('map-canvas#custom-line')
           map.addOverlay(polyline)
           bounds = new YMaps.GeoCollectionBounds(mapPoints)
           map.setBounds(bounds)
           $(this).data('overlay', polyline)
+          polyline.openBalloon()
