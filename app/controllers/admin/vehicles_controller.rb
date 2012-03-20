@@ -49,9 +49,7 @@ class Admin::VehiclesController < Admin::Base
   end
 
   def map
-    lan_request = 'spec.rails3.lan' == request.host
-    @api_key = AppConfig.maps.yandex.send('api_key' + (lan_request ? '_local' : ''))
-
+    @api_key = get_map_api_key :yandex, request.host
     @movements = Movement.where(:imei => @vehicle.imei).sort(:to_timestamp.desc).limit(20)
   end
 

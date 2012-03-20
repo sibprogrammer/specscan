@@ -1,7 +1,7 @@
 maps:
   yandex:
     api_key: "AH99F08BAAAAxImNBwMAITSCDZAKTru7w5bw1tMGwQYBotUAAAAAAAAAAACI2SCxvm4jlNTc84PmdvQUaTIVmQ=="
-    api_key_local: "ADEsGE8BAAAAbQY1QgMA-bypcd42Z69lpWqfBdggMLN58roAAAAAAAAAAAAg4uJvMt98Q4jAAnUJ_qfFTMtDVg=="
+    api_key_dev: "ADEsGE8BAAAAbQY1QgMA-bypcd42Z69lpWqfBdggMLN58roAAAAAAAAAAAAg4uJvMt98Q4jAAnUJ_qfFTMtDVg=="
     url: "http://api-maps.yandex.ru/1.1/index.xml"
 host:
   development: spec.rails3.lan
