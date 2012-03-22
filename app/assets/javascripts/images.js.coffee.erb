@@ -1,0 +1,9 @@
+<%
+  images = {}
+  Dir.chdir("#{Rails.root}/app/assets/images/") do
+    images = Dir["**/*"].inject({}) { |h, file| h.merge! file => image_path(file) }
+  end
+%>
+
+window.image_path = (name) ->
+  <%= images.to_json %>[name]
