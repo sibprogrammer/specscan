@@ -16,6 +16,7 @@ $ ->
     createLineStyle = ->
       style = new YMaps.Style()
       style.polygonStyle = new YMaps.PolygonStyle()
+      style.polygonStyle.strokeColor = '0000FFA5'
       style.polygonStyle.fillColor = '0000FFA5'
       style.lineStyle = new YMaps.LineStyle()
       style.lineStyle.strokeColor = '0000FFA5'
@@ -90,6 +91,7 @@ $ ->
           mapPoints = []
           $(move.points).each (index, point) ->
             geoPoint = new YMaps.GeoPoint(point.longitude, point.latitude)
+            geoPoint.description = point.time + '<br>' + point.speed
             mapPoints.push(geoPoint)
 
           polyline = new PolylineWithArrows(mapPoints, { style: 'user#routeLine' })

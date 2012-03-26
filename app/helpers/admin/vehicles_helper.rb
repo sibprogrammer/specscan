@@ -31,7 +31,12 @@ module Admin::VehiclesHelper
 
     def get_points(movement, from_timestamp, to_timestamp)
       points =  WayPoint.where(:imei => movement.imei, :timestamp.gte => from_timestamp, :timestamp.lte => to_timestamp ).all
-      points.collect{ |point| { :latitude => point.latitude, :longitude => point.longitude } }
+      points.collect{ |point| {
+        :latitude => point.latitude,
+        :longitude => point.longitude,
+        :time => t('.movement.time', :time => Time.at(point.timestamp).to_formatted_s(:time)),
+        :speed => t('.movement.speed', :speed => point.speed),
+      }}
     end
 
     def duration_human(duration)

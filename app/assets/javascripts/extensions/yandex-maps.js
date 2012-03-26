@@ -9,6 +9,7 @@ $(function() {
 
   window.PolylineWithArrows = function(points, options) {
     YMaps.Polyline.call(this, points, options);
+    this._origPoints = points;
 
     var arrows = new YMaps.GeoObjectCollection(this.getComputedStyle());
     var listener;
@@ -56,11 +57,14 @@ $(function() {
                   var arrowPoint1 = middle.diff(offsetMiddle).diff(arrowPart1.neg());
                   var arrowPoint2 = middle.diff(offsetMiddle).diff(arrowPart2.neg());
 
-                  arrows.add(new YMaps.Polygon([
+                  var polygon = new YMaps.Polygon([
                       this.getMap().converter.localPixelsToCoordinates(middle),
                       this.getMap().converter.localPixelsToCoordinates(arrowPoint1),
                       this.getMap().converter.localPixelsToCoordinates(arrowPoint2)
-                  ]));
+                  ]);
+
+                  polygon.description = this._origPoints[i].description;
+                  arrows.add(polygon);
               }
           }
           prev = current;
