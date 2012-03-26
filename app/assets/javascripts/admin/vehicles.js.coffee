@@ -14,11 +14,13 @@ $ ->
       $('#map-canvas').height($(window).height() - $('#map-canvas').offset().top - 20)
 
     createLineStyle = ->
-      lineStyle = new YMaps.Style()
-      lineStyle.lineStyle = new YMaps.LineStyle()
-      lineStyle.lineStyle.strokeColor = '0000FFA5'
-      lineStyle.lineStyle.strokeWidth = '5'
-      YMaps.Styles.add("map-canvas#custom-line", lineStyle)
+      style = new YMaps.Style()
+      style.polygonStyle = new YMaps.PolygonStyle()
+      style.polygonStyle.fillColor = '0000FFA5'
+      style.lineStyle = new YMaps.LineStyle()
+      style.lineStyle.strokeColor = '0000FFA5'
+      style.lineStyle.strokeWidth = 4
+      YMaps.Styles.add("user#routeLine", style)
 
     getIconStyle = (image) ->
       iconStyle = new YMaps.Style();
@@ -90,11 +92,10 @@ $ ->
             geoPoint = new YMaps.GeoPoint(point.longitude, point.latitude)
             mapPoints.push(geoPoint)
 
-          polyline = new YMaps.Polyline(mapPoints)
+          polyline = new PolylineWithArrows(mapPoints, { style: 'user#routeLine' })
           polyline.name = move.title
           polyline.description = move.timeframe + "<br/>"
           polyline.description += move.duration
-          polyline.setStyle('map-canvas#custom-line')
           map.addOverlay(polyline)
           bounds = new YMaps.GeoCollectionBounds(mapPoints)
           map.setBounds(bounds)
