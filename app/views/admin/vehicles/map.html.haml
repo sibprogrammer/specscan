@@ -7,8 +7,10 @@
 - content_for :sidebar do
   %h4= t '.movements_list'
   %ul.movements-list
+    %li= link_to 'Показать все', '#', :class => 'ico-show-all'
+    %li= link_to 'Скрыть все', '#', :class => 'ico-hide-all'
     - @movements.each do |movement|
-      %li= link_to timeframe(movement), "#", 'data-info' => movement_info(movement).to_json, :class => (movement.parking ? 'ico-parking' : 'ico-moving')
+      %li= link_to timeframe(movement), "#", 'data-info' => movement_info(movement).to_json, :class => (movement.parking ? 'ico-parking' : 'ico-moving') + ' movement-info'
 
 = javascript_include_tag "http://api-maps.yandex.ru/1.1/index.xml?key=#{@api_key}"
 = javascript_include_tag "extensions/yandex-maps"

@@ -42,6 +42,69 @@ $ ->
       config.map.setBounds(placemark.getBounds())
       placemark
 
+    showMovement = (element, state) ->
+      $(element).parent('li').toggleClass('ico-watch')
+      $(element).parent('li').addClass('ico-watch') if 'show' == state
+      $(element).parent('li').removeClass('ico-watch') if 'hide' == state
+
+      overlays = $(element).data('overlays')
+      overlays = [] unless overlays
+
+      return if overlays.length > 0 && 'show' == state
+
+      if overlays.length && !$(element).parent('li').hasClass('ico-watch')
+        for overlay in overlays
+          map.removeOverlay(overlay)
+        $(element).data('overlays', null)
+        return
+
+      return if 'hide' == state
+
+      move = $(element).data('info')
+
+      if move.parking
+        point = move.first_point
+        geoPoint = new YMaps.GeoPoint(point.longitude, point.latitude)
+
+        placemark = getPlacemark({
+          map: map, title: move.title, description: move.timeframe + "<br/>" + move.duration,
+          geoPoint: geoPoint, icon: 'parking'
+        })
+        placemark.openBalloon()
+        overlays.push(placemark)
+      else
+        firstGeoPoint = new YMaps.GeoPoint(move.first_point.longitude, move.first_point.latitude)
+        placemark = getPlacemark({
+          map: map, title: move.title, description: move.timeframe + "<br/>" + move.duration,
+          geoPoint: firstGeoPoint, icon: 'flag_green'
+        })
+        overlays.push(placemark)
+
+        lastGeoPoint = new YMaps.GeoPoint(move.last_point.longitude, move.last_point.latitude)
+        placemark = getPlacemark({
+          map: map, title: move.title, description: move.timeframe + "<br/>" + move.duration,
+          geoPoint: lastGeoPoint, icon: 'flag_finish'
+        })
+        overlays.push(placemark)
+
+        mapPoints = []
+        $(move.points).each (index, point) ->
+          geoPoint = new YMaps.GeoPoint(point.longitude, point.latitude)
+          geoPoint.description = point.time + '<br>' + point.speed
+          mapPoints.push(geoPoint)
+
+        polyline = new PolylineWithArrows(mapPoints, { style: 'user#routeLine' })
+        polyline.name = move.title
+        polyline.description = move.timeframe + "<br/>"
+        polyline.description += move.duration
+        map.addOverlay(polyline)
+        bounds = new YMaps.GeoCollectionBounds(mapPoints)
+        map.setBounds(bounds)
+        polyline.openBalloon()
+        overlays.push(polyline)
+
+      $(element).data('overlays', overlays)
+
     resizeMap()
     $(window).resize(resizeMap)
 
@@ -49,59 +112,14 @@ $ ->
     map.setCenter(new YMaps.GeoPoint(82.933957,55.007224), 12)
     createLineStyle()
 
-    $('.movements-list a').each (index, element) ->
+    $('.movements-list a.movement-info').each (index, element) ->
       $(element).on 'click', ->
-        $(this).parent('li').toggleClass('ico-watch')
+        showMovement(this)
 
-        overlays = $(this).data('overlays')
-        overlays = [] unless overlays
+    $('a.ico-show-all').first().on 'click', ->
+      $('.movements-list a.movement-info').each (index, element) ->
+        showMovement(element, 'show')
 
-        if overlays.length && !$(this).parent('li').hasClass('ico-watch')
-          for overlay in overlays
-            map.removeOverlay(overlay)
-          return
-
-        move = $(this).data('info')
-
-        if move.parking
-          point = move.first_point
-          geoPoint = new YMaps.GeoPoint(point.longitude, point.latitude)
-
-          placemark = getPlacemark({
-            map: map, title: move.title, description: move.timeframe + "<br/>" + move.duration,
-            geoPoint: geoPoint, icon: 'parking'
-          })
-          placemark.openBalloon()
-          overlays.push(placemark)
-        else
-          firstGeoPoint = new YMaps.GeoPoint(move.first_point.longitude, move.first_point.latitude)
-          placemark = getPlacemark({
-            map: map, title: move.title, description: move.timeframe + "<br/>" + move.duration,
-            geoPoint: firstGeoPoint, icon: 'flag_green'
-          })
-          overlays.push(placemark)
-
-          lastGeoPoint = new YMaps.GeoPoint(move.last_point.longitude, move.last_point.latitude)
-          placemark = getPlacemark({
-            map: map, title: move.title, description: move.timeframe + "<br/>" + move.duration,
-            geoPoint: lastGeoPoint, icon: 'flag_finish'
-          })
-          overlays.push(placemark)
-
-          mapPoints = []
-          $(move.points).each (index, point) ->
-            geoPoint = new YMaps.GeoPoint(point.longitude, point.latitude)
-            geoPoint.description = point.time + '<br>' + point.speed
-            mapPoints.push(geoPoint)
-
-          polyline = new PolylineWithArrows(mapPoints, { style: 'user#routeLine' })
-          polyline.name = move.title
-          polyline.description = move.timeframe + "<br/>"
-          polyline.description += move.duration
-          map.addOverlay(polyline)
-          bounds = new YMaps.GeoCollectionBounds(mapPoints)
-          map.setBounds(bounds)
-          polyline.openBalloon()
-          overlays.push(polyline)
-
-        $(this).data('overlays', overlays)
+    $('a.ico-hide-all').first().on 'click', ->
+      $('.movements-list a.movement-info').each (index, element) ->
+        showMovement(element, 'hide')
