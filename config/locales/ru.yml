@@ -185,6 +185,8 @@ ru:
         action:
           reports: "Отчеты"
           details: "Детали по машине"
+          show_all: "Показать все"
+          hide_all: "Скрыть все"
         movement:
           movement_title: "Перемещение"
           parking_title: "Стоянка"

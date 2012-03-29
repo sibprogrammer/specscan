@@ -7,8 +7,8 @@
 - content_for :sidebar do
   %h4= t '.movements_list'
   %ul.movements-list
-    %li= link_to 'Показать все', '#', :class => 'ico-show-all'
-    %li= link_to 'Скрыть все', '#', :class => 'ico-hide-all'
+    %li= link_to t('.action.show_all'), '#', :class => 'ico-show-all'
+    %li= link_to t('.action.hide_all'), '#', :class => 'ico-hide-all'
     - @movements.each do |movement|
       %li= link_to timeframe(movement), "#", 'data-info' => movement_info(movement).to_json, :class => (movement.parking ? 'ico-parking' : 'ico-moving') + ' movement-info'
 
