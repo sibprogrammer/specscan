@@ -180,6 +180,7 @@ ru:
         page_title: "Машина %{reg_number}"
         help: "Здесь представлена информация о передвижениях машины."
         movements_list: "Список перемещений"
+        no_data: "Нет данных"
         button:
           show_track: "Показать трек"
         action:
