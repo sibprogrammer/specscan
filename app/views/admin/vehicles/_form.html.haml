@@ -5,7 +5,7 @@
     = f.label :imei, t('.field.imei'), :class => 'control-label'
     .controls
       - if can? :manage, @vehicle
-        = f.text_field :imei, :required => true
+        = f.text_field :imei
       - else
         %span.uneditable-input= @vehicle.imei
 

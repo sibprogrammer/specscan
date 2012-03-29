@@ -1,6 +1,6 @@
 class Vehicle < ActiveRecord::Base
 
-  validates :imei, :presence => true, :uniqueness => true, :length => { :in => 5..50 },
+  validates :imei, :uniqueness => true, :allow_blank => true, :length => { :in => 5..50 },
     :numericality => { :only_integer => true }
   validates :user_id, :presence => true
   validates :reg_number, :length => { :in => 3..15 }, :allow_blank => true

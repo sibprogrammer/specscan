@@ -38,7 +38,7 @@ class Admin::VehiclesController < Admin::Base
   end
 
   def update
-    params[:vehicle].delete(:imei)
+    params[:vehicle].delete(:imei) unless can? :manage, @vehicle
     params[:vehicle].delete(:user_id) unless can? :manage, @vehicle
 
     if @vehicle.update_attributes(params[:vehicle])

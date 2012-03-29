@@ -8,7 +8,7 @@ class VehicleTest < ActiveSupport::TestCase
   end
 
   test "valid vehicle with only required attributes filled" do
-    vehicle = Vehicle.new(:name => 'Car X', :imei => '1234567890', :user_id => users(:client).id)
+    vehicle = Vehicle.new(:name => 'Car X', :user_id => users(:client).id)
     assert vehicle.valid?
   end
 
@@ -24,8 +24,8 @@ class VehicleTest < ActiveSupport::TestCase
     assert another_car.invalid?
   end
 
-  test "vehicle should have imei" do
-    vehicle = Vehicle.new(:reg_number => 'X999XX 199')
+  test "vehicle can have empty imei" do
+    vehicle = Vehicle.new(:reg_number => 'X999XX 199', :imei => '')
     assert vehicle.invalid?
   end
 
