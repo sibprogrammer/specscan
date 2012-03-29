@@ -6,10 +6,11 @@
 
 %form.form-horizontal
   - %w{ imei name reg_number }.each do |field_name|
-    .control-group
-      %label.control-label= t('admin.vehicles.form.field.' + field_name)
-      .controls
-        %span.uneditable-input= @vehicle.send(field_name)
+    - if !@vehicle.send(field_name).blank?
+      .control-group
+        %label.control-label= t('admin.vehicles.form.field.' + field_name)
+        .controls
+          %span.uneditable-input= @vehicle.send(field_name)
 
   - if can? :manage, @vehicle
     .control-group
@@ -17,10 +18,11 @@
       .controls
         %span.uneditable-input= @vehicle.user.login
 
-  .control-group
-    %label.control-label= t('admin.vehicles.form.field.description')
-    .controls
-      %span.uneditable-input= simple_format @vehicle.description
+  - if !@vehicle.description.blank?
+    .control-group
+      %label.control-label= t('admin.vehicles.form.field.description')
+      .controls
+        %span.uneditable-input= simple_format @vehicle.description
 
   .form-actions
     - if can? :edit, @vehicle

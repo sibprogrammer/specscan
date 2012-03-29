@@ -6,15 +6,16 @@
 
 %form.form-horizontal
   - %w{ login name email role contact_name phone additional_info comment created_at updated_at }.each do |field_name|
-    .control-group
-      %label.control-label= t('admin.users.form.field.' + field_name)
-      .control
-        - if 'role' == field_name
-          %span.uneditable-input= t('admin.users.form.field.role_' + @user.send(field_name + '_name'))
-        - elsif %w{ created_at updated_at }.include? field_name
-          %span.uneditable-input= l @user.send(field_name).localtime
-        - else
-          %span.uneditable-input= simple_format @user.send(field_name)
+    - if %w{ role created_at updated_at }.include?(field_name) or !@user.send(field_name).blank?
+      .control-group
+        %label.control-label= t('admin.users.form.field.' + field_name)
+        .control
+          - if 'role' == field_name
+            %span.uneditable-input= t('admin.users.form.field.role_' + @user.send(field_name + '_name'))
+          - elsif %w{ created_at updated_at }.include? field_name
+            %span.uneditable-input= l @user.send(field_name).localtime
+          - else
+            %span.uneditable-input= simple_format @user.send(field_name)
 
   .form-actions
     = link_to t('.button.back'), admin_users_path, :class => 'btn btn-primary'
