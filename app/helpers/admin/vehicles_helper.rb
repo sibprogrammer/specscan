@@ -15,8 +15,18 @@ module Admin::VehiclesHelper
       :first_point => first_point,
       :last_point => second_point,
       :points => movement.parking ? [] : get_points(movement, movement.from_timestamp, movement.to_timestamp),
-      :timeframe => t('.movement.time', :time => "#{movement.from_time.to_formatted_s(:time)} - #{movement.to_time.to_formatted_s(:time)}"),
+      :from_time => t('.movement.from_time', :time => movement.from_time.to_formatted_s(:date_time)),
+      :to_time => t('.movement.to_time', :time => movement.to_time.to_formatted_s(:date_time)),
       :duration => t('.movement.duration', :duration =>  duration_human(duration)),
+    }
+  end
+
+  def last_point_info(way_point)
+    {
+      :title => t('.last_point.title'),
+      :description => t('.last_point.time', :time => way_point.time.to_formatted_s(:date_time)),
+      :latitude => way_point.latitude,
+      :longitude => way_point.longitude,
     }
   end
 

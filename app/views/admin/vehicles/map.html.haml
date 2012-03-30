@@ -8,6 +8,7 @@
   %h4= t '.movements_list'
   - if @movements.count > 0
     %ul.movements-list
+      %li= link_to t('.action.last_point'), '#', 'data-info' => last_point_info(@last_point).to_json, :class => 'ico-last-point'
       %li= link_to t('.action.show_all'), '#', :class => 'ico-show-all'
       %li= link_to t('.action.hide_all'), '#', :class => 'ico-hide-all'
       - @movements.each do |movement|

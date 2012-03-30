@@ -17,6 +17,10 @@ class WayPoint
     coors_to_distance_haversine(latitude, longitude, to_point.latitude, to_point.longitude)
   end
 
+  def time
+    Time.at(timestamp)
+  end
+
   private
 
     def to_rad(ang)

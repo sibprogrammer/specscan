@@ -188,12 +188,18 @@ ru:
           details: "Детали по машине"
           show_all: "Показать все"
           hide_all: "Скрыть все"
+          last_point: "Последняя точка"
         movement:
           movement_title: "Перемещение"
           parking_title: "Стоянка"
           time: "Время: %{time}"
+          from_time: "%{time} (начало)"
+          to_time: "%{time} (конец)"
           duration: "Продолжительность: %{duration}"
           speed: "Скорость: %{speed} км/ч"
+        last_point:
+          title: "Последняя точка"
+          time: "Время: %{time}"
       reports:
         page_title: "Отчеты по машине %{reg_number}"
         help: "Здесь представлены статистические отчеты по выбранной машине."
