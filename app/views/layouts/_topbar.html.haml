@@ -19,8 +19,9 @@
     %p= t 'about_box.intro'
     %p
       E-mail:
-      = mail_to 'support@specscan.ru'
-    %p= t('about_box.phone_support', :phone => '(8 383) 0000 000')
+      = mail_to AppConfig.support.email
+    - unless AppConfig.support.phone.blank?
+      %p= t('about_box.phone_support', :phone => AppConfig.support.phone)
     %p= t 'project.copyright'
   .modal-footer
     %a.btn.btn-primary{ 'data-dissmiss' => 'modal' }= t 'about_box.close'
