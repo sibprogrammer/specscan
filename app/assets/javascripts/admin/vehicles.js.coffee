@@ -54,10 +54,10 @@ $ ->
       bounds = new YMaps.GeoBounds(config.geoPoint, config.geoPoint)
       placemark.setBounds(bounds)
       config.map.addOverlay(placemark)
-      config.map.setBounds(placemark.getBounds())
+      config.map.setBounds(placemark.getBounds()) if config.moveMap
       placemark
 
-    showMovement = (element, state) ->
+    showMovement = (element, state, moveMap = true) ->
       $(element).parent('li').toggleClass('ico-watch')
       $(element).parent('li').addClass('ico-watch') if 'show' == state
       $(element).parent('li').removeClass('ico-watch') if 'hide' == state
@@ -83,22 +83,22 @@ $ ->
 
         placemark = getPlacemark({
           map: map, title: move.title, description: move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration,
-          geoPoint: geoPoint, icon: 'parking'
+          geoPoint: geoPoint, icon: 'parking', moveMap: moveMap
         })
-        placemark.openBalloon()
+        placemark.openBalloon() if moveMap
         overlays.push(placemark)
       else
         firstGeoPoint = new YMaps.GeoPoint(move.first_point.longitude, move.first_point.latitude)
         placemark = getPlacemark({
           map: map, title: move.title, description: move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration,
-          geoPoint: firstGeoPoint, icon: 'flag_green'
+          geoPoint: firstGeoPoint, icon: 'flag_green', moveMap: false
         })
         overlays.push(placemark)
 
         lastGeoPoint = new YMaps.GeoPoint(move.last_point.longitude, move.last_point.latitude)
         placemark = getPlacemark({
           map: map, title: move.title, description: move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration,
-          geoPoint: lastGeoPoint, icon: 'flag_finish'
+          geoPoint: lastGeoPoint, icon: 'flag_finish', moveMap: false
         })
         overlays.push(placemark)
 
@@ -112,9 +112,10 @@ $ ->
         polyline.name = move.title
         polyline.description = move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration
         map.addOverlay(polyline)
-        bounds = new YMaps.GeoCollectionBounds(mapPoints)
-        map.setBounds(bounds)
-        polyline.openBalloon()
+        if moveMap
+          bounds = new YMaps.GeoCollectionBounds(mapPoints)
+          map.setBounds(bounds)
+          polyline.openBalloon()
         overlays.push(polyline)
 
       $(element).data('overlays', overlays)
@@ -132,7 +133,7 @@ $ ->
       map.setCenter(geoPoint, 12)
       lastPointPlacemark = getPlacemark({
         map: map, title: lastPoint.title, description: lastPoint.description,
-        geoPoint: geoPoint, bigIcon: 'truck'
+        geoPoint: geoPoint, bigIcon: 'truck', moveMap: true
       })
       lastPointPlacemark.openBalloon()
     else
@@ -147,7 +148,7 @@ $ ->
 
     $('a.ico-show-all').first().on 'click', ->
       $('.movements-list a.movement-info').each (index, element) ->
-        showMovement(element, 'show')
+        showMovement(element, 'show', false)
 
     $('a.ico-hide-all').first().on 'click', ->
       $('.movements-list a.movement-info').each (index, element) ->

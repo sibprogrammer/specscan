@@ -1,5 +1,7 @@
 module Admin::VehiclesHelper
 
+  MIN_METERS_BETWEEN_POINTS = 10
+
   def timeframe(movement)
     "#{movement.from_time.to_formatted_s(:time)} - #{movement.to_time.to_formatted_s(:time)}"
   end
@@ -40,8 +42,18 @@ module Admin::VehiclesHelper
     end
 
     def get_points(movement, from_timestamp, to_timestamp)
-      points =  WayPoint.where(:imei => movement.imei, :timestamp.gte => from_timestamp, :timestamp.lte => to_timestamp ).all
-      points.collect{ |point| {
+      all_points = WayPoint.where(:imei => movement.imei, :timestamp.gte => from_timestamp, :timestamp.lte => to_timestamp ).all
+      important_points = []
+      prev_point = nil
+
+      all_points.each do |point|
+        if !prev_point or prev_point.distance(point) > MIN_METERS_BETWEEN_POINTS
+          important_points << point
+          prev_point = point
+        end
+      end
+
+      important_points.collect{ |point| {
         :latitude => point.latitude,
         :longitude => point.longitude,
         :time => t('.movement.time', :time => Time.at(point.timestamp).to_formatted_s(:time)),
