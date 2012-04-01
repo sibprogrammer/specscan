@@ -1,5 +1,5 @@
 
-Vehicle.all.each do |vehicle|
+Vehicle.where("imei != ''").each do |vehicle|
 
   puts "Vehicle ##{vehicle.id} (IMEI: #{vehicle.imei})"
 
