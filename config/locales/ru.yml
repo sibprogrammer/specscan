@@ -181,6 +181,8 @@ ru:
         help: "Здесь представлена информация о передвижениях машины."
         movements_list: "Список перемещений"
         no_data: "Нет данных"
+        date_picker: "Выбранная дата"
+        selected_date: "Дата: %{date}"
         button:
           show_track: "Показать трек"
         action:

@@ -158,3 +158,8 @@ $ ->
       lastPoint = $(this).data('info')
       map.setCenter(new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude))
       lastPointPlacemark.openBalloon()
+
+    $('#selectedDate').on 'custom:dateChanged', ->
+      url = document.location.pathname
+      url += '?date=' + $('#selectedDate').text()
+      document.location = url

@@ -5,6 +5,10 @@
   %li= link_to t('.action.reports'), reports_admin_vehicle_path
 
 - content_for :sidebar do
+  %h4= t '.date_picker'
+  %ul
+    %li= link_to @selected_date, '#', :id => 'selectedDate', 'data-datepicker' => 'datepicker'
+
   %h4= t '.movements_list'
   - if @movements.count > 0
     %ul.movements-list
