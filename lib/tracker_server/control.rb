@@ -4,20 +4,34 @@ module TrackerServer
   class Control
 
     PID_FILE = File.dirname(__FILE__) + '/../../tmp/pids/tracker-server.pid'
+    LOG_FILE = File.dirname(__FILE__) + '/../../log/tracker-server.log'
 
     def initialize
       command = ARGV[0]
 
       case command
         when 'start' then do_start
-        when 'stop' then do_stop
+        when 'stop' then exit do_stop
         when 'restart' then do_restart
         when 'status' then do_status
         else do_help
       end
     end
 
+    def puts_ok(message)
+      puts "\033[00;32m[OK]\033[00m " + message
+    end
+
+    def puts_fail(message)
+      puts "\033[00;31m[FAIL]\033[00m " + message
+    end
+
     def do_start
+      if File.exists?(PID_FILE)
+        puts_fail "Daemon is already running."
+        exit 2
+      end
+
       puts "Starting daemon..."
 
       fork_daemon
@@ -33,15 +47,25 @@ module TrackerServer
 
     def do_stop
       if (File.exists?(PID_FILE))
-        pid = File.read(PID_FILE)
+        pid = File.read(PID_FILE).to_i
+
         begin
-          Process.kill('TERM', pid.to_i)
+          Process.kill(0, pid)
         rescue
+          puts_fail "Daemon probably died."
           delete_pid_file
+          return 1
+        end
+
+        begin
+          Process.kill('TERM', pid)
+        rescue
+          puts_fail "Unable to stop daemon."
         end
       end
 
-      puts "Daemon was stopped."
+      puts_ok "Daemon was stopped."
+      return 0
     end
 
     def do_restart
@@ -50,13 +74,20 @@ module TrackerServer
     end
 
     def do_status
-      # TODO: validate process presense by Process.kill(0, pid)
-
       if (File.exists?(PID_FILE))
-        puts "Daemon is running."
+        pid = File.read(PID_FILE).to_i
+
+        begin
+          Process.kill(0, pid)
+        rescue
+          puts_fail "Daemon probably died."
+          exit 1
+        end
+
+        puts_ok "Daemon is running."
       else
-        puts "Daemon is stopped."
-        exit(1)
+        puts_fail "Daemon is stopped."
+        exit 1
       end
     end
 
@@ -67,17 +98,17 @@ module TrackerServer
 
     def fork_daemon
       raise 'Failed to fork child.' if (pid = fork) == -1
-      exit 2 unless pid.nil?
+      exit 0 unless pid.nil?
 
       Process.setsid
       raise 'Failed to create daemon.' if (pid = fork) == -1
-      exit 2 unless pid.nil?
+      exit 0 unless pid.nil?
 
       Signal.trap('HUP', 'IGNORE')
       ['INT', 'TERM'].each { |signal| trap(signal) { shutdown } }
 
       STDIN.reopen '/dev/null'
-      STDOUT.reopen(File.dirname(__FILE__) + '/../../log/tracker-server.log', 'a')
+      STDOUT.reopen(LOG_FILE, 'a')
       STDERR.reopen STDOUT
     end
 
@@ -99,7 +130,7 @@ module TrackerServer
     def shutdown
       log "Shutdown daemon."
       delete_pid_file
-      exit(0)
+      exit 0
     end
 
     def log(message)
