@@ -3,11 +3,21 @@ require 'date'
 module TrackerServer
   class Control
 
-    PID_FILE = File.dirname(__FILE__) + '/../../tmp/pids/tracker-server.pid'
-    LOG_FILE = File.dirname(__FILE__) + '/../../log/tracker-server.log'
-
     def initialize
-      command = ARGV[0]
+      @server_names = %w{ galileo tk103b }
+
+      do_help if ARGV.count < 2
+
+      @server_name = ARGV[0]
+      unless @server_names.include? @server_name
+        puts "Unknown server name."
+        exit 1
+      end
+
+      @pid_file = File.dirname(__FILE__) + "/../../tmp/pids/tracker-server-#{@server_name}.pid"
+      @log_file = File.dirname(__FILE__) + "/../../log/tracker-server-#{@server_name}.log"
+
+      command = ARGV[1]
 
       case command
         when 'start' then do_start
@@ -27,7 +37,7 @@ module TrackerServer
     end
 
     def do_start
-      if File.exists?(PID_FILE)
+      if File.exists?(@pid_file)
         puts_fail "Daemon is already running."
         exit 2
       end
@@ -38,16 +48,15 @@ module TrackerServer
       write_pid_file
       load_rails_env
 
-      require 'tracker_server/galileo'
-      server = TrackerServer::Galileo.new(1234)
-      server.start
+      require 'tracker_server/abstract'
+      TrackerServer::Abstract.create(@server_name)
 
       delete_pid_file
     end
 
     def do_stop
-      if (File.exists?(PID_FILE))
-        pid = File.read(PID_FILE).to_i
+      if (File.exists?(@pid_file))
+        pid = File.read(@pid_file).to_i
 
         begin
           Process.kill(0, pid)
@@ -74,8 +83,8 @@ module TrackerServer
     end
 
     def do_status
-      if (File.exists?(PID_FILE))
-        pid = File.read(PID_FILE).to_i
+      if (File.exists?(@pid_file))
+        pid = File.read(@pid_file).to_i
 
         begin
           Process.kill(0, pid)
@@ -92,7 +101,7 @@ module TrackerServer
     end
 
     def do_help
-      puts "Usage: ruby #{$0} (start|stop|restart|status)"
+      puts "Usage: ruby #{$0} (#{@server_names.join('|')}) (start|stop|restart|status)"
       exit 1
     end
 
@@ -108,17 +117,17 @@ module TrackerServer
       ['INT', 'TERM'].each { |signal| trap(signal) { shutdown } }
 
       STDIN.reopen '/dev/null'
-      STDOUT.reopen(LOG_FILE, 'a')
+      STDOUT.reopen(@log_file, 'a')
       STDERR.reopen STDOUT
     end
 
     def write_pid_file
       log "Daemon PID: #{Process.pid}"
-      open(PID_FILE, "w") { |file| file.write(Process.pid) }
+      open(@pid_file, "w") { |file| file.write(Process.pid) }
     end
 
     def delete_pid_file
-      File.unlink PID_FILE if File.exists?(PID_FILE)
+      File.unlink @pid_file if File.exists?(@pid_file)
     end
 
     def load_rails_env

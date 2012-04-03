@@ -1,58 +1,11 @@
-require 'socket'
-require 'tracker_server/logger'
+require 'tracker_server/abstract'
 require 'digest/crc16_modbus'
 
 module TrackerServer
-  class Galileo
+  class Galileo < Abstract
 
     CHECKSUM_BYTES = 2
     HEADER_SIZE = 3
-
-    def initialize(port)
-      @port = port
-      @server = TCPServer.new @port
-      logger.debug "Staring tracker server on port #{@port}..."
-    end
-
-    def logger
-      return @logger if @logger
-      file = File.open("#{Rails.root}/log/tracker-server.log", 'a')
-      file.sync = true
-      @logger = TrackerServer::Logger.new(file)
-    end
-
-    def start
-      # workaround for clients with incorrect DNS records
-      Socket.do_not_reverse_lookup = true
-
-      loop do
-        Thread.start(@server.accept) do |client|
-          logger.debug "#{client} connected."
-
-          port, ip = Socket.unpack_sockaddr_in(client.getpeername)
-          logger.debug "Client address: #{ip}:#{port}"
-
-          begin
-            process_data client
-          rescue Exception => e
-            logger.debug "Error: #{e.message}"
-          end
-
-          client.close
-          logger.debug "#{client} connection closed."
-        end
-      end
-    end
-
-    def get_packet_size(raw_size)
-      hi_byte = ~0x80 & raw_size[1]
-      low_byte = raw_size[0]
-      (hi_byte << 8) + low_byte
-    end
-
-    def get_human_data(data)
-      data.unpack('H2'*data.length).join(', ')
-    end
 
     def process_data(client)
       head_packet = read_packet(client)
@@ -70,6 +23,16 @@ module TrackerServer
         point = WayPoint.new(packet)
         point.save
       end
+    end
+
+    def get_packet_size(raw_size)
+      hi_byte = ~0x80 & raw_size[1]
+      low_byte = raw_size[0]
+      (hi_byte << 8) + low_byte
+    end
+
+    def get_human_data(data)
+      data.unpack('H2'*data.length).join(', ')
     end
 
     def read_packet(client)

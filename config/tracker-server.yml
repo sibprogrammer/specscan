@@ -1,2 +1,4 @@
-server:
-  port: 1234
+galileo:
+  port: 5000
+tk103b:
+  port: 5001
