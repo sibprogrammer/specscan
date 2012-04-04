@@ -40,6 +40,7 @@ class Admin::VehiclesController < Admin::Base
   def update
     params[:vehicle].delete(:imei) unless can? :manage, @vehicle
     params[:vehicle].delete(:user_id) unless can? :manage, @vehicle
+    params[:vehicle].delete(:tracker_model_id) unless can? :manage, @vehicle
 
     if @vehicle.update_attributes(params[:vehicle])
       redirect_to(admin_vehicle_path(@vehicle), :notice => t('admin.vehicles.update.vehicle_updated'))

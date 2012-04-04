@@ -9,6 +9,14 @@
       - else
         %span.uneditable-input= @vehicle.imei
 
+  .control-group
+    = f.label :user, t('.field.tracker_name'), :class => 'control-label'
+    .controls
+      - if can? :manage, @vehicle
+        = select 'vehicle', 'tracker_model_id', tracker_models_list
+      - else
+        %span.uneditable-input= @vehicle.tracker_name
+
   - form_field f, :name, :text_field, :required => true
   - form_field f, :reg_number, :text_field
 

@@ -10,6 +10,8 @@
       - sortable_column 'name', t(".column.name"), @sort_state
       - sortable_column 'reg_number', t(".column.reg_number"), @sort_state
       - sortable_column 'imei', t(".column.imei"), @sort_state if can? :manage, Vehicle
+      - if can? :manage, Vehicle
+        %th= t(".column.tracker_name")
       - sortable_column 'owner', t(".column.owner"), @sort_state if can? :manage, User
       - sortable_column 'created_at', t(".column.created_at"), @sort_state
 
@@ -20,6 +22,8 @@
         %td= vehicle.reg_number
         - if can? :manage, Vehicle
           %td= vehicle.imei
+        - if can? :manage, Vehicle
+          %td= vehicle.tracker_name
         - if can? :manage, User
           %td= link_to vehicle.user.login, admin_user_path(vehicle.user)
         %td= l vehicle.created_at.localtime

@@ -137,10 +137,12 @@ ru:
       form:
         field:
           imei: "IMEI"
+          tracker_name: "Трекер"
           reg_number: "Регистрационный номер"
           user: "Владелец"
           name: "Название"
           description: "Описание"
+          unknown_tracker: "Не указан"
         button:
           create: "Добавить"
           back: "Назад"
@@ -150,6 +152,7 @@ ru:
         help: "Здесь представлен список машин, можно добавить новую, посмотреть информацию о существующей, треки, отчеты."
         column:
           imei: "IMEI"
+          tracker_name: "Трекер"
           reg_number: "Гос. номер"
           owner: "Владелец"
           created_at: "Дата создания"

@@ -10,7 +10,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120227151338) do
+ActiveRecord::Schema.define(:version => 20120404135023) do
+
+  create_table "tracker_models", :force => true do |t|
+    t.string "code"
+    t.string "title"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                                 :default => "",    :null => false
@@ -46,6 +51,7 @@ ActiveRecord::Schema.define(:version => 20120227151338) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
+    t.integer  "tracker_model_id", :default => 0
   end
 
   add_index "vehicles", ["user_id"], :name => "index_vehicles_on_user_id"

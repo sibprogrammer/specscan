@@ -32,6 +32,11 @@ module Admin::VehiclesHelper
     }
   end
 
+  def tracker_models_list
+    list = TrackerModel.all.collect { |model| [model.title, model.id] }
+    [[t('admin.vehicles.form.field.unknown_tracker'), 0]] + list
+  end
+
   private
 
     def get_point_by_timestamp(movement, timestamp)
