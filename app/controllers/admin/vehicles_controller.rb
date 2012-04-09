@@ -50,7 +50,7 @@ class Admin::VehiclesController < Admin::Base
   end
 
   def map
-    time = params.key?(:date) ? Time.parse(params[:date]) : Time.now
+    time = params.key?(:date) ? Time.parse(params[:date]) : Date.today.to_time
     @selected_date = time.to_formatted_s(:date)
 
     @api_key = get_map_api_key :yandex, request.host
