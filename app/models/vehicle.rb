@@ -11,6 +11,8 @@ class Vehicle < ActiveRecord::Base
   belongs_to :user
   belongs_to :tracker_model
 
+  scope :with_imei, where("imei != ''")
+
   def total_way_points
      WayPoint.where(:imei => imei).count
   end

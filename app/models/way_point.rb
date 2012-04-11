@@ -21,6 +21,25 @@ class WayPoint
     Time.at(timestamp)
   end
 
+  def self.get_by_timestamp(timestamp, imei)
+    WayPoint.where(:imei => imei, :timestamp => timestamp).first
+  end
+
+  def self.nearest_point(timestamp, imei)
+    WayPoint.where(:imei => imei, :timestamp.lt => timestamp).sort(:timestamp.desc).first
+  end
+
+  def self.find_closest_older(way_point, movement)
+    conditions = { :coors_valid => true, :imei => movement.imei, :timestamp => { '$gte' => movement.from_timestamp, '$lte' => movement.to_timestamp } }
+    points = WayPoint.where(conditions).sort(:timestamp.desc).all
+    prev_point = way_point
+    points.each do |point|
+      return prev_point if point.distance(way_point) > 2
+      prev_point = point
+    end
+    return
+  end
+
   private
 
     def to_rad(ang)

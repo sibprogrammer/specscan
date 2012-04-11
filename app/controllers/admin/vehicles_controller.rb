@@ -55,7 +55,7 @@ class Admin::VehiclesController < Admin::Base
 
     @api_key = get_map_api_key :yandex, request.host
     @movements = Movement.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lte => time.to_i + 86400).
-      sort(:to_timestamp.desc).limit(20)
+      sort(:from_timestamp.desc)
     @last_point = WayPoint.where(:imei => @vehicle.imei, :coors_valid => true, :timestamp.lte => time.to_i + 86400).sort(:timestamp.desc).first
   end
 
