@@ -1,50 +1,26 @@
 - @page_title = t '.page_title', :reg_number => @vehicle.reg_number
 
 - content_for :sidebar_actions do
-  %li= link_to t('.action.details'), admin_vehicle_path
   %li= link_to t('.action.map'), map_admin_vehicle_path
+  %li= link_to t('.action.details'), admin_vehicle_path
 
-%table.table.table-bordered.table-striped
-  %thead
-    %tr
-      %th Дата
-      %th Стоянки
-      %th Перемещения
-      %th Стоянки, ЧЧ:ММ
-      %th Движение, ЧЧ:ММ
-      %th Пробег, км.
-      %th Расход топлива, л.
+- if @reports.blank?
+  = t('.no_reports')
+- else
+  %table.table.table-bordered.table-striped
+    %thead
+      %tr
+      - %w{ map date parking movement parking_time movement_time distance fuel }.each do |column_name|
+        %th= t ".column.#{column_name}"
 
-  %tbody
-    %tr
-      %td 2012.02.15
-      %td 4
-      %td 3
-      %td 12:30
-      %td 1:22
-      %td 80
-      %td 40
-    %tr
-      %td 2012.02.16
-      %td 1
-      %td 0
-      %td 24:00
-      %td 0:00
-      %td 0
-      %td 0
-    %tr
-      %td 2012.02.17
-      %td 2
-      %td 1
-      %td 22:30
-      %td 2:30
-      %td 160
-      %td 50
-    %tr
-      %td 2012.02.18
-      %td 12
-      %td 11
-      %td 2:30
-      %td 18:40
-      %td 520
-      %td 300
+    %tbody
+      - @reports.each do |report|
+        %tr
+          %td= link_to t('.action.map_for_date'), map_admin_vehicle_path(:date => report.date_human)
+          %td= report.date_human
+          %td= report.parking_count
+          %td= report.movement_count
+          %td= duration_human(report.parking_time)
+          %td= duration_human(report.movement_time)
+          %td -
+          %td -

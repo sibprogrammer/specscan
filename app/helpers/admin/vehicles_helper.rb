@@ -36,6 +36,14 @@ module Admin::VehiclesHelper
     [[t('admin.vehicles.form.field.unknown_tracker'), 0]] + list
   end
 
+  def duration_human(duration)
+    seconds = duration % 60
+    minutes = duration / 60
+    hours = minutes / 60
+    minutes = minutes % 60
+    "%d:%.2d" % [hours, minutes]
+  end
+
   private
 
     def get_point_by_timestamp(movement, timestamp)
@@ -63,14 +71,6 @@ module Admin::VehiclesHelper
         :time => t('.movement.time', :time => Time.at(point.timestamp).to_formatted_s(:time)),
         :speed => t('.movement.speed', :speed => point.speed),
       }}
-    end
-
-    def duration_human(duration)
-      seconds = duration % 60
-      minutes = duration / 60
-      hours = minutes / 60
-      minutes = minutes % 60
-      "%d:%.2d" % [hours, minutes]
     end
 
 end

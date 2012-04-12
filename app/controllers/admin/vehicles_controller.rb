@@ -60,6 +60,8 @@ class Admin::VehiclesController < Admin::Base
   end
 
   def reports
+    current_month = Date.today.strftime('%Y%m')
+    @reports = Report.where(:imei => @vehicle.imei, :date.gte => (current_month + '01').to_i, :date.lte => (current_month + '31').to_i).sort(:date.desc)
   end
 
   private

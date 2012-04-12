@@ -15,6 +15,7 @@ class Server::Analyzer < Server::Abstract
     loop do
       Vehicle.with_imei.each do |vehicle|
         update_movements(vehicle)
+        update_reports(vehicle)
       end
       sleep(5.minutes.to_i)
     end
@@ -131,6 +132,64 @@ class Server::Analyzer < Server::Abstract
         :to_timestamp => way_point.timestamp,
         :parking => false
       })
+    end
+
+    def update_reports(vehicle)
+      logger.debug "Updating reports for vehicle ##{vehicle.id} (IMEI: #{vehicle.imei})"
+
+      last_report = Report.where(:imei => vehicle.imei).sort(:date.desc).first
+
+      if last_report
+        start_date = Date.parse(last_report.date.to_s)
+      else
+        first_movement = Movement.where(:imei => vehicle.imei, :from_timestamp.gt => (Time.now - 3.months).to_i).sort(:from_timestamp).first
+        unless first_movement
+          logger.debug "No movements found."
+          return
+        end
+        start_date = Time.at(first_movement.from_timestamp).to_date
+      end
+
+      current_date = Date.today
+      (start_date..current_date).each do |date|
+        update_reports_for_date(date, vehicle)
+      end
+    end
+
+    def update_reports_for_date(date, vehicle)
+      logger.debug "Report for date: #{date}"
+
+      conditions = { :imei => vehicle.imei, :from_timestamp.gte => date.to_time.to_i, :from_timestamp.lte => date.to_time.to_i + 86400 }
+      movements = Movement.where(conditions).sort(:from_timestamp.desc)
+
+      movement_count = parking_count = movement_time = parking_time = 0
+
+      movements.each do |movement|
+        if movement.parking
+          parking_count += 1
+          parking_time += movement.elapsed_time
+        else
+          movement_count += 1
+          movement_time += movement.elapsed_time
+        end
+      end
+
+      date_compact = date.to_formatted_s(:date_compact).to_i
+      report = Report.where(:imei => vehicle.imei, :date => date_compact).first
+      report = Report.new if !report
+
+      report.update_attributes({
+        :imei => vehicle.imei,
+        :date => date_compact,
+        :parking_count => parking_count,
+        :movement_count => movement_count,
+        :parking_time => parking_time,
+        :movement_time => movement_time,
+      })
+
+      report.save
+
+      logger.debug "Parkings: #{parking_count} (#{parking_time} sec.), movements: #{movement_count} (#{movement_time} sec.)"
     end
 
 end

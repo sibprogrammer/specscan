@@ -18,7 +18,7 @@
   %tbody
     - @vehicles.each do |vehicle|
       %tr
-        %td= link_to vehicle.name, admin_vehicle_path(vehicle)
+        %td= link_to vehicle.name, reports_admin_vehicle_path(vehicle)
         %td= vehicle.reg_number
         - if can? :manage, Vehicle
           %td= vehicle.imei
