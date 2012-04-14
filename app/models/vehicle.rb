@@ -14,11 +14,15 @@ class Vehicle < ActiveRecord::Base
   scope :with_imei, where("imei != ''")
 
   def total_way_points
-     WayPoint.where(:imei => imei).count
+    WayPoint.where(:imei => imei).count
   end
 
   def tracker_name
     tracker_model ? tracker_model.title : ''
+  end
+
+  def title
+    name + (reg_number.blank? ? '' : (', ' + reg_number))
   end
 
 end
