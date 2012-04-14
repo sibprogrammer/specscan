@@ -1,7 +1,7 @@
 %head
   %meta{ :charset => "utf-8" }
   %meta{ :name => 'viewport', :content => 'width=device-width, initial-scale=1.0' }
-  %title= t 'project.title'
+  %title= "#{@page_title} - " + t('project.title')
   = favicon_link_tag '/favicon.ico?2'
   = stylesheet_link_tag 'application'
   = javascript_include_tag 'application'
