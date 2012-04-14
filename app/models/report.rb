@@ -8,7 +8,8 @@ class Report
   key :movement_count
   key :parking_time
   key :movement_time
-  
+  key :distance
+
   def date_human
     Date.parse(date.to_s).to_formatted_s(:date)
   end

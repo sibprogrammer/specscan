@@ -29,7 +29,7 @@ class Server::Analyzer < Server::Abstract
       last_movement = Movement.where(:imei => vehicle.imei).sort(:to_timestamp).last
 
       if !last_movement
-        first_way_point = WayPoint.where(:imei => vehicle.imei).sort(:timestamp).first
+        first_way_point = WayPoint.where(:imei => vehicle.imei, :coors_valid => true).sort(:timestamp).first
         return if !first_way_point
         last_movement = Movement.new({
           :imei => vehicle.imei,
@@ -46,9 +46,14 @@ class Server::Analyzer < Server::Abstract
         :timestamp => { :$gt => last_movement.to_timestamp },
       }
 
+      movements = [last_movement]
+
       WayPoint.where(conditions).sort(:timestamp).each do |way_point|
         last_movement = analyze_way_point(way_point, vehicle.imei, last_movement)
+        movements << last_movement if last_movement.id.to_s != movements.last.id.to_s
       end
+
+      movements.each{ |movement| update_distance(movement) }
     end
 
     def analyze_way_point(way_point, imei, last_movement)
@@ -162,7 +167,7 @@ class Server::Analyzer < Server::Abstract
       conditions = { :imei => vehicle.imei, :from_timestamp.gte => date.to_time.to_i, :from_timestamp.lte => date.to_time.to_i + 86400 }
       movements = Movement.where(conditions).sort(:from_timestamp.desc)
 
-      movement_count = parking_count = movement_time = parking_time = 0
+      movement_count = parking_count = movement_time = parking_time = distance = 0
 
       movements.each do |movement|
         if movement.parking
@@ -171,6 +176,7 @@ class Server::Analyzer < Server::Abstract
         else
           movement_count += 1
           movement_time += movement.elapsed_time
+          distance += movement.distance
         end
       end
 
@@ -185,11 +191,16 @@ class Server::Analyzer < Server::Abstract
         :movement_count => movement_count,
         :parking_time => parking_time,
         :movement_time => movement_time,
+        :distance => distance,
       })
 
       report.save
 
       logger.debug "Parkings: #{parking_count} (#{parking_time} sec.), movements: #{movement_count} (#{movement_time} sec.)"
+    end
+
+    def update_distance(movement)
+      movement.recalculate_distance unless movement.parking
     end
 
 end

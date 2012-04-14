@@ -203,6 +203,7 @@ ru:
           to_time: "%{time} (конец)"
           duration: "Продолжительность: %{duration}"
           speed: "Скорость: %{speed} км/ч"
+          distance: "Расстояние: %{distance} км"
         last_point:
           title: "Последняя точка"
           time: "Время: %{time}"

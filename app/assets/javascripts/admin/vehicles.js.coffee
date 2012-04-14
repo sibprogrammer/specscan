@@ -110,7 +110,7 @@ $ ->
 
         polyline = new PolylineWithArrows(mapPoints, { style: 'user#routeLine' })
         polyline.name = move.title
-        polyline.description = move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration
+        polyline.description = move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration + "<br/>" + move.distance
         map.addOverlay(polyline)
         if moveMap
           bounds = new YMaps.GeoCollectionBounds(mapPoints)
