@@ -157,6 +157,7 @@ ru:
           owner: "Владелец"
           created_at: "Дата создания"
           name: "Название"
+          description: "Описание"
         action:
           add_vehicle: "Добавить машину"
       show:
