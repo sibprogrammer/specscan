@@ -1,23 +1,21 @@
 require 'test_helper'
-require 'tracker_server/galileo'
+require 'server/tracker/galileo'
 
-module TrackerServer
-  class Galileo
-    def initialize(port)
-      # do nothing
-    end
+class Server::Tracker::Galileo
+  def initialize
+    # do nothing
+  end
 
-    def logger
-      return @logger if @logger
-      @logger = TrackerServer::Logger.new(STDERR)
-    end
+  def logger
+    return @logger if @logger
+    @logger = TrackerServer::Logger.new(STDERR)
   end
 end
 
-class TrackerServer::GalileoTest < ActiveSupport::TestCase
+class Server::Tracker::GalileoTest < ActiveSupport::TestCase
 
   def setup
-    @server = TrackerServer::Galileo.new(1234)
+    @server = Server::Tracker::Galileo.new
   end
 
   def validate_status_props(packet)
