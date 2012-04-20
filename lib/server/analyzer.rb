@@ -5,6 +5,7 @@ module Server; end
 class Server::Analyzer < Server::Abstract
 
   MIN_METERS_FOR_MOVEMENT_START = 3
+  MAX_METERS_FOR_FALSE_MOVEMENT_START = 1000
   MIN_SECONDS_FOR_PARKING_WITH_ENGINE_ON = 120
 
   def initialize
@@ -74,7 +75,8 @@ class Server::Analyzer < Server::Abstract
         if !way_point.engine_on and !way_point.sens_moving
           last_movement.to_timestamp = way_point.timestamp
         else
-          if way_point.distance(WayPoint.get_by_timestamp(last_movement.from_timestamp, imei)) > MIN_METERS_FOR_MOVEMENT_START
+          distance = way_point.distance(WayPoint.get_by_timestamp(last_movement.from_timestamp, imei))
+          if distance > MIN_METERS_FOR_MOVEMENT_START #and distance < MAX_METERS_FOR_FALSE_MOVEMENT_START
             last_movement.save
             last_movement = create_movement(imei, last_movement, way_point)
           else
@@ -88,7 +90,7 @@ class Server::Analyzer < Server::Abstract
         if !way_point.engine_on and !way_point.sens_moving
           prev_way_point = WayPoint.nearest_point(way_point.timestamp, imei)
 
-          if (prev_way_point.engine_on or prev_way_point.sens_moving) and prev_way_point.timestamp > last_movement.from_timestamp
+          if prev_way_point and (prev_way_point.engine_on or prev_way_point.sens_moving) and prev_way_point.timestamp > last_movement.from_timestamp
             last_movement.to_timestamp = way_point.timestamp
           else
             prev_way_point = WayPoint.find_closest_older(way_point, last_movement)
@@ -102,7 +104,7 @@ class Server::Analyzer < Server::Abstract
           end
         else
           prev_way_point = WayPoint.nearest_point(way_point.timestamp - MIN_SECONDS_FOR_PARKING_WITH_ENGINE_ON, imei)
-          if prev_way_point.timestamp > last_movement.from_timestamp and prev_way_point.distance(way_point) < MIN_METERS_FOR_MOVEMENT_START
+          if prev_way_point and prev_way_point.timestamp > last_movement.from_timestamp and prev_way_point.distance(way_point) < MIN_METERS_FOR_MOVEMENT_START
             last_movement.to_timestamp = prev_way_point.timestamp
             last_movement.save
             last_movement = create_parking(imei, last_movement, way_point)

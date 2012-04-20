@@ -60,7 +60,7 @@ module Admin::VehiclesHelper
     end
 
     def get_points(movement, from_timestamp, to_timestamp)
-      all_points = WayPoint.where(:imei => movement.imei, :timestamp.gte => from_timestamp, :timestamp.lte => to_timestamp ).all
+      all_points = WayPoint.where(:imei => movement.imei, :timestamp.gte => from_timestamp, :timestamp.lte => to_timestamp, :coors_valid => true).all
       important_points = []
       prev_point = nil
 

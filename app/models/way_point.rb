@@ -26,7 +26,7 @@ class WayPoint
   end
 
   def self.nearest_point(timestamp, imei)
-    WayPoint.where(:imei => imei, :timestamp.lt => timestamp).sort(:timestamp.desc).first
+    WayPoint.where(:imei => imei, :timestamp.lt => timestamp, :coors_valid => true).sort(:timestamp.desc).first
   end
 
   def self.find_closest_older(way_point, movement)
