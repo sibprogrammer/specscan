@@ -86,6 +86,7 @@ class Server::Tracker::Galileo < Server::Tracker::Abstract
           packet[:satellites] = (first_byte & ~0xF0)
           packet[:latitude] = data[index+1,4].unpack('l<')[0].to_f / 1000000
           packet[:longitude] = data[index+5,4].unpack('l<')[0].to_f / 1000000
+          packet[:coors_valid] = false if packet[:coors_valid] and ((0 - packet[:latitude]).abs < 0.1 or (0 - packet[:longitude]).abs < 0.1)
         when 0x33
           value_length = 4
           packet[:speed] = data[index,2].unpack('v')[0].to_f / 10
