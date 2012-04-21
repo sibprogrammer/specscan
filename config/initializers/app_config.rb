@@ -10,6 +10,7 @@ config_defaults = {
   },
   'host' => {
     'development' => '',
+    'site_url' => 'http://example.com',
   },
   'support' => {
     'email' => 'support@example.com',

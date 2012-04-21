@@ -5,6 +5,7 @@ maps:
     url: "http://api-maps.yandex.ru/1.1/index.xml"
 host:
   development: dev-host.lan
+  site_url: "http://example.com"
 support:
   email: "support@example.com"
   phone: "(8 383) XXXX XXX"
