@@ -16,6 +16,11 @@ config_defaults = {
     'email' => 'support@example.com',
     'phone' => '',
   },
+  'mongo' => {
+    'host' => 'localhost',
+    'port' => '27017',
+    'db_name' => '',
+  },
 }
 
 def hashes2ostruct(object)
