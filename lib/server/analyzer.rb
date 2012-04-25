@@ -194,6 +194,7 @@ class Server::Analyzer < Server::Abstract
         :parking_time => parking_time,
         :movement_time => movement_time,
         :distance => distance,
+        :fuel_norm => get_fuel_by_norm(vehicle, distance)
       })
 
       report.save
@@ -203,6 +204,11 @@ class Server::Analyzer < Server::Abstract
 
     def update_distance(movement)
       movement.recalculate_distance unless movement.parking
+    end
+
+    def get_fuel_by_norm(vehicle, distance)
+      return 0 if vehicle.fuel_norm.blank? or (distance.abs <= 0.01)
+      distance * vehicle.fuel_norm / 100
     end
 
 end

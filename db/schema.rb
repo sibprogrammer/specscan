@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120404135023) do
+ActiveRecord::Schema.define(:version => 20120425162418) do
 
   create_table "tracker_models", :force => true do |t|
     t.string "code"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(:version => 20120404135023) do
     t.datetime "updated_at"
     t.string   "name"
     t.integer  "tracker_model_id", :default => 0
+    t.decimal  "fuel_norm"
   end
 
   add_index "vehicles", ["user_id"], :name => "index_vehicles_on_user_id"

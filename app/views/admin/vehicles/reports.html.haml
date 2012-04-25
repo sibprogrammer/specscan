@@ -22,5 +22,5 @@
           %td= report.movement_count
           %td= duration_human(report.parking_time)
           %td= duration_human(report.movement_time)
-          %td= distance_human(report.distance)
-          %td -
+          %td= decimal_human(report.distance)
+          %td= decimal_human(report.fuel_norm)

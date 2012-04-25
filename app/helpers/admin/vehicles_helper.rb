@@ -19,7 +19,7 @@ module Admin::VehiclesHelper
       :from_time => t('.movement.from_time', :time => movement.from_time.to_formatted_s(:date_time)),
       :to_time => t('.movement.to_time', :time => movement.to_time.to_formatted_s(:date_time)),
       :duration => t('.movement.duration', :duration =>  duration_human(movement.elapsed_time)),
-      :distance => movement.parking ? '' : t('.movement.distance', :distance => distance_human(movement.distance)),
+      :distance => movement.parking ? '' : t('.movement.distance', :distance => decimal_human(movement.distance)),
     }
   end
 
@@ -45,9 +45,9 @@ module Admin::VehiclesHelper
     "%d:%.2d" % [hours, minutes]
   end
 
-  def distance_human(distance)
-    return 0 if distance.blank?
-    "%.1f" % (distance / 1000)
+  def decimal_human(decimal)
+    return 0 if decimal.blank?
+    "%.1f" % (decimal / 1000)
   end
 
   private
