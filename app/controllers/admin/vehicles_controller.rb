@@ -1,6 +1,5 @@
 class Admin::VehiclesController < Admin::Base
 
-  menu_section :vehicles
   before_filter :check_manage_permission, :only => [:new, :create]
   before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports]
 

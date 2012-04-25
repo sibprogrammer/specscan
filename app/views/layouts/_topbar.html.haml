@@ -3,8 +3,8 @@
     .container-fluid
       %a.brand{ 'data-toggle' => 'modal', :href => '#about-box' }= t 'project.title'
       %ul.nav
-        - @menu.each do |menu|
-          %li{ :class => (menu[:name] == @menu_section) ? 'active' : '' }= link_to t('menu.' + menu[:name]), menu[:link]
+        - @menu.each do |menu_item|
+          %li{ :class => menu_item[:active] ? 'active' : '' }= link_to t('menu.' + menu_item[:name]), menu_item[:link]
       - if @show_search
         %form.pull-left
           %input{ :type => 'text', :placeholder => t('menu.search') }

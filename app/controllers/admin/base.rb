@@ -15,11 +15,12 @@ class Admin::Base < ApplicationController
 
     def set_menu
       @menu = []
-      @menu << { :name => 'overview', :link => '/' }
-      @menu << { :name => 'users', :link => '/admin/users' } if can? :manage, User
-      @menu << { :name => 'vehicles', :link => '/admin/vehicles' }
+      @menu << { :name => 'overview', :controller => 'admin/dashboard', :link => '/' }
+      @menu << { :name => 'users', :controller => 'admin/users', :link => '/admin/users' } if can? :manage, User
+      @menu << { :name => 'vehicles', :controller => 'admin/vehicles', :link => '/admin/vehicles' }
       @menu << { :name => 'logout', :link => '/logout' }
-      @menu_section = @@menu_section
+      logger.info "Params controller: #{params[:controller]}"
+      @menu.each{ |item| item[:active] = true if params[:controller] == item[:controller] }
     end
 
     def set_search
@@ -29,10 +30,6 @@ class Admin::Base < ApplicationController
 
     def set_sidebar_actions
       @sidebar_actions = []
-    end
-
-    def self.menu_section(section)
-      @@menu_section = section.to_s
     end
 
     def get_list_sort_state(columns, list_name, defaults = {})

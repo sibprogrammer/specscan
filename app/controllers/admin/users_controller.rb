@@ -1,6 +1,5 @@
 class Admin::UsersController < Admin::Base
 
-  menu_section :users
   before_filter :check_manage_permission, :except => [:profile, :update]
   before_filter :set_selected_user, :only => [:show, :edit, :update, :lock, :unlock]
 
