@@ -1,0 +1,27 @@
+- @page_title = t '.page_title', :phone => number_to_phone(@sim_card.phone)
+
+%form.form-horizontal
+  - %w{ mobile_operator phone balance vehicle description created_at updated_at }.each do |field_name|
+    - if !@sim_card.send(field_name).blank?
+      .control-group
+        %label.control-label= t('admin.sim_cards.form.field.' + field_name)
+        .controls
+          %span.uneditable-input
+            - if %w{ created_at updated_at }.include? field_name
+              = l @sim_card.send(field_name).localtime
+            - elsif 'phone' == field_name
+              = number_to_phone(@sim_card.phone)
+            - elsif 'mobile_operator' == field_name
+              = @sim_card.mobile_operator.title
+            - elsif 'vehicle' == field_name
+              = @sim_card.vehicle.title
+            - elsif 'description' == field_name
+              = simple_format @sim_card.description
+            - else
+              = @sim_card.send(field_name)
+
+  .form-actions
+    = link_to t('.button.back'), admin_sim_cards_path, :class => 'btn btn-primary'
+    = link_to t('.button.edit'), edit_admin_sim_card_path(@sim_card), :class => 'btn'
+    - unless @sim_card.helper_password.blank?
+      = link_to t('.button.check_balance'), check_balance_admin_sim_card_path(@sim_card), :class => 'btn btn-success', :method => :post

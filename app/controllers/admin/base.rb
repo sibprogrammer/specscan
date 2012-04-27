@@ -18,6 +18,7 @@ class Admin::Base < ApplicationController
       @menu << { :name => 'overview', :controller => 'admin/dashboard', :link => '/' }
       @menu << { :name => 'users', :controller => 'admin/users', :link => '/admin/users' } if can? :manage, User
       @menu << { :name => 'vehicles', :controller => 'admin/vehicles', :link => '/admin/vehicles' }
+      @menu << { :name => 'sim_cards', :controller => 'admin/sim_cards', :link => '/admin/sim_cards' } if can? :manage, SimCard
       @menu << { :name => 'logout', :link => '/logout' }
       logger.info "Params controller: #{params[:controller]}"
       @menu.each{ |item| item[:active] = true if params[:controller] == item[:controller] }

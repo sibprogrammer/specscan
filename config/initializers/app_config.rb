@@ -21,6 +21,9 @@ config_defaults = {
     'port' => '27017',
     'db_name' => '',
   },
+  'encryption' => {
+    'key' => '',
+  },
 }
 
 def hashes2ostruct(object)

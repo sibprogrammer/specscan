@@ -10,7 +10,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120425162418) do
+ActiveRecord::Schema.define(:version => 20120426134046) do
+
+  create_table "mobile_operators", :force => true do |t|
+    t.string "title"
+  end
+
+  create_table "sim_cards", :force => true do |t|
+    t.string   "phone"
+    t.integer  "mobile_operator_id"
+    t.decimal  "balance"
+    t.string   "helper_password"
+    t.string   "description"
+    t.integer  "vehicle_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "tracker_models", :force => true do |t|
     t.string "code"

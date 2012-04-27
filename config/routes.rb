@@ -16,6 +16,9 @@ Specscan::Application.routes.draw do
       get 'reports', :on => :member
     end
     match "profile" => "users#profile"
+    resources :sim_cards do
+      post 'check_balance', :on => :member
+    end
   end
 
   root :to => 'admin/dashboard#index'

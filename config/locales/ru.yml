@@ -37,6 +37,10 @@ ru:
               invalid: "Регистрационный номер содержит недопустимые символы."
             name:
               blank: "Не указано название машины."
+        sim_card:
+          attributes:
+            phone:
+              blank: "Не указан номер телефона."
   will_paginate:
     next_label: "→"
     previous_label: "←"
@@ -49,6 +53,7 @@ ru:
     overview: "Обзор"
     users: "Клиенты"
     vehicles: "Машины"
+    sim_cards: "SIM-карты"
     logout: "Выход"
     search: "Поиск"
     logged_in: "Вошли как %{login}"
@@ -155,6 +160,7 @@ ru:
         column:
           imei: "IMEI"
           tracker_name: "Трекер"
+          sim_card_balance: "SIM-карта, р."
           reg_number: "Гос. номер"
           owner: "Владелец"
           created_at: "Дата создания"
@@ -230,3 +236,51 @@ ru:
       page_title: "Профиль"
       help: "Здесь можно отредактировать информацию о себе или изменить пароль."
       updated: "Профиль был обновлен."
+    sim_cards:
+      form:
+        field:
+          mobile_operator: "Оператор сотовой связи"
+          phone: "Телефонный номер"
+          balance: "Баланс, р."
+          helper_password: "Пароль в Интернет-помощник"
+          vehicle: "Машина"
+          unknown_vehicle: "Не указана"
+          description: "Примечание"
+          created_at: "Дата создания"
+          updated_at: "Дата обновления"
+        button:
+          create: "Добавить"
+          update: "Обновить"
+          back: "Назад"
+          delete: "Удалить"
+      index:
+        page_title: "SIM-карты"
+        help: "Здесь представлена информация об используемых в трекерах SIM-картах."
+        action:
+          add_sim_card: "Добавить SIM-карту"
+        column:
+          mobile_operator: "Оператор"
+          vehicle: "Машина"
+          phone: "Телефон"
+          balance: "Баланс, р."
+          created_at: "Дата создания"
+          updated_at: "Дата обновления"
+      new:
+        page_title: "Добавление SIM-карты"
+        help: "Здесь можно добавить новую SIM-карту, заполнив форму. Поле телефон является обязательным для заполнения."
+      create:
+        sim_card_created: "SIM-карта добавлена."
+      edit:
+        page_title: "SIM-карта %{phone}"
+        help: "Здесь можно отредактировать информацию о SIM-карте."
+      update:
+        sim_card_updated: "Информация о SIM-карте %{phone} была обновлена."
+      show:
+        page_title: "SIM-карта %{phone}"
+        help: "Здесь представлена обзорная информация по выбранной SIM-карте."
+        button:
+          back: "Назад"
+          edit: "Редактировать"
+          check_balance: "Проверить баланс"
+      check_balance:
+        checked: "Баланс SIM-карты %{phone} был обновлен."

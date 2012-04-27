@@ -1,0 +1,24 @@
+- @page_title = t '.page_title'
+
+- content_for :sidebar_actions do
+  %li= link_to t('.action.add_sim_card'), new_admin_sim_card_path
+
+%table.table.table-bordered.table-striped
+  %thead
+    %tr
+      %th= t '.column.mobile_operator'
+      %th= t(".column.vehicle")
+      - @columns.each do |column_name|
+        - sortable_column column_name, t(".column.#{column_name}"), @sort_state
+
+  %tbody
+    - @sim_cards.each do |sim_card|
+      %tr
+        %td= sim_card.mobile_operator.title
+        %td= sim_card.vehicle ? sim_card.vehicle.title : ''
+        %td= link_to number_to_phone(sim_card.phone), admin_sim_card_path(sim_card)
+        %td= sim_card.balance
+        %td= l sim_card.created_at.localtime
+        %td= l sim_card.updated_at.localtime
+
+= will_paginate @sim_cards
