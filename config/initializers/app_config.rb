@@ -24,6 +24,9 @@ config_defaults = {
   'encryption' => {
     'key' => '',
   },
+  'google_analytics' => {
+    'account_id' => '',
+  },
 }
 
 def hashes2ostruct(object)
