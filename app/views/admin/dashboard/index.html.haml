@@ -11,3 +11,8 @@
     %th= t '.stats.column.vehicles'
     %td= @vehicles_total
 
+  - if can? :manage, SimCard
+    %tr
+      %th= t '.stats.column.sim_cards'
+      %td= @sim_cards_total
+

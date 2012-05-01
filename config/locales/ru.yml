@@ -75,6 +75,7 @@ ru:
           column:
             users: "Клиенты"
             vehicles: "Машины"
+            sim_cards: "SIM-карты"
         access_denied: "Доступ запрещен."
         unknown_object: "Неизвестный объект."
     users:
