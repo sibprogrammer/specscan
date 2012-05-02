@@ -59,8 +59,16 @@ class Admin::VehiclesController < Admin::Base
   end
 
   def reports
-    current_month = Date.today.strftime('%Y%m')
-    @reports = Report.where(:imei => @vehicle.imei, :date.gte => (current_month + '01').to_i, :date.lte => (current_month + '31').to_i).sort(:date.desc)
+    @months = []
+    (0..2).each do |index|
+      @months << {
+        :name => t('month.name_' + (Date.today - index.month).month.to_s),
+        :date => (Date.today - index.month).strftime('%Y.%m.01')
+      }
+    end
+
+    month = (params.key?(:date) ? Date.parse(params[:date]) : Date.today).strftime('%Y%m')
+    @reports = Report.where(:imei => @vehicle.imei, :date.gte => (month + '01').to_i, :date.lte => (month + '31').to_i).sort(:date.desc)
   end
 
   private

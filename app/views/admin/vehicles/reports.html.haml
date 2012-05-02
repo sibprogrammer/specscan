@@ -4,6 +4,12 @@
   %li= link_to t('.action.map'), map_admin_vehicle_path
   %li= link_to t('.action.details'), admin_vehicle_path
 
+- content_for :sidebar do
+  %h4= t '.month'
+  %ul
+    - @months.each do |month|
+      %li= link_to month[:name], reports_admin_vehicle_path(:date => month[:date])
+
 - if @reports.blank?
   = t('.no_reports')
 - else

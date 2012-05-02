@@ -45,6 +45,19 @@ ru:
     next_label: "→"
     previous_label: "←"
     page_gap: ".."
+  month:
+    name_1: "Январь"
+    name_2: "Февраль"
+    name_3: "Март"
+    name_4: "Апрель"
+    name_5: "Май"
+    name_6: "Июнь"
+    name_7: "Июль"
+    name_8: "Август"
+    name_9: "Сентябрь"
+    name_10: "Октябрь"
+    name_11: "Ноябрь"
+    name_12: "Декабрь"
   layouts:
     sidebar:
       actions: "Действия"
@@ -220,6 +233,7 @@ ru:
         page_title: "Отчеты - %{vehicle_title}"
         help: "Здесь представлены статистические отчеты по выбранной машине."
         no_reports: "Отсутствует информация о перемещениях."
+        month: "Месяц"
         column:
           date: "Дата"
           parking: "Стоянки"
