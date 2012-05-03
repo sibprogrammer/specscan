@@ -1,4 +1,4 @@
 galileo:
   port: 5000
 tk103b:
-  port: 5001
+  port: 5100
