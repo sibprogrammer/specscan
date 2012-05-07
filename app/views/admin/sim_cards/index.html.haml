@@ -15,8 +15,8 @@
     - @sim_cards.each do |sim_card|
       %tr
         %td= sim_card.mobile_operator.title
-        %td= sim_card.vehicle ? sim_card.vehicle.title : ''
-        %td= link_to number_to_phone(sim_card.phone), admin_sim_card_path(sim_card)
+        %td= sim_card.vehicle ? link_to(sim_card.vehicle.title, admin_vehicle_path(sim_card.vehicle)) : sim_card.description
+        %td= link_to number_to_phone(sim_card.phone), admin_sim_card_path(sim_card), :title => sim_card.description
         %td= sim_card.balance
         %td= l sim_card.created_at.localtime
         %td= l sim_card.updated_at.localtime
