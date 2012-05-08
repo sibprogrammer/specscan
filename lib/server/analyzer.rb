@@ -7,6 +7,7 @@ class Server::Analyzer < Server::Abstract
   MIN_METERS_FOR_MOVEMENT_START = 3
   MAX_METERS_FOR_FALSE_MOVEMENT_START = 1000
   MIN_SECONDS_FOR_PARKING_WITH_ENGINE_ON = 120
+  MIN_SPEED_KM = 3
 
   def initialize
     @log_file = "#{Rails.root}/log/analyzer.log"
@@ -76,7 +77,7 @@ class Server::Analyzer < Server::Abstract
           last_movement.to_timestamp = way_point.timestamp
         else
           distance = way_point.distance(WayPoint.get_by_timestamp(last_movement.from_timestamp, imei))
-          if distance > MIN_METERS_FOR_MOVEMENT_START #and distance < MAX_METERS_FOR_FALSE_MOVEMENT_START
+          if distance > MIN_METERS_FOR_MOVEMENT_START and way_point.speed > MIN_SPEED_KM
             last_movement.save
             last_movement = create_movement(imei, last_movement, way_point)
           else
