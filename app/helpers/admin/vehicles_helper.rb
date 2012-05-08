@@ -71,12 +71,9 @@ module Admin::VehiclesHelper
         end
       end
 
-      important_points.collect{ |point| {
-        :latitude => point.latitude,
-        :longitude => point.longitude,
-        :time => t('.movement.time', :time => Time.at(point.timestamp).to_formatted_s(:time)),
-        :speed => t('.movement.speed', :speed => point.speed),
-      }}
+      important_points.collect do |point|
+        [point.latitude, point.longitude, Time.at(point.timestamp).to_formatted_s(:time), point.speed]
+      end
     end
 
 end

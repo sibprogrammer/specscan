@@ -228,11 +228,11 @@ ru:
         movement:
           movement_title: "Перемещение"
           parking_title: "Стоянка"
-          time: "Время: %{time}"
+          time: "Время: %time%"
           from_time: "%{time} (начало)"
           to_time: "%{time} (конец)"
           duration: "Продолжительность: %{duration}"
-          speed: "Скорость: %{speed} км/ч"
+          speed: "Скорость: %speed% км/ч"
           distance: "Расстояние: %{distance} км"
         last_point:
           title: "Последняя точка"

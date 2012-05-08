@@ -104,8 +104,8 @@ $ ->
 
         mapPoints = []
         $(move.points).each (index, point) ->
-          geoPoint = new YMaps.GeoPoint(point.longitude, point.latitude)
-          geoPoint.description = point.time + '<br>' + point.speed
+          geoPoint = new YMaps.GeoPoint(point[1], point[0])
+          geoPoint.description = jsLocaleKeys.time.replace('%time%', point[2]) + '<br>' + jsLocaleKeys.speed.replace('%speed%', point[3])
           mapPoints.push(geoPoint)
 
         polyline = new PolylineWithArrows(mapPoints, { style: 'user#routeLine' })
