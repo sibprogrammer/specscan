@@ -1,7 +1,7 @@
 class Admin::VehiclesController < Admin::Base
 
   before_filter :check_manage_permission, :only => [:new, :create, :destroy]
-  before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports, :destroy]
+  before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports, :destroy, :get_movement_points]
 
   def index
     @columns = %w{ name reg_number imei owner created_at }
@@ -58,6 +58,11 @@ class Admin::VehiclesController < Admin::Base
     @last_point = WayPoint.where(:imei => @vehicle.imei, :coors_valid => true, :timestamp.lte => time.to_i + 86400).sort(:timestamp.desc).first
 
     @js_locale_keys = %w{ time speed }
+  end
+
+  def get_movement_points
+    movement = Movement.where(:imei => @vehicle.imei, '_id' => params[:movement_id]).first
+    render :json => movement ? movement.get_points : []
   end
 
   def reports

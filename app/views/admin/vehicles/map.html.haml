@@ -16,7 +16,8 @@
       %li= link_to t('.action.show_all'), '#', :class => 'ico-show-all'
       %li= link_to t('.action.hide_all'), '#', :class => 'ico-hide-all'
       - @movements.each do |movement|
-        %li= link_to timeframe(movement), "#", 'data-info' => movement_info(movement).to_json, :class => (movement.parking ? 'ico-parking' : 'ico-moving') + ' movement-info'
+        %li= link_to timeframe(movement), "#", 'data-info' => movement_info(movement, @vehicle.id).to_json,
+          :class => (movement.parking ? 'ico-parking' : 'ico-moving') + ' movement-info'
   - else
     = t('.no_data')
 
