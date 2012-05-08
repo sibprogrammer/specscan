@@ -1,7 +1,10 @@
 .navbar.navbar-fixed-top
   .navbar-inner
     .container-fluid
-      %a.brand{ 'data-toggle' => 'modal', :href => '#about-box' }= t 'project.title'
+      %a.brand{ 'data-toggle' => 'modal', :href => '#about-box' }
+        = t('project.title')
+        - if beta_version?
+          %span.beta> .beta
       %ul.nav
         - @menu.each do |menu_item|
           %li{ :class => menu_item[:active] ? 'active' : '' }= link_to t('menu.' + menu_item[:name]), menu_item[:link]

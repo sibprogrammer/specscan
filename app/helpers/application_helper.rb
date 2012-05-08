@@ -27,6 +27,10 @@ module ApplicationHelper
     end
   end
 
+  def beta_version?
+    'development' == Rails.env
+  end
+
   private
 
     def get_locale_section_for_context
