@@ -1,7 +1,7 @@
 class Admin::UsersController < Admin::Base
 
-  before_filter :check_manage_permission, :except => [:profile, :update]
-  before_filter :set_selected_user, :only => [:show, :edit, :update, :lock, :unlock]
+  before_filter :check_manage_permission, :except => [:profile, :update, :destroy]
+  before_filter :set_selected_user, :only => [:show, :edit, :update, :lock, :unlock, :destroy]
 
   def index
     @columns = %w{ login name email vehicles_total created_at }
@@ -68,6 +68,11 @@ class Admin::UsersController < Admin::Base
   def unlock
     @user.unlock
     redirect_to(admin_user_path(@user), :notice => t('admin.users.unlock.unlocked', :login => @user.login))
+  end
+
+  def destroy
+    @user.destroy
+    redirect_to(admin_users_path, :notice => t('admin.users.destroy.user_deleted'))
   end
 
   private

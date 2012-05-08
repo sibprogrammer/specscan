@@ -1,7 +1,7 @@
 class Admin::SimCardsController < Admin::Base
 
   before_filter :check_manage_permission
-  before_filter :set_selected_sim_card, :only => [:show, :edit, :update, :check_balance]
+  before_filter :set_selected_sim_card, :only => [:show, :edit, :update, :check_balance, :destroy]
 
   def index
     @columns = %w{ phone balance created_at updated_at }
@@ -43,6 +43,11 @@ class Admin::SimCardsController < Admin::Base
   def check_balance
     @sim_card.update_balance
     redirect_to(admin_sim_card_path(@sim_card), :notice => t('admin.sim_cards.check_balance.checked', :phone => @sim_card.phone))
+  end
+
+  def destroy
+    @sim_card.destroy
+    redirect_to(admin_sim_cards_path, :notice => t('admin.sim_cards.destroy.sim_card_deleted'))
   end
 
   private

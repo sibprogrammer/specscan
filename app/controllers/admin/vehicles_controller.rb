@@ -1,7 +1,7 @@
 class Admin::VehiclesController < Admin::Base
 
-  before_filter :check_manage_permission, :only => [:new, :create]
-  before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports]
+  before_filter :check_manage_permission, :only => [:new, :create, :destroy]
+  before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports, :destroy]
 
   def index
     @columns = %w{ name reg_number imei owner created_at }
@@ -69,6 +69,11 @@ class Admin::VehiclesController < Admin::Base
 
     month = (params.key?(:date) ? Date.parse(params[:date]) : Date.today).strftime('%Y%m')
     @reports = Report.where(:imei => @vehicle.imei, :date.gte => (month + '01').to_i, :date.lte => (month + '31').to_i).sort(:date.desc)
+  end
+
+  def destroy
+    @vehicle.destroy
+    redirect_to(admin_vehicles_path, :notice => t('admin.vehicles.destroy.vehicle_deleted'))
   end
 
   private

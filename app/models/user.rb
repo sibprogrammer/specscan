@@ -52,6 +52,10 @@ class User < ActiveRecord::Base
     super && unlocked
   end
 
+  def deletable?
+    0 == vehicles.count
+  end
+
   protected
 
     def email_required?
