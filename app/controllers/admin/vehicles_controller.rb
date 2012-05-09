@@ -51,6 +51,7 @@ class Admin::VehiclesController < Admin::Base
   def map
     time = params.key?(:date) ? Time.parse(params[:date]) : Date.today.to_time
     @selected_date = time.to_formatted_s(:date)
+    @show_last_point = Date.today.to_time == time
 
     @api_key = get_map_api_key :yandex, request.host
     @movements = Movement.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lte => time.to_i + 86400).

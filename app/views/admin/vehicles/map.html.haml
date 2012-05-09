@@ -15,7 +15,8 @@
       - @movements.each do |movement|
         %li= link_to timeframe(movement), "#", 'data-info' => movement_info(movement, @vehicle.id).to_json,
           :class => (movement.parking ? 'ico-parking' : 'ico-moving') + ' movement-info'
-      %li= link_to t('.action.last_point'), '#', 'data-info' => last_point_info(@last_point).to_json, :class => 'ico-last-point'
+      %li= link_to t('.action.last_point'), '#', 'data-info' => last_point_info(@last_point).to_json,
+        :class => "ico-last-point #{@show_last_point ? '' : 'ico-hidden'}"
       %li= link_to t('.action.show_all'), '#', :class => 'ico-show-all'
       %li= link_to t('.action.hide_all'), '#', :class => 'ico-hide-all'
   - else

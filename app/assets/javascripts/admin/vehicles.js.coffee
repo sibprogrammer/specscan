@@ -152,17 +152,20 @@ $ ->
     lastPointPlacemark = null
 
     if $('a.ico-last-point').length > 0
-      lastPoint = $('a.ico-last-point').first().data('info')
+      pointLink = $('a.ico-last-point').first()
+      lastPoint = pointLink.data('info')
       geoPoint = new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude)
       map.setCenter(geoPoint, 12)
-      lastPointPlacemark = getPlacemark({
-        map: map, title: lastPoint.title, description: lastPoint.description,
-        geoPoint: geoPoint, bigIcon: 'truck', moveMap: true
-      })
-      lastPointPlacemark.openBalloon()
+
+      if !pointLink.hasClass('ico-hidden')
+        lastPointPlacemark = getPlacemark({
+          map: map, title: lastPoint.title, description: lastPoint.description,
+          geoPoint: geoPoint, bigIcon: 'truck', moveMap: true
+        })
+        lastPointPlacemark.openBalloon()
     else
       # center of Novosibirsk
-      map.setCenter(new YMaps.GeoPoint(82.933957,55.007224), 12)
+      map.setCenter(new YMaps.GeoPoint(82.933957, 55.007224), 12)
 
     createLineStyle()
 
