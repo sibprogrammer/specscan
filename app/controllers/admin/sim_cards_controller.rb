@@ -41,8 +41,12 @@ class Admin::SimCardsController < Admin::Base
   end
 
   def check_balance
-    @sim_card.update_balance
-    redirect_to(admin_sim_card_path(@sim_card), :notice => t('admin.sim_cards.check_balance.checked', :phone => @sim_card.phone))
+    locale_section = 'admin.sim_cards.check_balance'
+    if @sim_card.update_balance
+      redirect_to(admin_sim_card_path(@sim_card), :notice => t("#{locale_section}.checked", :phone => @sim_card.phone))
+    else
+      redirect_to(admin_sim_card_path(@sim_card), :alert => t("#{locale_section}.failed", :phone => @sim_card.phone))
+    end
   end
 
   def destroy

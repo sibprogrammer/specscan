@@ -23,6 +23,6 @@
   .form-actions
     = link_to t('.button.back'), admin_sim_cards_path, :class => 'btn btn-primary'
     = link_to t('.button.edit'), edit_admin_sim_card_path(@sim_card), :class => 'btn'
-    - unless @sim_card.helper_password.blank?
+    - unless @sim_card.helper_password.blank? or !@sim_card.balance_check_support?
       = link_to t('.button.check_balance'), check_balance_admin_sim_card_path(@sim_card), :class => 'btn btn-success', :method => :post
     = link_to t('.button.delete'), admin_sim_card_path(@sim_card), :class => 'btn btn-danger', :method => :delete, 'data-confirm' => t('.button.confirm_delete')

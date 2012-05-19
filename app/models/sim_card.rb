@@ -12,8 +12,17 @@ class SimCard < ActiveRecord::Base
   belongs_to :vehicle
 
   def update_balance
-    self.balance = Balance::Mts.get(self)
+    begin
+      self.balance = Balance::Mts.get(self) if 'mts' == mobile_operator.code
+    rescue
+      return false
+    end
+
     save
+  end
+
+  def balance_check_support?
+    %w{ mts }.include?(mobile_operator.code)
   end
 
   def helper_password=(password)

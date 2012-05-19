@@ -14,6 +14,7 @@ ActiveRecord::Schema.define(:version => 20120426134046) do
 
   create_table "mobile_operators", :force => true do |t|
     t.string "title"
+    t.string "code"
   end
 
   create_table "sim_cards", :force => true do |t|
