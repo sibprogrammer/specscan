@@ -17,6 +17,7 @@
 - if @movements.blank?
   = t('.no_data')
 - else
+  %h3= t '.header.stats'
   %table.table.table-bordered.table-striped
     %tr
       %th{ :width => '35%' }= t '.stats.date'
@@ -45,8 +46,10 @@
         %th= t '.stats.fuel'
         %td= decimal_human(@report.fuel_norm)
 
+  %h3= t '.header.chart'
   #movementsChart{ :style => 'width: 100%; height: 100px;' }
 
+  %h3= t '.header.movements_list'
   %table.table.table-bordered.table-striped
     %thead
       %tr

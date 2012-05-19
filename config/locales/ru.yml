@@ -251,6 +251,9 @@ ru:
         help: "Здесь представлены статистические отчеты по выбранной машине."
         no_reports: "Отсутствует информация о перемещениях."
         month: "Месяц"
+        header:
+          stats: "Статистика за месяц"
+          list_by_days: "Список отчетов по дням"
         column:
           date: "Дата"
           parking: "Стоянки"
@@ -260,6 +263,13 @@ ru:
           distance: "Пробег, км."
           fuel: "Расход топлива, л."
           map: "Карта"
+        stats:
+          movements: "Перемещения"
+          movements_duration: "Время перемещений"
+          parking: "Стоянки"
+          parking_duration: "Время стоянок"
+          distance: "Пробег, км."
+          fuel: "Расход топлива, л."
         action:
           details: "Детали по машине"
           map: "Карта перемещений"
@@ -273,6 +283,10 @@ ru:
         reset_zoom_title: "Вернутся к масштабу 1:1"
         no_data: "Нет данных."
         date_picker: "Выбранная дата"
+        header:
+          stats: "Статистика"
+          chart: "График активности"
+          movements_list: "Список перемещений и стоянок"
         column:
           type: "Тип"
           from_time: "Начало"

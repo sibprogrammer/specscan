@@ -77,6 +77,7 @@ class Admin::VehiclesController < Admin::Base
 
     month = (params.key?(:date) ? Date.parse(params[:date]) : Date.today).strftime('%Y%m')
     @reports = Report.where(:imei => @vehicle.imei, :date.gte => (month + '01').to_i, :date.lte => (month + '31').to_i).sort(:date.desc)
+    @reports_summary = get_reports_summary(@reports)
   end
 
   def day_report
@@ -124,6 +125,19 @@ class Admin::VehiclesController < Admin::Base
         ranges << [from_time.to_i, to_time.to_i]
       end
       ranges
+    end
+
+    def get_reports_summary(reports)
+      fields = %w{ movement_count movement_time parking_count parking_time distance fuel_norm }
+
+      reports_summary = {}
+      fields.each{ |field| reports_summary[field.to_sym] = 0 }
+
+      reports.each do |reports|
+        fields.each{ |field| reports_summary[field.to_sym] += reports.send(field) }
+      end
+
+      reports_summary
     end
 
 end
