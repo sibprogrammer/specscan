@@ -14,6 +14,7 @@ Specscan::Application.routes.draw do
     resources :vehicles do
       get 'map', :on => :member
       get 'reports', :on => :member
+      get 'day_report', :on => :member
       get 'get_movement_points', :on => :member
     end
     match "profile" => "users#profile"

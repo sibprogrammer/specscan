@@ -187,6 +187,8 @@ $ ->
       map.setCenter(new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude))
       lastPointPlacemark.openBalloon()
 
+  if $('body.vehicles.map').length > 0 or $('body.vehicles.day_report').length > 0
+
     $('#selectedDate').on 'custom:dateChanged', ->
       url = document.location.pathname
       url += '?date=' + $('#selectedDate').text()

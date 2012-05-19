@@ -58,6 +58,14 @@ ru:
     name_10: "Октябрь"
     name_11: "Ноябрь"
     name_12: "Декабрь"
+  week_day:
+    name_0: "воскресенье"
+    name_1: "понедельник"
+    name_2: "вторник"
+    name_3: "среда"
+    name_4: "четверг"
+    name_5: "пятница"
+    name_6: "суббота"
   layouts:
     sidebar:
       actions: "Действия"
@@ -196,7 +204,7 @@ ru:
           confirm_delete: "Вы действительно хотите удалить информацию о машине?"
         action:
           map: "Карта перемещений"
-          reports: "Отчеты"
+          reports: "Список отчетов"
       new:
         page_title: "Добавление машины"
         help: "Здесь можно добавить новую машину, заполнив форму. Название и IMEI устройства является обязательным и должен быть уникальным."
@@ -214,13 +222,14 @@ ru:
         page_title: "Карта перемещений - %{vehicle_title}"
         help: "Здесь представлена информация о передвижениях машины."
         movements_list: "Список перемещений"
-        no_data: "Нет данных"
+        no_data: "Нет данных."
         date_picker: "Выбранная дата"
         selected_date: "Дата: %{date}"
         button:
           show_track: "Показать трек"
         action:
-          reports: "Отчеты"
+          reports: "Список отчетов"
+          day_report: "Детальный отчет"
           details: "Детали по машине"
           show_all: "Показать все"
           hide_all: "Скрыть все"
@@ -255,6 +264,34 @@ ru:
           details: "Детали по машине"
           map: "Карта перемещений"
           map_for_date: "Карта"
+      day_report:
+        page_title: "Отчет - %{vehicle_title}"
+        help: "Здесь представлен отчет за сутки на указанную дату по выбранной машине."
+        parking_title: "Стоянка"
+        movement_title: "Перемещение"
+        no_data: "Нет данных."
+        date_picker: "Выбранная дата"
+        column:
+          type: "Тип"
+          from_time: "Начало"
+          to_time: "Конец"
+          duration: "Продолжительность, Ч:ММ"
+          distance: "Пробег, км."
+        stats:
+          date: "Дата"
+          week_day: "День недели"
+          movements: "Перемещения"
+          movements_duration: "Время перемещений"
+          parking: "Стоянки"
+          parking_duration: "Время стоянок"
+          first_movement_start: "Начало первого перемещения, ЧЧ:ММ"
+          last_movement_end: "Конец последнего перемещения, ЧЧ:ММ"
+          distance: "Пробег, км."
+          fuel: "Расход топлива, л."
+        action:
+          reports: "Список отчетов"
+          map: "Карта перемещений"
+          details: "Детали по машине"
     profile:
       page_title: "Профиль"
       help: "Здесь можно отредактировать информацию о себе или изменить пароль."

@@ -1,7 +1,7 @@
 class Admin::VehiclesController < Admin::Base
 
   before_filter :check_manage_permission, :only => [:new, :create, :destroy]
-  before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports, :destroy, :get_movement_points]
+  before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports, :day_report, :destroy, :get_movement_points]
 
   def index
     @columns = %w{ name reg_number imei owner created_at }
@@ -79,6 +79,17 @@ class Admin::VehiclesController < Admin::Base
     @reports = Report.where(:imei => @vehicle.imei, :date.gte => (month + '01').to_i, :date.lte => (month + '31').to_i).sort(:date.desc)
   end
 
+  def day_report
+    time = params.key?(:date) ? Time.parse(params[:date]) : Date.today.to_time
+    @selected_date = time.to_formatted_s(:date)
+    @week_day = t('week_day.name_' + time.wday.to_s)
+
+    @movements = Movement.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lte => time.to_i + 86400).
+      sort(:from_timestamp)
+    @first_movement, @last_movement = get_boundary_movements(@movements)
+    @report = Report.where(:imei => @vehicle.imei, :date => time.to_date.strftime('%Y%m%d').to_i).first
+  end
+
   def destroy
     @vehicle.destroy
     redirect_to(admin_vehicles_path, :notice => t('admin.vehicles.destroy.vehicle_deleted'))
@@ -93,6 +104,12 @@ class Admin::VehiclesController < Admin::Base
     def set_selected_vehicle
       @vehicle = Vehicle.find(params[:id])
       authorize! :edit, @vehicle
+    end
+
+    def get_boundary_movements(movements)
+      movements = movements.find_all{ |movement| !movement.parking? }
+      [nil, nil] if movements.blank?
+      [movements.first, movements.last]
     end
 
 end

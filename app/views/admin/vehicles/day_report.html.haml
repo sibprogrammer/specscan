@@ -1,0 +1,59 @@
+- @page_title = t '.page_title', :vehicle_title => @vehicle.title
+
+- content_for :sidebar_actions do
+  %li= link_to t('.action.map'), map_admin_vehicle_path(:date => @selected_date)
+  %li= link_to t('.action.reports'), reports_admin_vehicle_path
+  %li= link_to t('.action.details'), admin_vehicle_path
+
+- content_for :sidebar do
+  %h4= t '.date_picker'
+  %ul
+    %li= link_to @selected_date, '#', :id => 'selectedDate', 'data-datepicker' => 'datepicker'
+
+- if @movements.blank?
+  = t('.no_data')
+- else
+  %table.table.table-bordered.table-striped
+    %tr
+      %th{ :width => '35%' }= t '.stats.date'
+      %td{ :width => '15%' }= @selected_date
+      %th{ :width => '35%' }= t '.stats.week_day'
+      %td{ :width => '15%' }= @week_day
+    - if @report
+      %tr
+        %th= t '.stats.movements'
+        %td= @report.movement_count
+        %th= t '.stats.movements_duration'
+        %td= duration_human(@report.movement_time)
+      %tr
+        %th= t '.stats.parking'
+        %td= @report.parking_count
+        %th= t '.stats.parking_duration'
+        %td= duration_human(@report.parking_time)
+      %tr
+        %th= t '.stats.first_movement_start'
+        %td= @first_movement.from_time.to_formatted_s(:date_time)
+        %th= t '.stats.last_movement_end'
+        %td= @last_movement.to_time.to_formatted_s(:date_time)
+      %tr
+        %th= t '.stats.distance'
+        %td= decimal_human(@report.distance)
+        %th= t '.stats.fuel'
+        %td= decimal_human(@report.fuel_norm)
+
+  %table.table.table-bordered.table-striped
+    %thead
+      %tr
+      - %w{ type from_time to_time duration distance }.each do |column_name|
+        %th= t ".column.#{column_name}"
+
+    %tbody
+      - @movements.each do |movement|
+        %tr
+          %td
+            = image_tag "icons/#{movement.parking ? 'parking' : 'arrow_down'}.png", :class => 'inline-icon'
+            = t('.' + (movement.parking ? 'parking_title' : 'movement_title'))
+          %td= movement.from_time.to_formatted_s(:date_time)
+          %td= movement.to_time.to_formatted_s(:date_time)
+          %td= duration_human(movement.elapsed_time)
+          %td= decimal_human(movement.distance)

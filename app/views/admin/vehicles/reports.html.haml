@@ -16,17 +16,17 @@
   %table.table.table-bordered.table-striped
     %thead
       %tr
-      - %w{ map date parking movement parking_time movement_time distance fuel }.each do |column_name|
+      - %w{ date parking movement parking_time movement_time distance fuel map }.each do |column_name|
         %th= t ".column.#{column_name}"
 
     %tbody
       - @reports.each do |report|
         %tr
-          %td= link_to t('.action.map_for_date'), map_admin_vehicle_path(:date => report.date_human)
-          %td= report.date_human
+          %td= link_to report.date_human, day_report_admin_vehicle_path(:date => report.date_human)
           %td= report.parking_count
           %td= report.movement_count
           %td= duration_human(report.parking_time)
           %td= duration_human(report.movement_time)
           %td= decimal_human(report.distance)
           %td= decimal_human(report.fuel_norm)
+          %td= link_to t('.action.map_for_date'), map_admin_vehicle_path(:date => report.date_human)
