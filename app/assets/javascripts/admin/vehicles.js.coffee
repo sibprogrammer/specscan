@@ -193,3 +193,78 @@ $ ->
       url = document.location.pathname
       url += '?date=' + $('#selectedDate').text()
       document.location = url
+
+  if $('body.vehicles.day_report').length > 0
+
+    chartData = []
+    chartData[i] = 0 for i in [0..1440]
+
+    for index, range of movementRanges
+      chartData[i] = 1 for i in [range[0]..range[1]]
+
+    Highcharts.setOptions({
+      lang: {
+        resetZoom: jsLocaleKeys.reset_zoom,
+        resetZoomTitle: jsLocaleKeys.reset_zoom_title
+      }
+    })
+
+    chart = new Highcharts.Chart({
+      chart: {
+        renderTo: 'chart',
+        type: 'area',
+        zoomType: 'x',
+        marginBottom: 25
+      },
+      title: {
+        text: ''
+      },
+      yAxis: {
+        title: {
+          text: null
+        },
+        categories: [jsLocaleKeys.parking_title, jsLocaleKeys.movement_title]
+      },
+      xAxis: {
+        labels: {
+          formatter: ->
+            this.value / 60
+        },
+        min: 0,
+        max: 1440,
+        tickInterval: 60,
+        gridLineWidth: 1,
+        offset: 1
+      },
+      plotOptions: {
+        area: {
+          marker: {
+            enabled: false,
+            symbol: 'circle',
+            radius: 2,
+            states: {
+              hover: {
+                enabled: true
+              }
+            }
+          }
+        }
+      }
+      tooltip: {
+        formatter: ->
+          hours = parseInt(this.x / 60)
+          hours = if hours >= 10 then hours else ('0' + hours)
+          minutes = this.x % 60
+          minutes = if minutes >= 10 then minutes else ('0' + minutes)
+          hours + ':' + minutes
+      },
+      legend: {
+        enabled: false
+      },
+      credits: {
+        enabled: false
+      },
+      series: [{
+        data: chartData
+      }]
+    })

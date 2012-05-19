@@ -86,8 +86,11 @@ class Admin::VehiclesController < Admin::Base
 
     @movements = Movement.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lte => time.to_i + 86400).
       sort(:from_timestamp)
+    @movements_ranges = movements_ranges(@movements, time)
     @first_movement, @last_movement = get_boundary_movements(@movements)
     @report = Report.where(:imei => @vehicle.imei, :date => time.to_date.strftime('%Y%m%d').to_i).first
+
+    @js_locale_keys = %w{ parking_title movement_title reset_zoom reset_zoom_title }
   end
 
   def destroy
@@ -110,6 +113,17 @@ class Admin::VehiclesController < Admin::Base
       movements = movements.find_all{ |movement| !movement.parking? }
       [nil, nil] if movements.blank?
       [movements.first, movements.last]
+    end
+
+    def movements_ranges(movements, day_start_time)
+      ranges = []
+      movements.each do |movement|
+        next if movement.parking?
+        from_time = (movement.from_time - day_start_time) / 60
+        to_time = (movement.to_time - day_start_time) / 60
+        ranges << [from_time.to_i, to_time.to_i]
+      end
+      ranges
     end
 
 end
