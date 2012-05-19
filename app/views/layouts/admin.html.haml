@@ -7,8 +7,9 @@
 
     .container-fluid
       .row-fluid
-        = render 'layouts/sidebar'
-        .content
+        .span3
+          = render 'layouts/sidebar'
+        .span9
           .page-header
             %h1= @page_title
           = render :partial => 'layouts/flash', :locals => { :flash => flash }

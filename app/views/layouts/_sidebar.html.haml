@@ -1,13 +1,12 @@
-.sidebar
-  .well
-    - if content_for? :sidebar_actions
-      %h4= t '.actions'
-      %ul
-        = yield :sidebar_actions
+.well.sidebar-nav
+  - if content_for? :sidebar_actions
+    %h4= t '.actions'
+    %ul
+      = yield :sidebar_actions
 
-    = yield :sidebar
+  = yield :sidebar
 
-    - if context_help?(@help)
-      %h4= t '.help'
-      %div= context_help(@help)
+  - if context_help?(@help)
+    %h4= t '.help'
+    %div= context_help(@help)
 

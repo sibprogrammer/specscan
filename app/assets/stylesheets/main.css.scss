@@ -1,10 +1,10 @@
 .navbar .brand { height: 18px; background: image-url('satellite.png') no-repeat 10px 4px; padding: 8px 20px 12px 48px; color: white; }
 .navbar .brand .beta { color: red; }
 
-@media (min-width: 980px) {
-  .row-fluid > .sidebar { left: 20px; position: absolute; top: 60px; width: 220px; }
-  .row-fluid > .content { margin-left: 240px; }
+.sidebar-nav { padding: 10px 20px; }
+.sidebar-nav h4 { white-space: nowrap; }
 
+@media (min-width: 980px) {
   .container-fluid {
     .form-horizontal {
       .control-label { width: 190px; }
@@ -24,7 +24,7 @@ img { max-width: none; }
 .uneditable-input { border-color: #FFF; box-shadow: none;  cursor: default; }
 
 ul.movements-list { list-style: none outside none; margin: 0 0 0 10px; overflow-y: auto; max-height: 450px; }
-.movements-list li { line-height: 22px; }
+.movements-list li { line-height: 22px; white-space: nowrap; }
 
 .ico-parking { background: image-url('icons/parking.png') no-repeat 0 2px; padding: 2px 22px; }
 .ico-moving { background: image-url('icons/arrow_down.png') no-repeat 0 2px; padding: 2px 22px; }

@@ -11,7 +11,7 @@ $ ->
       map
 
     resizeMap = ->
-      mapHeight = if ($(window).width() < 980) then $(window).height() else ($(window).height() - $('#map-canvas').offset().top - 20)
+      mapHeight = if ($(window).width() < 768) then $(window).height() else ($(window).height() - $('#map-canvas').offset().top - 20)
       $('#map-canvas').height(mapHeight)
 
     createLineStyle = ->
