@@ -5,14 +5,14 @@
 %table.table.table-striped
   - if can? :manage, User
     %tr
-      %th= t '.stats.column.users'
+      %th= link_to t('.stats.column.users'), admin_users_path
       %td= @users_total
   %tr
-    %th= t '.stats.column.vehicles'
+    %th= link_to t('.stats.column.vehicles'), admin_vehicles_path
     %td= @vehicles_total
 
   - if can? :manage, SimCard
     %tr
-      %th= t '.stats.column.sim_cards'
+      %th= link_to t('.stats.column.sim_cards'), admin_sim_cards_path
       %td= @sim_cards_total
 
