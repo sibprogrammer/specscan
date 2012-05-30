@@ -21,6 +21,7 @@ Specscan::Application.routes.draw do
     resources :sim_cards do
       post 'check_balance', :on => :member
     end
+    resources :fuel_sensors
   end
 
   root :to => 'admin/dashboard#index'

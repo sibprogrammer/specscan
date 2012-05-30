@@ -5,7 +5,7 @@
   %li= link_to t('.action.map'), map_admin_vehicle_path(@vehicle)
 
 %form.form-horizontal
-  - %w{ imei tracker_name name reg_number fuel_norm }.each do |field_name|
+  - %w{ imei tracker_name name reg_number fuel_norm fuel_tank fuel_tank2 }.each do |field_name|
     - if !@vehicle.send(field_name).blank?
       .control-group
         %label.control-label= t('admin.vehicles.form.field.' + field_name)

@@ -74,6 +74,7 @@ ru:
     overview: "Обзор"
     users: "Клиенты"
     vehicles: "Машины"
+    fuel_sensors: "Датчики топлива"
     sim_cards: "SIM-карты"
     profile: "Профиль"
     logout: "Выход"
@@ -176,6 +177,8 @@ ru:
           description: "Описание"
           unknown_tracker: "Не указан"
           fuel_norm: "Расход топлива, л. на 100 км."
+          fuel_tank: "Топливный бак, л."
+          fuel_tank2: "Дополнительный бак, л."
         button:
           create: "Добавить"
           back: "Назад"
@@ -365,3 +368,47 @@ ru:
       check_balance:
         checked: "Баланс SIM-карты %{phone} был обновлен."
         failed: "Не удалось обновить баланс SIM-карты %{phone}, возможно указана неверная комбинация номер/пароль."
+    fuel_sensors:
+      index:
+        page_title: "Список датчиков топлива"
+        help: "Здесь представлена информация о зарегистрированных датчиках уровня топлива."
+        action:
+          add_fuel_sensor: "Добавить датчик"
+        column:
+          identity: "#"
+          fuel_sensor_model: "Модель датчика"
+          code: "Код"
+          comments: "Примечание"
+          created_at: "Дата создания"
+      new:
+        page_title: "Добавление датчика топлива"
+        help: "Здесь можно добавить новый датчик топлива, заполнив форму."
+      create:
+        fuel_sensor_created: "Датчик топлива добавлен."
+      form:
+        field:
+          model: "Модель датчика"
+          code: "Код"
+          comments: "Примечание"
+        button:
+          create: "Добавить"
+          update: "Обновить"
+          back: "Назад"
+          delete: "Удалить"
+      show:
+        page_title: "Датчик топлива %{title}"
+        help: "Здесь представлена обзорная информация по выбранному датчику топлива."
+        action:
+          fuel_sensors: "Список датчиков топлива"
+        button:
+          back: "Назад"
+          edit: "Редактировать"
+          delete: "Удалить"
+          confirm_delete: "Вы действительно хотите удалить информацию о датчике топлива?"
+      edit:
+        page_title: "Датчик топлива %{title}"
+        help: "Здесь можно отредактировать информацию о датчике топлива."
+      update:
+        fuel_sensor_updated: "Информация о датчике топлива %{title} была обновлена."
+      destroy:
+        fuel_sensor_deleted: "Информация о датчике топлива была удалена."

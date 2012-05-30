@@ -1,0 +1,14 @@
+= form_for([:admin, @fuel_sensor], :html => { :class => 'form-horizontal' }) do |f|
+  = render :partial => 'partials/form_errors', :locals => { :resource => @fuel_sensor, :locale_scope => 'admin.fuel_sensors.form' }
+
+  .control-group
+    = f.label :fuel_sensor, t('.field.model'), :class => 'control-label'
+    .controls
+      = select 'fuel_sensor', 'fuel_sensor_model_id', FuelSensorModel.all.collect { |model| [model.title, model.id] }
+
+  - form_field f, :code, :text_field
+  - form_field f, :comments, :text_field
+
+  .form-actions
+    = f.submit t('.button.' + (@fuel_sensor.new_record? ? 'create' : 'update')), :class => 'btn btn-primary'
+    = link_to t('.button.back'), (@fuel_sensor.new_record? ? admin_fuel_sensors_path : admin_fuel_sensors_path(@fuel_sensor)), :class => 'btn'
