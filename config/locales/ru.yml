@@ -179,6 +179,7 @@ ru:
           fuel_norm: "Расход топлива, л. на 100 км."
           fuel_tank: "Топливный бак, л."
           fuel_tank2: "Дополнительный бак, л."
+          fuel_sensor: "Датчик топлива"
         button:
           create: "Добавить"
           back: "Назад"
@@ -195,6 +196,7 @@ ru:
           created_at: "Дата создания"
           name: "Название"
           description: "Описание"
+          fuel_sensor: "ДУТ"
         action:
           add_vehicle: "Добавить машину"
       show:
@@ -380,6 +382,7 @@ ru:
           code: "Код"
           comments: "Примечание"
           created_at: "Дата создания"
+          vehicle: "Машина"
       new:
         page_title: "Добавление датчика топлива"
         help: "Здесь можно добавить новый датчик топлива, заполнив форму."
@@ -390,6 +393,8 @@ ru:
           model: "Модель датчика"
           code: "Код"
           comments: "Примечание"
+          vehicle: "Машина"
+          unknown_vehicle: "Не указана"
         button:
           create: "Добавить"
           update: "Обновить"

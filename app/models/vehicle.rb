@@ -10,6 +10,7 @@ class Vehicle < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :tracker_model
+  has_one :fuel_sensor
   has_one :sim_card
 
   scope :with_imei, where("imei != ''")

@@ -10,6 +10,7 @@
       - sortable_column 'id', t(".column.identity"), @sort_state
       - sortable_column 'fuel_sensor_model_id', t(".column.fuel_sensor_model"), @sort_state
       - sortable_column 'code', t(".column.code"), @sort_state
+      %th= t(".column.vehicle")
       - sortable_column 'comments', t(".column.comments"), @sort_state
       - sortable_column 'created_at', t(".column.created_at"), @sort_state
 
@@ -19,6 +20,7 @@
         %td= link_to fuel_sensor.id, admin_fuel_sensor_path(fuel_sensor)
         %td= fuel_sensor.model
         %td= fuel_sensor.code
+        %td= fuel_sensor.vehicle ? link_to(fuel_sensor.vehicle.title, admin_vehicle_path(fuel_sensor.vehicle)) : ''
         %td= fuel_sensor.comments
         %td= l fuel_sensor.created_at.localtime
 

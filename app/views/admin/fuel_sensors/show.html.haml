@@ -4,12 +4,16 @@
   %li= link_to t('.action.fuel_sensors'), admin_fuel_sensors_path
 
 %form.form-horizontal
-  - %w{ model code comments }.each do |field_name|
+  - %w{ model code vehicle comments }.each do |field_name|
     - if !@fuel_sensor.send(field_name).blank?
       .control-group
         %label.control-label= t('admin.fuel_sensors.form.field.' + field_name)
         .controls
-          %span.uneditable-input= @fuel_sensor.send(field_name)
+          %span.uneditable-input
+            - if 'vehicle' == field_name
+              = @fuel_sensor.vehicle.title
+            - else
+              = @fuel_sensor.send(field_name)
 
   .form-actions
     = link_to t('.button.edit'), edit_admin_fuel_sensor_path(@fuel_sensor), :class => 'btn btn-primary'

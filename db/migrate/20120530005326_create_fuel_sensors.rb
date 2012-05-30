@@ -4,6 +4,7 @@ class CreateFuelSensors < ActiveRecord::Migration
       t.integer :fuel_sensor_model_id
       t.string :code
       t.string :comments
+      t.integer :vehicle_id
       t.timestamps
     end
   end

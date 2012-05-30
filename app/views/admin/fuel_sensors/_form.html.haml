@@ -7,6 +7,12 @@
       = select 'fuel_sensor', 'fuel_sensor_model_id', FuelSensorModel.all.collect { |model| [model.title, model.id] }
 
   - form_field f, :code, :text_field
+
+  .control-group
+    = f.label :user, t('.field.vehicle'), :class => 'control-label'
+    .controls
+      = select 'fuel_sensor', 'vehicle_id', ([[t('.field.unknown_vehicle'), 0]] + Vehicle.all.collect { |vehicle| [vehicle.title, vehicle.id] })
+
   - form_field f, :comments, :text_field
 
   .form-actions
