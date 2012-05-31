@@ -30,10 +30,10 @@
           %td= vehicle.imei
         - if can? :manage, Vehicle
           %td= vehicle.tracker_name
-          %td= vehicle.fuel_sensor ? link_to(vehicle.fuel_sensor.title, admin_fuel_sensor_path(vehicle.fuel_sensor)) : ''
+          %td= vehicle.fuel_sensor ? link_to(vehicle.fuel_sensor.model, admin_fuel_sensor_path(vehicle.fuel_sensor)) : ''
           %td= vehicle.sim_card ? vehicle.sim_card.balance : ''
         - if can? :manage, User
-          %td= link_to vehicle.user.login, admin_user_path(vehicle.user)
+          %td= link_to vehicle.user.login, admin_user_path(vehicle.user), :title => vehicle.user.name
         %td= l vehicle.created_at.localtime
 
 = will_paginate @vehicles
