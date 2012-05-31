@@ -98,6 +98,7 @@ ru:
             users: "Клиенты"
             vehicles: "Машины"
             sim_cards: "SIM-карты"
+            fuel_sensors: "Датчики топлива"
         access_denied: "Доступ запрещен."
         unknown_object: "Неизвестный объект."
     users:

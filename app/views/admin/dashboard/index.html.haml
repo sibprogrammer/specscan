@@ -10,9 +10,11 @@
   %tr
     %th= link_to t('.stats.column.vehicles'), admin_vehicles_path
     %td= @vehicles_total
-
   - if can? :manage, SimCard
     %tr
       %th= link_to t('.stats.column.sim_cards'), admin_sim_cards_path
       %td= @sim_cards_total
-
+  - if can? :manage, FuelSensor
+    %tr
+      %th= link_to t('.stats.column.fuel_sensors'), admin_fuel_sensors_path
+      %td= @fuel_sensors_total

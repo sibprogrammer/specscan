@@ -5,6 +5,7 @@ class Admin::DashboardController < Admin::Base
     @users_total = User.count(:all) if can? :manage, User
     @vehicles_total = can?(:manage, Vehicle) ? Vehicle.count(:all) : current_user.vehicles.count
     @sim_cards_total = SimCard.count(:all) if can? :manage, SimCard
+    @fuel_sensors_total = FuelSensor.count(:all) if can? :manage, FuelSensor
   end
 
 end
