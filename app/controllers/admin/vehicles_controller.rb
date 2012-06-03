@@ -77,7 +77,7 @@ class Admin::VehiclesController < Admin::Base
 
     month = (params.key?(:date) ? Date.parse(params[:date]) : Date.today).strftime('%Y%m')
     @reports = Report.where(:imei => @vehicle.imei, :date.gte => (month + '01').to_i, :date.lte => (month + '31').to_i).sort(:date.desc)
-    @reports_summary = get_reports_summary(@reports)
+    @reports_summary = get_reports_summary(@reports, @vehicle)
   end
 
   def day_report
@@ -90,6 +90,8 @@ class Admin::VehiclesController < Admin::Base
     @movements_ranges = movements_ranges(@movements, time)
     @first_movement, @last_movement = get_boundary_movements(@movements)
     @report = Report.where(:imei => @vehicle.imei, :date => time.to_date.strftime('%Y%m%d').to_i).first
+    @fuel_changes = FuelChange.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lte => time.to_i + 86400).
+      sort(:from_timestamp)
 
     @js_locale_keys = %w{ parking_title movement_title reset_zoom reset_zoom_title }
   end
@@ -127,8 +129,9 @@ class Admin::VehiclesController < Admin::Base
       ranges
     end
 
-    def get_reports_summary(reports)
+    def get_reports_summary(reports, vehicle)
       fields = %w{ movement_count movement_time parking_count parking_time distance fuel_norm }
+      fields << 'fuel_used' << 'fuel_added' << 'fuel_stolen' if vehicle.fuel_sensor
 
       reports_summary = {}
       fields.each{ |field| reports_summary[field.to_sym] = 0 }

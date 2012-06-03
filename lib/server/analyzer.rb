@@ -44,18 +44,54 @@ class Server::Analyzer < Server::Abstract
 
       conditions = {
         :imei => vehicle.imei,
-        :coors_valid => true,
         :timestamp => { :$gt => last_movement.to_timestamp },
       }
 
       movements = [last_movement]
+      prev_way_point = WayPoint.where(:imei => vehicle.imei, :timestamp.lt => last_movement.to_timestamp).sort(:timestamp.desc).first
 
       WayPoint.where(conditions).sort(:timestamp).each do |way_point|
+        update_fuel_changes(way_point, prev_way_point, vehicle, last_movement) if prev_way_point
+        prev_way_point = way_point
+        next unless way_point.coors_valid
         last_movement = analyze_way_point(way_point, vehicle.imei, last_movement)
         movements << last_movement if last_movement.id.to_s != movements.last.id.to_s
       end
 
       movements.each{ |movement| update_distance(movement) }
+    end
+
+    def update_fuel_changes(way_point, prev_way_point, vehicle, last_movement)
+      fuel_diff = prev_way_point.fms_fuel.to_i - way_point.fms_fuel.to_i
+      return if fuel_diff.abs < 0.01
+
+      tank_size = vehicle.fuel_tank
+      fuel_ammount = (tank_size / 100) * fuel_diff.abs
+
+      if 1 == fuel_diff
+        last_movement.fuel_used = (last_movement.fuel_used.to_i + fuel_ammount).to_f
+        last_movement.save
+      else
+        prev_fuel_change = FuelChange.where(:imei => vehicle.imei, :to_timestamp.lt => way_point.timestamp).sort(:to_timestamp.desc).first
+        multiplier = (fuel_diff > 1) ? -1 : 1
+
+        if prev_fuel_change and prev_fuel_change.multiplier == multiplier and (way_point.timestamp - prev_fuel_change.to_timestamp) < 60
+          prev_fuel_change.to_timestamp = way_point.timestamp
+          prev_fuel_change.amount += fuel_ammount.to_f
+          prev_fuel_change.save
+        else
+          FuelChange.create({
+            :imei => vehicle.imei,
+            :multiplier => multiplier,
+            :amount => fuel_ammount.to_f,
+            :from_timestamp => way_point.timestamp,
+            :to_timestamp => way_point.timestamp,
+            :way_point => way_point,
+          })
+        end
+
+        logger.debug "Fuel ammount changed: #{fuel_ammount*multiplier}"
+      end
     end
 
     def analyze_way_point(way_point, imei, last_movement)
@@ -170,7 +206,7 @@ class Server::Analyzer < Server::Abstract
       conditions = { :imei => vehicle.imei, :from_timestamp.gte => date.to_time.to_i, :from_timestamp.lte => date.to_time.to_i + 86400 }
       movements = Movement.where(conditions).sort(:from_timestamp.desc)
 
-      movement_count = parking_count = movement_time = parking_time = distance = 0
+      movement_count = parking_count = movement_time = parking_time = distance = fuel_used = fuel_added = fuel_stolen = 0
 
       movements.each do |movement|
         if movement.parking
@@ -180,6 +216,17 @@ class Server::Analyzer < Server::Abstract
           movement_count += 1
           movement_time += movement.elapsed_time
           distance += movement.distance
+        end
+        fuel_used += movement.fuel_used.to_f
+      end
+
+      fuel_changes = FuelChange.where(conditions).sort(:from_timestamp.desc)
+
+      fuel_changes.each do |fuel_change|
+        if fuel_change.refuel?
+          fuel_added += fuel_change.amount
+        else
+          fuel_stolen += fuel_change.amount
         end
       end
 
@@ -195,7 +242,10 @@ class Server::Analyzer < Server::Abstract
         :parking_time => parking_time,
         :movement_time => movement_time,
         :distance => distance,
-        :fuel_norm => get_fuel_by_norm(vehicle, distance)
+        :fuel_norm => get_fuel_by_norm(vehicle, distance),
+        :fuel_used => fuel_used,
+        :fuel_added => fuel_added,
+        :fuel_stolen => fuel_stolen,
       })
 
       report.save

@@ -7,6 +7,7 @@ class Movement
   key :to_timestamp
   key :parking
   key :distance
+  key :fuel_used
 
   def from_time
     Time.at(from_timestamp)
@@ -38,6 +39,10 @@ class Movement
     all_points.collect do |point|
       [point.latitude, point.longitude, Time.at(point.timestamp).to_formatted_s(:time), point.speed]
     end
+  end
+
+  def distance_km
+    distance.to_f / 1000
   end
 
 end

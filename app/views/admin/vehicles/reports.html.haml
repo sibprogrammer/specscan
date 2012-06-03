@@ -28,16 +28,27 @@
       %td= duration_human(@reports_summary[:parking_time])
     %tr
       %th= t '.stats.distance'
-      %td= decimal_human(@reports_summary[:distance])
+      %td= decimal_human(@reports_summary[:distance].to_f / 1000)
       %th= t '.stats.fuel'
-      %td= decimal_human(@reports_summary[:fuel_norm])
+      %td= decimal_human(@reports_summary[:fuel_norm].to_f / 1000)
+    - if @vehicle.fuel_sensor
+      %tr
+        %th= t '.stats.refuels'
+        %td= decimal_human(@reports_summary[:fuel_added].to_f) + ' / ' + decimal_human(@reports_summary[:fuel_stolen].to_f)
+        %th= t '.stats.fuel_used'
+        %td= decimal_human(@reports_summary[:fuel_used])
 
   %h3= t '.header.list_by_days'
   %table.table.table-bordered.table-striped
     %thead
       %tr
-      - %w{ date parking movement parking_time movement_time distance fuel map }.each do |column_name|
-        %th= t ".column.#{column_name}"
+      - %w{ date parking movement movement_time distance fuel fuel_norm_fact refuels map }.each do |column_name|
+        - next if 'fuel' == column_name and @vehicle.fuel_sensor
+        - next if %w{ fuel_norm_fact refuels }.include?(column_name) and !@vehicle.fuel_sensor
+        - if %w{ movement_time fuel_norm_fact refuels }.include?(column_name)
+          %th{ :colspan => 2 }= t ".column.#{column_name}"
+        - else
+          %th= t ".column.#{column_name}"
 
     %tbody
       - @reports.each do |report|
@@ -47,6 +58,12 @@
           %td= report.movement_count
           %td= duration_human(report.parking_time)
           %td= duration_human(report.movement_time)
-          %td= decimal_human(report.distance)
-          %td= decimal_human(report.fuel_norm)
+          %td= decimal_human(report.distance.to_f / 1000)
+          - if @vehicle.fuel_sensor
+            %td= decimal_human(report.fuel_norm.to_f / 1000)
+            %td= decimal_human(report.fuel_used.to_f)
+            %td= decimal_human(report.fuel_added.to_f)
+            %td= decimal_human(report.fuel_stolen.to_f)
+          - else
+            %td= decimal_human(report.fuel_norm.to_f / 1000)
           %td= link_to t('.action.map_for_date'), map_admin_vehicle_path(:date => report.date_human)

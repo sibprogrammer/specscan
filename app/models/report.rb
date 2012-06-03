@@ -10,6 +10,7 @@ class Report
   key :movement_time
   key :distance
   key :fuel_norm
+  key :fuel_used
 
   def date_human
     Date.parse(date.to_s).to_formatted_s(:date)
