@@ -1,7 +1,8 @@
 class Admin::VehiclesController < Admin::Base
 
-  before_filter :check_manage_permission, :only => [:new, :create, :destroy]
-  before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports, :day_report, :destroy, :get_movement_points]
+  before_filter :check_manage_permission, :only => [:new, :create, :destroy, :calibration, :calibration_save]
+  before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports, :day_report, :destroy, :get_movement_points,
+    :calibration, :calibration_save]
 
   def index
     @columns = %w{ name reg_number imei owner created_at }
@@ -99,6 +100,22 @@ class Admin::VehiclesController < Admin::Base
   def destroy
     @vehicle.destroy
     redirect_to(admin_vehicles_path, :notice => t('admin.vehicles.destroy.vehicle_deleted'))
+  end
+
+  def calibration
+  end
+
+  def calibration_save
+    attributes = {
+      :calibration_table => params[:vehicle][:calibration_table],
+      :calibration_table2 => params[:vehicle][:calibration_table2],
+    }
+
+    if @vehicle.update_attributes(attributes)
+      redirect_to(admin_vehicle_path(@vehicle), :notice => t('admin.vehicles.calibration_save.updated'))
+    else
+      render :action => 'calibration'
+    end
   end
 
   private

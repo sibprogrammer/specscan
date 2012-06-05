@@ -14,7 +14,7 @@
   %ul
     %li= link_to @selected_date, '#', :id => 'selectedDate', 'data-datepicker' => 'datepicker'
 
-- if @movements.blank?
+- if @movements.blank? and @fuel_changes.blank?
   = t('.no_data')
 - else
 
@@ -37,11 +37,12 @@
         %td= @report.parking_count
         %th= t '.stats.parking_duration'
         %td= duration_human(@report.parking_time)
-      %tr
-        %th= t '.stats.first_movement_start'
-        %td= @first_movement.from_time.to_formatted_s(:date_time)
-        %th= t '.stats.last_movement_end'
-        %td= @last_movement.to_time.to_formatted_s(:date_time)
+      - if @report.movement_count > 0
+        %tr
+          %th= t '.stats.first_movement_start'
+          %td= @first_movement.from_time.to_formatted_s(:date_time)
+          %th= t '.stats.last_movement_end'
+          %td= @last_movement.to_time.to_formatted_s(:date_time)
       %tr
         %th= t '.stats.distance'
         %td= decimal_human(@report.distance.to_f / 1000)

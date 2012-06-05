@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120530005326) do
+ActiveRecord::Schema.define(:version => 20120605140729) do
 
   create_table "fuel_sensor_models", :force => true do |t|
     t.string "title"
@@ -81,10 +81,12 @@ ActiveRecord::Schema.define(:version => 20120530005326) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
-    t.integer  "tracker_model_id", :default => 0
+    t.integer  "tracker_model_id",   :default => 0
     t.decimal  "fuel_norm"
     t.decimal  "fuel_tank"
     t.decimal  "fuel_tank2"
+    t.text     "calibration_table"
+    t.text     "calibration_table2"
   end
 
   add_index "vehicles", ["user_id"], :name => "index_vehicles_on_user_id"

@@ -3,6 +3,8 @@
 - content_for :sidebar_actions do
   %li= link_to t('.action.reports'), reports_admin_vehicle_path(@vehicle)
   %li= link_to t('.action.map'), map_admin_vehicle_path(@vehicle)
+  - if can? :manage, @vehicle
+    %li= link_to t('.action.calibration'), calibration_admin_vehicle_path(@vehicle)
 
 %form.form-horizontal
   - %w{ name tracker_name imei fuel_sensor reg_number fuel_norm fuel_tank fuel_tank2 }.each do |field_name|

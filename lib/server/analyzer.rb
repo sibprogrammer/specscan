@@ -62,7 +62,7 @@ class Server::Analyzer < Server::Abstract
     end
 
     def update_fuel_changes(way_point, prev_way_point, vehicle, last_movement)
-      fuel_diff = prev_way_point.fms_fuel.to_i - way_point.fms_fuel.to_i
+      fuel_diff = vehicle.get_fuel_amount(prev_way_point.rs232_1.to_i) - vehicle.get_fuel_amount(way_point.rs232_1.to_i)
       return if fuel_diff.abs < 0.01
 
       tank_size = vehicle.fuel_tank
