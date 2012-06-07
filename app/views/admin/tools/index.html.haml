@@ -1,0 +1,6 @@
+- @page_title = t '.page_title'
+
+%table.table.table-striped
+  %tr
+    %th{ :width => '20%' }= link_to t('.tool.packets_monitor'), url_for(:action => 'packets_monitor')
+    %td= t '.tool.packets_monitor_help'

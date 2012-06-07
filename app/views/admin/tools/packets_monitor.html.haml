@@ -1,0 +1,36 @@
+- @page_title = t '.page_title'
+
+- if @way_points
+  - content_for :sidebar do
+    %h4= t '.packets_list'
+    %ul
+      - @way_points.each do |way_point|
+        %li= link_to(way_point._id, "#packet-#{way_point._id}")
+
+= form_tag({}, :class => 'form-horizontal') do
+
+  .control-group
+    %label.control-label= t '.form.imei'
+    .controls
+      = text_field_tag :imei, params[:imei]
+
+  .control-group
+    %label.control-label= t '.form.tags_filter'
+    .controls
+      = text_field_tag :tags_filter, params[:tags_filter]
+
+  .form-actions
+    = submit_tag(t('.form.request'), :class => 'btn btn-primary')
+    = link_to(t('.form.reset'), url_for(:action => 'packets_monitor'), :class => 'btn')
+
+- if @way_points
+  - @way_points.each do |way_point|
+    %p
+      %a{ :name => "packet-#{way_point._id}", :href => 'javascript:void(0);' }
+        = t('.packet_title', :id => way_point._id, :time => Time.at(way_point.timestamp).to_formatted_s(:date_time_full), :imei => way_point.imei)
+    %table.table.table-striped
+      - way_point.attributes.keys.sort.each do |attr|
+        - if @tags_filter.blank? or @tags_filter.include?(attr)
+          %tr
+            %th{ :width => '15%' }= attr
+            %td= way_point.send(attr)

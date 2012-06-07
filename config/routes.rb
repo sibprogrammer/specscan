@@ -24,6 +24,7 @@ Specscan::Application.routes.draw do
       post 'check_balance', :on => :member
     end
     resources :fuel_sensors
+    match "tools(/:action)", :controller => 'tools'
   end
 
   root :to => 'admin/dashboard#index'
