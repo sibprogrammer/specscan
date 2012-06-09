@@ -65,32 +65,29 @@ class Server::Analyzer < Server::Abstract
       fuel_diff = vehicle.get_fuel_amount(prev_way_point.rs232_1.to_i) - vehicle.get_fuel_amount(way_point.rs232_1.to_i)
       return if fuel_diff.abs < 0.01
 
-      tank_size = vehicle.fuel_tank
-      fuel_ammount = (tank_size / 100) * fuel_diff.abs
-
-      if 1 == fuel_diff
-        last_movement.fuel_used = (last_movement.fuel_used.to_i + fuel_ammount).to_f
+      if fuel_diff < 1 and fuel_diff > 0
+        last_movement.fuel_used = (last_movement.fuel_used.to_i + fuel_diff.abs).to_f
         last_movement.save
       else
         prev_fuel_change = FuelChange.where(:imei => vehicle.imei, :to_timestamp.lt => way_point.timestamp).sort(:to_timestamp.desc).first
-        multiplier = (fuel_diff > 1) ? -1 : 1
+        multiplier = (fuel_diff > 0) ? -1 : 1
 
         if prev_fuel_change and prev_fuel_change.multiplier == multiplier and (way_point.timestamp - prev_fuel_change.to_timestamp) < 60
           prev_fuel_change.to_timestamp = way_point.timestamp
-          prev_fuel_change.amount += fuel_ammount.to_f
+          prev_fuel_change.amount += fuel_diff.abs.to_f
           prev_fuel_change.save
         else
           FuelChange.create({
             :imei => vehicle.imei,
             :multiplier => multiplier,
-            :amount => fuel_ammount.to_f,
+            :amount => fuel_diff.abs.to_f,
             :from_timestamp => way_point.timestamp,
             :to_timestamp => way_point.timestamp,
             :way_point => way_point,
           })
         end
 
-        logger.debug "Fuel ammount changed: #{fuel_ammount*multiplier}"
+        logger.debug "Fuel ammount changed: #{fuel_diff}"
       end
     end
 
