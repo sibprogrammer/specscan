@@ -69,4 +69,10 @@ class Vehicle < ActiveRecord::Base
     value
   end
 
+  def fuel_by_time(timestamp)
+    way_point = WayPoint.where(:imei => imei, :timestamp => timestamp).first
+    return 0 unless way_point
+    get_fuel_amount(way_point.rs232_1)
+  end
+
 end

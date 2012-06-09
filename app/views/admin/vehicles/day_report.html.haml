@@ -43,6 +43,12 @@
           %td= @first_movement.from_time.to_formatted_s(:date_time)
           %th= t '.stats.last_movement_end'
           %td= @last_movement.to_time.to_formatted_s(:date_time)
+        - if @vehicle.fuel_sensor
+          %tr
+            %th= t '.stats.fuel_on_start'
+            %td= decimal_human(@vehicle.fuel_by_time(@first_movement.from_timestamp))
+            %th= t '.stats.fuel_on_end'
+            %td= decimal_human(@vehicle.fuel_by_time(@last_movement.to_timestamp))
       %tr
         %th= t '.stats.distance'
         %td= decimal_human(@report.distance.to_f / 1000)
