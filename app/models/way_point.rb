@@ -23,7 +23,7 @@ class WayPoint
   end
 
   def self.get_by_timestamp(timestamp, imei)
-    WayPoint.where(:imei => imei, :timestamp => timestamp).first
+    WayPoint.where(:imei => imei, :timestamp.lte => timestamp).sort(:timestamp.desc).first
   end
 
   def self.nearest_point(timestamp, imei)

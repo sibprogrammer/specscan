@@ -55,9 +55,9 @@ class Admin::VehiclesController < Admin::Base
     @show_last_point = Date.today.to_time == time
 
     @api_key = get_map_api_key :yandex, request.host
-    @movements = Movement.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lte => time.to_i + 86400).
+    @movements = Movement.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lt => time.to_i + 86400).
       sort(:from_timestamp)
-    @last_point = WayPoint.where(:imei => @vehicle.imei, :coors_valid => true, :timestamp.lte => time.to_i + 86400).sort(:timestamp.desc).first
+    @last_point = WayPoint.where(:imei => @vehicle.imei, :coors_valid => true, :timestamp.lt => time.to_i + 86400).sort(:timestamp.desc).first
 
     @js_locale_keys = %w{ time speed }
   end
@@ -86,12 +86,12 @@ class Admin::VehiclesController < Admin::Base
     @selected_date = time.to_formatted_s(:date)
     @week_day = t('week_day.name_' + time.wday.to_s)
 
-    @movements = Movement.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lte => time.to_i + 86400).
+    @movements = Movement.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lt => time.to_i + 86400).
       sort(:from_timestamp)
     @movements_ranges = movements_ranges(@movements, time)
     @first_movement, @last_movement = get_boundary_movements(@movements)
     @report = Report.where(:imei => @vehicle.imei, :date => time.to_date.strftime('%Y%m%d').to_i).first
-    @fuel_changes = FuelChange.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lte => time.to_i + 86400).
+    @fuel_changes = FuelChange.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lt => time.to_i + 86400).
       sort(:from_timestamp)
     @fuel_chart_data = get_fuel_details(time)
 
@@ -162,7 +162,7 @@ class Admin::VehiclesController < Admin::Base
     end
 
     def get_fuel_details(start_time)
-      way_points = WayPoint.where(:imei => @vehicle.imei, :timestamp.gte => start_time.to_i, :timestamp.lte => start_time.to_i + 86400).
+      way_points = WayPoint.where(:imei => @vehicle.imei, :timestamp.gte => start_time.to_i, :timestamp.lt => start_time.to_i + 86400).
         sort(:from_timestamp)
       fuel_details = {}
 

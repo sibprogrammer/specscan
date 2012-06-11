@@ -95,7 +95,7 @@ class Server::Analyzer < Server::Abstract
       if (way_point.timestamp - last_movement.to_timestamp) > 10.minutes.to_i
         logger.debug "Large timespan between points: #{way_point.timestamp - last_movement.to_timestamp} sec."
         if last_movement.parking
-          last_movement.to_timestamp = way_point.timestamp
+          last_movement = add_way_point(last_movement, way_point)
         else
           last_movement = create_parking(imei, last_movement, way_point)
         end
@@ -107,14 +107,14 @@ class Server::Analyzer < Server::Abstract
       if last_movement.parking
         # if last was a parking
         if !way_point.engine_on and !way_point.sens_moving
-          last_movement.to_timestamp = way_point.timestamp
+          last_movement = add_way_point(last_movement, way_point)
         else
           distance = way_point.distance(WayPoint.get_by_timestamp(last_movement.from_timestamp, imei))
           if distance > MIN_METERS_FOR_MOVEMENT_START and way_point.speed > MIN_SPEED_KM
             last_movement.save
             last_movement = create_movement(imei, last_movement, way_point)
           else
-            last_movement.to_timestamp = way_point.timestamp
+            last_movement = add_way_point(last_movement, way_point)
           end
         end
 
@@ -125,12 +125,12 @@ class Server::Analyzer < Server::Abstract
           prev_way_point = WayPoint.nearest_point(way_point.timestamp, imei)
 
           if prev_way_point and (prev_way_point.engine_on or prev_way_point.sens_moving) and prev_way_point.timestamp > last_movement.from_timestamp
-            last_movement.to_timestamp = way_point.timestamp
+            last_movement = add_way_point(last_movement, way_point)
           else
             prev_way_point = WayPoint.find_closest_older(way_point, last_movement)
 
             if prev_way_point
-              last_movement.to_timestamp = prev_way_point.timestamp
+              last_movement = add_way_point(last_movement, prev_way_point)
               last_movement.save
             end
 
@@ -139,11 +139,11 @@ class Server::Analyzer < Server::Abstract
         else
           prev_way_point = WayPoint.nearest_point(way_point.timestamp - MIN_SECONDS_FOR_PARKING_WITH_ENGINE_ON, imei)
           if prev_way_point and prev_way_point.timestamp > last_movement.from_timestamp and prev_way_point.distance(way_point) < MIN_METERS_FOR_MOVEMENT_START
-            last_movement.to_timestamp = prev_way_point.timestamp
+            last_movement = add_way_point(last_movement, prev_way_point)
             last_movement.save
             last_movement = create_parking(imei, last_movement, way_point)
           else
-            last_movement.to_timestamp = way_point.timestamp
+            last_movement = add_way_point(last_movement, way_point)
           end
         end
 
@@ -153,26 +153,45 @@ class Server::Analyzer < Server::Abstract
       last_movement
     end
 
+    def add_way_point(movement, way_point)
+      if Time.at(movement.to_timestamp).yday == Time.at(way_point.timestamp).yday
+        movement.to_timestamp = way_point.timestamp
+        return movement
+      end
+
+      movement.to_timestamp = Time.at(movement.to_timestamp).end_of_day.to_i
+      movement.save
+
+      Movement.new({
+        :imei => movement.imei,
+        :from_timestamp => Time.at(way_point.timestamp).beginning_of_day.to_i,
+        :to_timestamp => way_point.timestamp,
+        :parking => movement.parking
+      })
+    end
+
     def create_parking(imei, last_movement, way_point)
       logger.debug "Parking started from: #{last_movement.from_timestamp}, #{Time.at(last_movement.from_timestamp)}"
 
-      Movement.new({
+      movement = Movement.new({
         :imei => imei,
         :from_timestamp => last_movement.to_timestamp,
-        :to_timestamp => way_point.timestamp,
+        :to_timestamp => last_movement.to_timestamp,
         :parking => true
       })
+      add_way_point(movement, way_point)
     end
 
     def create_movement(imei, last_movement, way_point)
       logger.debug "Movement started from: #{last_movement.from_timestamp}, #{Time.at(last_movement.from_timestamp)}"
 
-      Movement.new({
+      movement = Movement.new({
         :imei => imei,
         :from_timestamp => last_movement.to_timestamp,
-        :to_timestamp => way_point.timestamp,
+        :to_timestamp => last_movement.to_timestamp,
         :parking => false
       })
+      add_way_point(movement, way_point)
     end
 
     def update_reports(vehicle)
@@ -200,7 +219,7 @@ class Server::Analyzer < Server::Abstract
     def update_reports_for_date(date, vehicle)
       logger.debug "Report for date: #{date}"
 
-      conditions = { :imei => vehicle.imei, :from_timestamp.gte => date.to_time.to_i, :from_timestamp.lte => date.to_time.to_i + 86400 }
+      conditions = { :imei => vehicle.imei, :from_timestamp.gte => date.to_time.to_i, :from_timestamp.lt => date.to_time.to_i + 86400 }
       movements = Movement.where(conditions).sort(:from_timestamp.desc)
 
       movement_count = parking_count = movement_time = parking_time = distance = fuel_used = fuel_added = fuel_stolen = 0

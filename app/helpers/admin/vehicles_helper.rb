@@ -55,7 +55,7 @@ module Admin::VehiclesHelper
   private
 
     def get_point_by_timestamp(movement, timestamp)
-      point = WayPoint.where(:imei => movement.imei, :timestamp => timestamp).first
+      point = WayPoint.where(:imei => movement.imei, :timestamp.lte => timestamp).sort(:timestamp.desc).first
       result = {}
       %w{ latitude longitude }.each{ |name| result[name] = point.send(name)  }
       result
