@@ -2,6 +2,8 @@
 
 = javascript_include_tag "external/highcharts"
 = javascript_tag "movementRanges = #{@movements_ranges.to_json}"
+= javascript_tag "fuelChartData = #{@fuel_chart_data.to_json}"
+= javascript_tag "tankSize = #{@vehicle.fuel_tank}"
 = javascript_tag "jsLocaleKeys = #{Hash[*@js_locale_keys.collect{ |key| [key, t('.' + key)] }.flatten].to_json}"
 
 - content_for :sidebar_actions do
@@ -63,6 +65,10 @@
 
   %h3= t '.header.chart'
   #movementsChart{ :style => 'width: 100%; height: 100px;' }
+
+  - if @vehicle.fuel_sensor
+    %h3= t '.header.fuel_chart'
+    #fuelChangesChart{ :style => 'width: 100%; height: 200px;' }
 
   %h3= t '.header.movements_list'
   %table.table.table-bordered.table-striped

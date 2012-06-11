@@ -41,6 +41,10 @@ class WayPoint
     return
   end
 
+  def fuel_signal
+    rs232_1.to_i
+  end
+
   private
 
     def to_rad(ang)

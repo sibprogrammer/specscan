@@ -312,6 +312,7 @@ ru:
         header:
           stats: "Статистика"
           chart: "График активности"
+          fuel_chart: "График уровня топлива"
           movements_list: "Перемещения и стоянки"
           fuel_changes_list: "Заправки и сливы"
         column:

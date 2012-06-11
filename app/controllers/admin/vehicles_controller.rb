@@ -93,6 +93,7 @@ class Admin::VehiclesController < Admin::Base
     @report = Report.where(:imei => @vehicle.imei, :date => time.to_date.strftime('%Y%m%d').to_i).first
     @fuel_changes = FuelChange.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lte => time.to_i + 86400).
       sort(:from_timestamp)
+    @fuel_chart_data = get_fuel_details(time)
 
     @js_locale_keys = %w{ parking_title movement_title reset_zoom reset_zoom_title }
   end
@@ -154,10 +155,22 @@ class Admin::VehiclesController < Admin::Base
       fields.each{ |field| reports_summary[field.to_sym] = 0 }
 
       reports.each do |reports|
-        fields.each{ |field| reports_summary[field.to_sym] += reports.send(field) }
+        fields.each{ |field| reports_summary[field.to_sym] += reports.send(field).to_i }
       end
 
       reports_summary
+    end
+
+    def get_fuel_details(start_time)
+      way_points = WayPoint.where(:imei => @vehicle.imei, :timestamp.gte => start_time.to_i, :timestamp.lte => start_time.to_i + 86400).
+        sort(:from_timestamp)
+      fuel_details = {}
+
+      way_points.each do |way_point|
+        fuel_details[way_point.timestamp - start_time.to_i] = @vehicle.get_fuel_amount(way_point.fuel_signal).to_i
+      end
+
+      fuel_details
     end
 
 end
