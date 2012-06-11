@@ -106,6 +106,7 @@
 
         %tbody
           - @fuel_changes.each do |fuel_change|
+            - next if fuel_change.detect_error?
             %tr
               %td
                 = image_tag "icons/#{fuel_change.refuel? ? 'plus-circle' : 'minus-circle'}.png", :class => 'inline-icon'

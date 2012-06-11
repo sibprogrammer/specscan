@@ -9,6 +9,8 @@ class FuelChange
   key :to_timestamp
   one :way_point
 
+  TRESHOLD_LITRES = 4
+
   def refuel?
     1 == multiplier
   end
@@ -23,6 +25,10 @@ class FuelChange
 
   def elapsed_time
     to_timestamp - from_timestamp
+  end
+
+  def detect_error?
+    amount < TRESHOLD_LITRES
   end
 
 end
