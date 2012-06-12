@@ -35,8 +35,8 @@ $ ->
     getBigIconStyle = (image) ->
       iconStyle = new YMaps.Style();
       iconStyle.iconStyle = new YMaps.IconStyle();
-      iconStyle.iconStyle.size = new YMaps.Point(32, 32);
-      iconStyle.iconStyle.offset = new YMaps.Point(-16, -16);
+      iconStyle.iconStyle.size = new YMaps.Point(48, 48);
+      iconStyle.iconStyle.offset = new YMaps.Point(-24, -24);
       iconStyle.iconStyle.href = image_path(image)
       iconStyle
 
@@ -161,7 +161,7 @@ $ ->
       if !pointLink.hasClass('ico-hidden')
         lastPointPlacemark = getPlacemark({
           map: map, title: lastPoint.title, description: lastPoint.description,
-          geoPoint: geoPoint, bigIcon: 'truck', moveMap: true
+          geoPoint: geoPoint, bigIcon: vehicleIcon, moveMap: true
         })
         lastPointPlacemark.openBalloon()
     else

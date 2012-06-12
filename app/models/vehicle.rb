@@ -5,14 +5,16 @@ class Vehicle < ActiveRecord::Base
   validates :user_id, :presence => true
   validates :reg_number, :length => { :in => 3..15 }, :allow_blank => true
   validates :name, :presence => true, :uniqueness => { :scope => :user_id }
+  validates :vehicle_type_id, :presence => true
 
   attr_accessible :imei, :user_id, :reg_number, :name, :description, :tracker_model_id, :fuel_norm, :fuel_tank, :fuel_tank2,
-    :calibration_table, :calibration_table2
+    :calibration_table, :calibration_table2, :vehicle_type_id
 
   belongs_to :user
   belongs_to :tracker_model
   has_one :fuel_sensor
   has_one :sim_card
+  belongs_to :vehicle_type
 
   scope :with_imei, where("imei != ''")
 

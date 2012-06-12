@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120605140729) do
+ActiveRecord::Schema.define(:version => 20120612061551) do
 
   create_table "fuel_sensor_models", :force => true do |t|
     t.string "title"
@@ -73,6 +73,11 @@ ActiveRecord::Schema.define(:version => 20120605140729) do
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
+  create_table "vehicle_types", :force => true do |t|
+    t.string "code"
+    t.string "title"
+  end
+
   create_table "vehicles", :force => true do |t|
     t.string   "imei"
     t.string   "reg_number"
@@ -87,6 +92,7 @@ ActiveRecord::Schema.define(:version => 20120605140729) do
     t.decimal  "fuel_tank2"
     t.text     "calibration_table"
     t.text     "calibration_table2"
+    t.integer  "vehicle_type_id",    :default => 10
   end
 
   add_index "vehicles", ["user_id"], :name => "index_vehicles_on_user_id"

@@ -24,6 +24,7 @@
     = t('.no_data')
 
 = javascript_tag "jsLocaleKeys = #{Hash[*@js_locale_keys.collect{ |key| [key, t('.movement.' + key)] }.flatten].to_json}"
+= javascript_tag "vehicleIcon = 'vehicle_#{@vehicle.vehicle_type.code}'"
 = javascript_include_tag "http://api-maps.yandex.ru/1.1/index.xml?key=#{@api_key}"
 = javascript_include_tag "extensions/yandex-maps"
 #map-canvas{ :style => "width: 100%; height: 0px;", :name => 'map-canvas' }

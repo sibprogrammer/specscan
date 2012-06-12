@@ -182,6 +182,7 @@ ru:
           fuel_tank: "Топливный бак, л."
           fuel_tank2: "Дополнительный бак, л."
           fuel_sensor: "Датчик топлива"
+          vehicle_type: "Тип машины"
         button:
           create: "Добавить"
           back: "Назад"
@@ -199,6 +200,7 @@ ru:
           name: "Название"
           description: "Описание"
           fuel_sensor: "ДУТ"
+          type: "Тип"
         action:
           add_vehicle: "Добавить машину"
       show:

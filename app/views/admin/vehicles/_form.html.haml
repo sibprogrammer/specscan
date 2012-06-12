@@ -18,6 +18,12 @@
         %span.uneditable-input= @vehicle.tracker_name
 
   - form_field f, :name, :text_field, :required => true
+
+  .control-group
+    = f.label :type_id, t('.field.vehicle_type'), :class => 'control-label'
+    .controls
+      = select 'vehicle', 'vehicle_type_id', VehicleType.all.collect { |vehicle_type| [vehicle_type.title, vehicle_type.id] }
+
   - form_field f, :reg_number, :text_field
   - form_field f, :fuel_norm, :text_field
   - form_field f, :fuel_tank, :text_field

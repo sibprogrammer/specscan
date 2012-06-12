@@ -7,7 +7,7 @@
     %li= link_to t('.action.calibration'), calibration_admin_vehicle_path(@vehicle)
 
 %form.form-horizontal
-  - %w{ name tracker_name imei fuel_sensor reg_number fuel_norm fuel_tank fuel_tank2 }.each do |field_name|
+  - %w{ name vehicle_type tracker_name imei fuel_sensor reg_number fuel_norm fuel_tank fuel_tank2 }.each do |field_name|
     - if !@vehicle.send(field_name).blank?
       .control-group
         %label.control-label= t('admin.vehicles.form.field.' + field_name)
@@ -15,6 +15,8 @@
           %span.uneditable-input
             - if 'fuel_sensor' == field_name
               = @vehicle.fuel_sensor.fuel_sensor_model.title
+            - elsif 'vehicle_type' == field_name
+              = @vehicle.vehicle_type.title
             - else
               = @vehicle.send(field_name)
 
