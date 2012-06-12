@@ -29,6 +29,9 @@ GEM
       activesupport (= 3.1.3)
     activesupport (3.1.3)
       multi_json (~> 1.0)
+    airbrake (3.1.1)
+      activesupport
+      builder
     arel (2.2.1)
     bcrypt-ruby (3.0.1)
     bson (1.5.2)
@@ -144,6 +147,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  airbrake
   bson_ext
   cancan
   coffee-rails (~> 3.1.1)
