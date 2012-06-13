@@ -89,9 +89,9 @@
           %td= movement.from_time.to_formatted_s(:date_time)
           %td= movement.to_time.to_formatted_s(:date_time)
           %td= duration_human(movement.elapsed_time)
-          %td= decimal_human(movement.distance_km)
+          %td= movement.parking ? raw('&mdash;') : decimal_human(movement.distance_km)
           - if @vehicle.fuel_sensor
-            %td= decimal_human(movement.fuel_used)
+            %td= movement_fuel_used(movement)
 
   - if @vehicle.fuel_sensor
     %h3= t '.header.fuel_changes_list'
@@ -107,7 +107,6 @@
 
         %tbody
           - @fuel_changes.each do |fuel_change|
-            - next if fuel_change.detect_error?
             %tr
               %td
                 = image_tag "icons/#{fuel_change.refuel? ? 'plus-circle' : 'minus-circle'}.png", :class => 'inline-icon'

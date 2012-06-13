@@ -25,6 +25,11 @@ module Admin::VehiclesHelper
     }
   end
 
+  def movement_fuel_used(movement)
+    return raw('&mdash;') if movement.fuel_used.to_i < FuelChange::FUEL_TRESHOLD_LITRES
+    decimal_human(movement.fuel_used)
+  end
+
   def last_point_info(way_point)
     {
       :title => t('.last_point.title'),

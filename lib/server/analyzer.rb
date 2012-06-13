@@ -8,6 +8,7 @@ class Server::Analyzer < Server::Abstract
   MAX_METERS_FOR_FALSE_MOVEMENT_START = 1000
   MIN_SECONDS_FOR_PARKING_WITH_ENGINE_ON = 120
   MIN_SPEED_KM = 3
+  FUEL_TRESHOLD_LITRES = 10
 
   def initialize
     @log_file = "#{Rails.root}/log/analyzer.log"
@@ -62,11 +63,14 @@ class Server::Analyzer < Server::Abstract
     end
 
     def update_fuel_changes(way_point, prev_way_point, vehicle, last_movement)
-      fuel_diff = vehicle.get_fuel_amount(prev_way_point.rs232_1.to_i) - vehicle.get_fuel_amount(way_point.rs232_1.to_i)
+      # ignore sensor invalid values
+      return if 0 == prev_way_point.fuel_signal or 0 == way_point.fuel_signal
+
+      fuel_diff = vehicle.get_fuel_amount(prev_way_point.fuel_signal) - vehicle.get_fuel_amount(way_point.fuel_signal)
       return if fuel_diff.abs < 0.01
 
-      if fuel_diff < 1 and fuel_diff > 0
-        last_movement.fuel_used = (last_movement.fuel_used.to_i + fuel_diff.abs).to_f
+      if fuel_diff.abs < FUEL_TRESHOLD_LITRES
+        last_movement.fuel_used = (last_movement.fuel_used.to_f + fuel_diff).to_f
         last_movement.save
       else
         prev_fuel_change = FuelChange.where(:imei => vehicle.imei, :to_timestamp.lt => way_point.timestamp).sort(:to_timestamp.desc).first
