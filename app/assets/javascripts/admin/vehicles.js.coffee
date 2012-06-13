@@ -266,7 +266,7 @@ $ ->
 
     showFuelChangesChart = ->
       chartData = []
-      prevValue = 0
+      prevValue = fuelInitialValue
 
       for i in [0..selectedDateLastSecond]
         chartData[i] = if fuelChartData[i] then fuelChartData[i] else prevValue
