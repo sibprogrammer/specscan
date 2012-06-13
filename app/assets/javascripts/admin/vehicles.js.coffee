@@ -268,7 +268,7 @@ $ ->
       chartData = []
       prevValue = 0
 
-      for i in [0..86400]
+      for i in [0..selectedDateLastSecond]
         chartData[i] = if fuelChartData[i] then fuelChartData[i] else prevValue
         prevValue = chartData[i]
 

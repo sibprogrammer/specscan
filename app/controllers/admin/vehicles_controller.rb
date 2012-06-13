@@ -84,6 +84,7 @@ class Admin::VehiclesController < Admin::Base
   def day_report
     time = params.key?(:date) ? Time.parse(params[:date]) : Date.today.to_time
     @selected_date = time.to_formatted_s(:date)
+    @selected_date_last_second = (Time.now.to_i - time.to_i) < 86400 ? (Time.now.to_i - time.to_i) : 86400
     @week_day = t('week_day.name_' + time.wday.to_s)
 
     @movements = Movement.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lt => time.to_i + 86400).
