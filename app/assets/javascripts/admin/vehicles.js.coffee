@@ -265,12 +265,7 @@ $ ->
       })
 
     showFuelChangesChart = ->
-      chartData = []
-      prevValue = fuelInitialValue
-
-      for i in [0..selectedDateLastSecond]
-        chartData[i] = if fuelChartData[i] then fuelChartData[i] else prevValue
-        prevValue = chartData[i]
+      chartData = fuelChartData
 
       chart = new Highcharts.Chart({
         chart: {
@@ -293,11 +288,11 @@ $ ->
         xAxis: {
           labels: {
             formatter: ->
-              this.value / 3600
+              this.value / 60
           },
           min: 0,
-          max: 86400,
-          tickInterval: 3600,
+          max: 1440,
+          tickInterval: 60,
           gridLineWidth: 1,
           offset: 1
         },
@@ -317,10 +312,9 @@ $ ->
         }
         tooltip: {
           formatter: ->
-            minutesFromDayStart = parseInt(this.x / 60)
-            hours = parseInt(minutesFromDayStart / 60)
+            hours = parseInt(this.x / 60)
             hours = if hours >= 10 then hours else ('0' + hours)
-            minutes = minutesFromDayStart % 60
+            minutes = this.x % 60
             minutes = if minutes >= 10 then minutes else ('0' + minutes)
             hours + ':' + minutes + ' - ' + this.y
         },

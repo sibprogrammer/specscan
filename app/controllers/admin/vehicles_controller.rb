@@ -84,7 +84,6 @@ class Admin::VehiclesController < Admin::Base
   def day_report
     time = params.key?(:date) ? Time.parse(params[:date]) : Date.today.to_time
     @selected_date = time.to_formatted_s(:date)
-    @selected_date_last_second = (Time.now.to_i - time.to_i) < 86400 ? (Time.now.to_i - time.to_i) : 86400
     @week_day = t('week_day.name_' + time.wday.to_s)
 
     @movements = Movement.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lt => time.to_i + 86400).
@@ -95,9 +94,6 @@ class Admin::VehiclesController < Admin::Base
     @fuel_changes = FuelChange.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lt => time.to_i + 86400).
       sort(:from_timestamp)
     @fuel_chart_data = get_fuel_details(time)
-
-    initial_way_point = WayPoint.get_by_timestamp(time.to_i, @vehicle.imei, { :rs232_1.gt => 0 })
-    @fuel_initial_value = initial_way_point ? @vehicle.get_fuel_amount(initial_way_point.fuel_signal).to_i : 0
 
     @js_locale_keys = %w{ parking_title movement_title reset_zoom reset_zoom_title }
   end
@@ -166,15 +162,37 @@ class Admin::VehiclesController < Admin::Base
     end
 
     def get_fuel_details(start_time)
+      initial_way_point = WayPoint.get_by_timestamp(start_time.to_i, @vehicle.imei, { :rs232_1.gt => 0 })
+      fuel_initial_value = initial_way_point ? @vehicle.get_fuel_amount(initial_way_point.fuel_signal).to_i : 0
+
+      selected_date_last_minute = ((Time.now.to_i - start_time.to_i) < 86400 ? (Time.now.to_i - start_time.to_i) : 86400) / 60
+
       way_points = WayPoint.where(:imei => @vehicle.imei, :timestamp.gte => start_time.to_i, :timestamp.lt => start_time.to_i + 86400).
         sort(:from_timestamp)
-      fuel_details = {}
+      fuel_values = {}
+      last_fuel_value = fuel_initial_value
 
       way_points.each do |way_point|
-        fuel_details[way_point.timestamp - start_time.to_i] = @vehicle.get_fuel_amount(way_point.fuel_signal).to_i
+        next if 0 == way_point.fuel_signal
+        fuel_value = @vehicle.get_fuel_amount(way_point.fuel_signal).to_i
+        fuel_values[(way_point.timestamp - start_time.to_i) / 60] = fuel_value
+        last_fuel_value = fuel_value
       end
 
-      fuel_details
+      fuel_values[selected_date_last_minute] = last_fuel_value
+
+      minutes = fuel_values.keys.sort
+      prev_minute = 0
+      prev_fuel_value = fuel_initial_value
+      data = []
+
+      minutes.each do |minute|
+        prev_minute.upto(minute-1).each{ |current_minute| data << prev_fuel_value }
+        prev_minute = minute
+        prev_fuel_value = fuel_values[minute]
+      end
+
+      data
     end
 
 end
