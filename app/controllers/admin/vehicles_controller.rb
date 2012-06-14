@@ -96,7 +96,7 @@ class Admin::VehiclesController < Admin::Base
       sort(:from_timestamp)
     @fuel_chart_data = get_fuel_details(time)
 
-    initial_way_point = WayPoint.get_by_timestamp(time.to_i, @vehicle.imei)
+    initial_way_point = WayPoint.get_by_timestamp(time.to_i, @vehicle.imei, { :rs232_1.gt => 0 })
     @fuel_initial_value = initial_way_point ? @vehicle.get_fuel_amount(initial_way_point.fuel_signal).to_i : 0
 
     @js_locale_keys = %w{ parking_title movement_title reset_zoom reset_zoom_title }

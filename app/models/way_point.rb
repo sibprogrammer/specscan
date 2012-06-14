@@ -22,8 +22,8 @@ class WayPoint
     Time.at(timestamp)
   end
 
-  def self.get_by_timestamp(timestamp, imei)
-    WayPoint.where(:imei => imei, :timestamp.lte => timestamp).sort(:timestamp.desc).first
+  def self.get_by_timestamp(timestamp, imei, conditions = {})
+    WayPoint.where({ :imei => imei, :timestamp.lte => timestamp }.merge(conditions)).sort(:timestamp.desc).first
   end
 
   def self.nearest_point(timestamp, imei)
