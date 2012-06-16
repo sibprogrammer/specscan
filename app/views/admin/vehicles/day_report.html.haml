@@ -4,6 +4,7 @@
 = javascript_tag "movementRanges = #{@movements_ranges.to_json}"
 = javascript_tag "fuelChartData = #{@fuel_chart_data.to_json}"
 = javascript_tag "tankSize = #{@vehicle.fuel_tank}"
+= javascript_tag "selectedDateLastMinute = #{@selected_date_last_minute}"
 = javascript_tag "jsLocaleKeys = #{Hash[*@js_locale_keys.collect{ |key| [key, t('.' + key)] }.flatten].to_json}"
 
 - content_for :sidebar_actions do

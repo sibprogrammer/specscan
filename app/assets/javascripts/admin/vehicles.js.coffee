@@ -198,7 +198,7 @@ $ ->
 
     showMovementsChart = ->
       chartData = []
-      chartData[i] = 1 for i in [0..1440]
+      chartData[i] = 1 for i in [0..(selectedDateLastMinute-1)]
 
       for index, range of movementRanges
         chartData[i] = 9 for i in [range[0]..range[1]]

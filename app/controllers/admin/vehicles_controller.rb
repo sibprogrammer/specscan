@@ -85,6 +85,7 @@ class Admin::VehiclesController < Admin::Base
     time = params.key?(:date) ? Time.parse(params[:date]) : Date.today.to_time
     @selected_date = time.to_formatted_s(:date)
     @week_day = t('week_day.name_' + time.wday.to_s)
+    @selected_date_last_minute = ((Time.now.to_i - time.to_i) < 86400 ? (Time.now.to_i - time.to_i) : 86400) / 60
 
     @movements = Movement.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lt => time.to_i + 86400).
       sort(:from_timestamp)
@@ -93,7 +94,7 @@ class Admin::VehiclesController < Admin::Base
     @report = Report.where(:imei => @vehicle.imei, :date => time.to_date.strftime('%Y%m%d').to_i).first
     @fuel_changes = FuelChange.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lt => time.to_i + 86400).
       sort(:from_timestamp)
-    @fuel_chart_data = get_fuel_details(time)
+    @fuel_chart_data = get_fuel_details(time, @selected_date_last_minute)
 
     @js_locale_keys = %w{ parking_title movement_title reset_zoom reset_zoom_title }
   end
@@ -161,11 +162,9 @@ class Admin::VehiclesController < Admin::Base
       reports_summary
     end
 
-    def get_fuel_details(start_time)
+    def get_fuel_details(start_time, selected_date_last_minute)
       initial_way_point = WayPoint.get_by_timestamp(start_time.to_i, @vehicle.imei, { :rs232_1.gt => 0 })
       fuel_initial_value = initial_way_point ? @vehicle.get_fuel_amount(initial_way_point.fuel_signal).to_i : 0
-
-      selected_date_last_minute = ((Time.now.to_i - start_time.to_i) < 86400 ? (Time.now.to_i - start_time.to_i) : 86400) / 60
 
       way_points = WayPoint.where(:imei => @vehicle.imei, :timestamp.gte => start_time.to_i, :timestamp.lt => start_time.to_i + 86400).
         sort(:from_timestamp)
