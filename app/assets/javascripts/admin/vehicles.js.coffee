@@ -198,10 +198,10 @@ $ ->
 
     showMovementsChart = ->
       chartData = []
-      chartData[i] = 0 for i in [0..1440]
+      chartData[i] = 1 for i in [0..1440]
 
       for index, range of movementRanges
-        chartData[i] = 1 for i in [range[0]..range[1]]
+        chartData[i] = 9 for i in [range[0]..range[1]]
 
       chart = new Highcharts.Chart({
         chart: {
@@ -218,7 +218,9 @@ $ ->
           title: {
             text: null
           },
-          categories: [jsLocaleKeys.parking_title, jsLocaleKeys.movement_title]
+          max: 10,
+          gridLineWidth: 0
+          categories: ['', jsLocaleKeys.parking_title, '', '', '', '', '', '', '', jsLocaleKeys.movement_title, '']
         },
         xAxis: {
           labels: {
@@ -228,24 +230,39 @@ $ ->
           min: 0,
           max: 1440,
           tickInterval: 60,
-          gridLineWidth: 1,
-          offset: 1
+          gridLineWidth: 1
         },
         plotOptions: {
           area: {
+            lineWidth: 2,
+            shadow: false,
+            fillColor: {
+              linearGradient: [0, 0, 0, tankSize],
+              stops: [
+                [0, 'rgba(2,0,0,0)'],
+                [1, Highcharts.getOptions().colors[0]],
+              ]
+            },
             marker: {
               enabled: false,
               symbol: 'circle',
-              radius: 2,
               states: {
                 hover: {
-                  enabled: true
+                  enabled: true,
+                  radius: 4,
                 }
+              }
+            },
+            states: {
+              hover: {
+                lineWidth: 2
               }
             }
           }
         }
         tooltip: {
+          crosshairs: true,
+          shared: true,
           formatter: ->
             hours = parseInt(this.x / 60)
             hours = if hours >= 10 then hours else ('0' + hours)
