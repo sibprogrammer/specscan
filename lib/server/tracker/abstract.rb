@@ -18,7 +18,7 @@ class Server::Tracker::Abstract < Server::Abstract
     @port = @config['port']
     @server = TCPServer.new @port
     @log_file = "#{Rails.root}/log/tracker-server-#{@server_name}.log"
-    logger.debug "Staring #{@server_name} tracker server on port #{@port}..."
+    logger.debug "Starting #{@server_name} tracker server on port #{@port}..."
   end
 
   def start

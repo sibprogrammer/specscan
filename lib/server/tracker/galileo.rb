@@ -20,7 +20,11 @@ class Server::Tracker::Galileo < Server::Tracker::Abstract
       logger.debug "IMEI #{packet[:imei]} record id: #{packet[:record_id]}" if packet.key?(:record_id)
 
       point = WayPoint.new(packet)
-      point.save
+      if packet.key?(:timestamp) and (Time.now.to_i - packet[:timestamp]) > 1.year.to_i
+        logger.debug "Packet with very old timestamp was recieved - #{packet[:timestamp]}"
+      else
+        point.save
+      end
     end
   end
 
