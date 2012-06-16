@@ -270,7 +270,7 @@ $ ->
       chart = new Highcharts.Chart({
         chart: {
           renderTo: 'fuelChangesChart',
-          type: 'line',
+          type: 'area',
           zoomType: 'x',
           marginBottom: 25,
           marginLeft: 100
@@ -284,6 +284,7 @@ $ ->
           },
           min: 0,
           max: tankSize,
+          startOnTick: false,
         },
         xAxis: {
           labels: {
@@ -297,26 +298,43 @@ $ ->
           offset: 1
         },
         plotOptions: {
-          line: {
+          area: {
+            lineWidth: 2,
+            shadow: false,
+            fillColor: {
+              linearGradient: [0, 0, 0, tankSize],
+              stops: [
+                [0, 'rgba(2,0,0,0)'],
+                [1, Highcharts.getOptions().colors[0]],
+              ]
+            },
             marker: {
               enabled: false,
               symbol: 'circle',
-              radius: 2,
               states: {
                 hover: {
-                  enabled: true
+                  enabled: true,
+                  radius: 4,
                 }
+              }
+            },
+            states: {
+              hover: {
+                lineWidth: 2
               }
             }
           }
         }
         tooltip: {
+          crosshairs: true,
+          shared: true,
           formatter: ->
-            hours = parseInt(this.x / 60)
+            point = this.points[0]
+            hours = parseInt(point.x / 60)
             hours = if hours >= 10 then hours else ('0' + hours)
-            minutes = this.x % 60
+            minutes = point.x % 60
             minutes = if minutes >= 10 then minutes else ('0' + minutes)
-            hours + ':' + minutes + ' - ' + this.y
+            hours + ':' + minutes + ' - ' + point.y
         },
         legend: {
           enabled: false
