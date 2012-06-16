@@ -9,6 +9,7 @@ class Server::Analyzer < Server::Abstract
   MIN_SECONDS_FOR_PARKING_WITH_ENGINE_ON = 120
   MIN_SPEED_KM = 3
   FUEL_TRESHOLD_LITRES = 10
+  MIN_SECONDS_BETWEEN_REFILLS = 180
 
   def initialize
     @log_file = "#{Rails.root}/log/analyzer.log"
@@ -76,10 +77,12 @@ class Server::Analyzer < Server::Abstract
         prev_fuel_change = FuelChange.where(:imei => vehicle.imei, :to_timestamp.lt => way_point.timestamp).sort(:to_timestamp.desc).first
         multiplier = (fuel_diff > 0) ? -1 : 1
 
-        if prev_fuel_change and prev_fuel_change.multiplier == multiplier and (way_point.timestamp - prev_fuel_change.to_timestamp) < 60
+        if prev_fuel_change and prev_fuel_change.multiplier == multiplier and (way_point.timestamp - prev_fuel_change.to_timestamp) < MIN_SECONDS_BETWEEN_REFILLS
           prev_fuel_change.to_timestamp = way_point.timestamp
           prev_fuel_change.amount += fuel_diff.abs.to_f
           prev_fuel_change.save
+
+          logger.debug "#{fuel_diff} litres were added to previous fuel change."
         else
           FuelChange.create({
             :imei => vehicle.imei,
@@ -89,9 +92,9 @@ class Server::Analyzer < Server::Abstract
             :to_timestamp => way_point.timestamp,
             :way_point => way_point,
           })
-        end
 
-        logger.debug "Fuel ammount changed: #{fuel_diff}"
+          logger.debug "New fuel change detected: #{fuel_diff} litres."
+        end
       end
     end
 
