@@ -239,7 +239,7 @@ $ ->
             fillColor: {
               linearGradient: [0, 0, 0, tankSize],
               stops: [
-                [0, 'rgba(2,0,0,0)'],
+                [0, 'rgba(240,240,240,0)'],
                 [1, Highcharts.getOptions().colors[0]],
               ]
             },
@@ -321,7 +321,7 @@ $ ->
             fillColor: {
               linearGradient: [0, 0, 0, tankSize],
               stops: [
-                [0, 'rgba(2,0,0,0)'],
+                [0, 'rgba(240,240,240,0)'],
                 [1, Highcharts.getOptions().colors[0]],
               ]
             },
