@@ -54,7 +54,7 @@ class Server::Analyzer < Server::Abstract
 
       WayPoint.where(conditions).sort(:timestamp).each do |way_point|
         update_fuel_changes(way_point, prev_way_point, vehicle, last_movement) if prev_way_point
-        prev_way_point = way_point
+        prev_way_point = way_point unless 0 == way_point.fuel_signal
         next unless way_point.coors_valid
         last_movement = analyze_way_point(way_point, vehicle.imei, last_movement)
         movements << last_movement if last_movement.id.to_s != movements.last.id.to_s
