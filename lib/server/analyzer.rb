@@ -50,7 +50,7 @@ class Server::Analyzer < Server::Abstract
       }
 
       movements = [last_movement]
-      prev_way_point = WayPoint.where(:imei => vehicle.imei, :timestamp.lt => last_movement.to_timestamp).sort(:timestamp.desc).first
+      prev_way_point = WayPoint.where(:imei => vehicle.imei, :timestamp.lte => last_movement.to_timestamp).sort(:timestamp.desc).first
 
       WayPoint.where(conditions).sort(:timestamp).each do |way_point|
         update_fuel_changes(way_point, prev_way_point, vehicle, last_movement) if prev_way_point
