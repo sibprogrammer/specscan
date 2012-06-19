@@ -28,6 +28,9 @@
     %p
       %a{ :name => "packet-#{way_point._id}", :href => 'javascript:void(0);' }
         = t('.packet_title', :id => way_point._id, :time => Time.at(way_point.timestamp).to_formatted_s(:date_time_full), :imei => way_point.imei)
+      - if way_point.latitude?
+        %br
+        = link_to t('.map_link'), "http://www.openstreetmap.org/?mlat=#{way_point.latitude}&mlon=#{way_point.longitude}&zoom=15", :target => "_blank"
     %table.table.table-striped
       - way_point.attributes.keys.sort.each do |attr|
         - if @tags_filter.blank? or @tags_filter.include?(attr)
