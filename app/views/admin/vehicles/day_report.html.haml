@@ -2,10 +2,10 @@
 
 = javascript_include_tag "external/highcharts"
 = javascript_tag "movementRanges = #{@movements_ranges.to_json}"
-= javascript_tag "fuelChartData = #{@fuel_chart_data.to_json}"
-= javascript_tag "tankSize = #{@vehicle.fuel_tank}"
 = javascript_tag "selectedDateLastMinute = #{@selected_date_last_minute}"
 = javascript_tag "jsLocaleKeys = #{Hash[*@js_locale_keys.collect{ |key| [key, t('.' + key)] }.flatten].to_json}"
+= javascript_tag "fuelChartData = #{@vehicle.fuel_sensor ? @fuel_chart_data.to_json : '[]'}"
+= javascript_tag "tankSize = #{@vehicle.fuel_sensor ? @vehicle.fuel_tank : 0}"
 
 - content_for :sidebar_actions do
   %li= link_to t('.action.map'), map_admin_vehicle_path(:date => @selected_date)
