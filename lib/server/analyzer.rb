@@ -9,6 +9,7 @@ class Server::Analyzer < Server::Abstract
   MIN_SECONDS_FOR_PARKING_WITH_ENGINE_ON = 120
   MIN_SPEED_KM = 3
   FUEL_TRESHOLD_LITRES = 10
+  FUEL_TRESHOLD_PARKING_LITRES = 8
   MIN_SECONDS_BETWEEN_REFILLS = 180
 
   def initialize
@@ -70,7 +71,9 @@ class Server::Analyzer < Server::Abstract
       fuel_diff = vehicle.get_fuel_amount(prev_way_point.fuel_signal) - vehicle.get_fuel_amount(way_point.fuel_signal)
       return if fuel_diff.abs < 0.01
 
-      if fuel_diff.abs < FUEL_TRESHOLD_LITRES
+      fuel_treshold = (last_movement.parking and fuel_diff > 0) ? FUEL_TRESHOLD_PARKING_LITRES : FUEL_TRESHOLD_LITRES
+
+      if fuel_diff.abs < fuel_treshold
         last_movement.fuel_used = (last_movement.fuel_used.to_f + fuel_diff).to_f
         last_movement.save
       else
