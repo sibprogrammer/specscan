@@ -6,18 +6,18 @@
 %table.table.table-bordered.table-striped
   %thead
     %tr
-      %th= t '.column.mobile_operator'
-      %th= t(".column.vehicle")
       - @columns.each do |column_name|
-        - sortable_column column_name, t(".column.#{column_name}"), @sort_state
+        - if %w{ mobile_operator vehicle }.include?(column_name)
+          %th= t(".column.#{column_name}")
+        - else sortable_column column_name, t(".column.#{column_name}"), @sort_state
 
   %tbody
     - @sim_cards.each do |sim_card|
       %tr
-        %td= sim_card.mobile_operator.title
-        %td= sim_card.vehicle ? link_to(sim_card.vehicle.title, admin_vehicle_path(sim_card.vehicle)) : sim_card.description
         %td= link_to number_to_phone(sim_card.phone), admin_sim_card_path(sim_card), :title => sim_card.description
+        %td= sim_card.mobile_operator.title
         %td= sim_card.balance
+        %td= sim_card.vehicle ? link_to(sim_card.vehicle.title, admin_vehicle_path(sim_card.vehicle)) : sim_card.description
         %td= l sim_card.created_at.localtime
         %td= l sim_card.updated_at.localtime
 

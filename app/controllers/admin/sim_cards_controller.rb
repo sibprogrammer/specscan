@@ -4,7 +4,7 @@ class Admin::SimCardsController < Admin::Base
   before_filter :set_selected_sim_card, :only => [:show, :edit, :update, :check_balance, :destroy]
 
   def index
-    @columns = %w{ phone balance created_at updated_at }
+    @columns = %w{ phone mobile_operator balance vehicle created_at updated_at }
     @sort_state = get_list_sort_state(@columns, :sim_cards_list, :dir => 'asc', :field => 'balance')
     @sim_cards = SimCard.page(get_list_page).
       order("#{@sort_state[:field]} #{@sort_state[:dir]}")
