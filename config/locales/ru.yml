@@ -414,7 +414,6 @@ ru:
         action:
           add_fuel_sensor: "Добавить датчик"
         column:
-          identity: "#"
           fuel_sensor_model: "Модель датчика"
           code: "Код"
           comments: "Примечание"
