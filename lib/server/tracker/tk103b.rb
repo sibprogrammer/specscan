@@ -4,11 +4,20 @@ class Server::Tracker::Tk103b < Server::Tracker::Abstract
 
   SPEED_KM_PER_KNOT = 1.852
   REPLY_INTERVAL = '5s'
+  READ_BUFFER_BYTES = 8192
 
   def process_data(client)
     loop do
       data = read_data(client)
+      data.split(';').each do |packet|
+        process_packet(data)
+      end
+    end
+  end
 
+  private
+
+    def process_packet(data)
       if data.starts_with?('##')
         # process header
         send_data(client, 'LOAD')
@@ -29,16 +38,13 @@ class Server::Tracker::Tk103b < Server::Tracker::Abstract
         raise "Unrecognized data packet #{data}"
       end
     end
-  end
-
-  private
 
     def read_data(client)
-      data = client.recv(200)
+      data = client.recv(READ_BUFFER_BYTES)
       raise "Socket was closed by server." if data.blank?
 
       logger.debug "Recieved data: #{data}"
-      data.to_s.chomp(';')
+      data.to_s
     end
 
     def send_data(client, data)
