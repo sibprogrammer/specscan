@@ -18,6 +18,7 @@ class Admin::Base < ApplicationController
       @menu << { :name => 'overview', :controller => 'admin/dashboard', :link => '/' } if current_user.admin?
       @menu << { :name => 'users', :controller => 'admin/users', :link => '/admin/users' } if can? :manage, User
       @menu << { :name => 'vehicles', :controller => 'admin/vehicles', :link => '/admin/vehicles' }
+      @menu << { :name => 'additional_users', :controller => 'admin/additional_users', :link => '/admin/additional_users' } if can? :manage_additional_users, User
       @menu << { :name => 'fuel_sensors', :controller => 'admin/fuel_sensors', :link => '/admin/fuel_sensors' } if can? :manage, FuelSensor
       @menu << { :name => 'sim_cards', :controller => 'admin/sim_cards', :link => '/admin/sim_cards' } if can? :manage, SimCard
       @menu << { :name => 'tools', :controller => 'admin/tools', :link => '/admin/tools' } if current_user.admin?

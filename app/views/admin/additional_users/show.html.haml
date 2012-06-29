@@ -1,0 +1,19 @@
+- @page_title = t '.page_title', :login => @user.login
+
+%form.form-horizontal
+  - %w{ login name email additional_info }.each do |field_name|
+    - if !@user.send(field_name).blank?
+      .control-group
+        %label.control-label= t('admin.users.form.field.' + field_name)
+        .control
+          %span.uneditable-input= simple_format @user.send(field_name)
+
+  .form-actions
+    = link_to t('.button.back'), admin_additional_users_path, :class => 'btn btn-primary'
+    = link_to t('.button.edit'), edit_admin_additional_user_path(@user), :class => 'btn'
+    - if @user.unlocked
+      = link_to t('.button.lock'), lock_admin_additional_user_path(@user), :class => 'btn btn-danger', :method => :post
+    - else
+      = link_to t('.button.unlock'), unlock_admin_additional_user_path(@user), :class => 'btn btn-success', :method => :post
+    - if @user.deletable?
+      = link_to t('.button.delete'), admin_additional_user_path(@user), :class => 'btn btn-danger', :method => :delete, 'data-confirm' => t('.button.confirm_delete')

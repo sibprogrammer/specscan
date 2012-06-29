@@ -6,7 +6,7 @@
   - if can? :manage, User
     %tr
       %th= link_to t('.stats.column.users'), admin_users_path
-      %td= @users_total
+      %td= @clients_total
   %tr
     %th= link_to t('.stats.column.vehicles'), admin_vehicles_path
     %td= @vehicles_total

@@ -2,18 +2,22 @@ class User < ActiveRecord::Base
 
   ROLE_ADMIN = 1
   ROLE_CLIENT = 2
-  ROLES = [['admin', ROLE_ADMIN], ['client', ROLE_CLIENT]]
+  ROLE_USER = 3
+  ROLES = [['admin', ROLE_ADMIN], ['client', ROLE_CLIENT], ['user', ROLE_USER]]
 
-  validates :login, :presence => true, :uniqueness => true, :length => { :minimum => 3, :maximum => 15 },
-    :format => { :with => /^[a-z\d]+$/ }
+  validates :login, :presence => true, :uniqueness => true, :length => { :minimum => 3, :maximum => 20 },
+    :format => { :with => /^[-a-z\d]+$/ }
   validates :password, :presence => true, :confirmation => true, :on => :create,
     :length => { :minimum => 6, :maximum => 25 }, :format => { :with => /^[a-zA-Z\d]+$/ }
   validates :role, :presence => true
   devise :database_authenticatable, :rememberable, :trackable, :validatable
   attr_accessible :login, :name, :email, :password, :password_confirmation, :remember_me, :role, :contact_name,
-    :phone, :additional_info, :comment
+    :phone, :additional_info, :comment, :owner_id
 
   has_many :vehicles
+  belongs_to :owner, :class_name => 'User', :foreign_key => 'owner_id'
+
+  scope :clients, where('role IN (?)', [User::ROLE_CLIENT, User::ROLE_ADMIN])
 
   def admin?
     ROLE_ADMIN == role
@@ -23,10 +27,15 @@ class User < ActiveRecord::Base
     ROLE_CLIENT == role
   end
 
+  def user?
+    ROLE_USER == role
+  end
+
   def role_name
     case role
       when ROLE_ADMIN then 'admin'
       when ROLE_CLIENT then 'client'
+      when ROLE_USER then 'user'
     end
   end
 
@@ -49,11 +58,11 @@ class User < ActiveRecord::Base
   end
 
   def active_for_authentication?
-    super && unlocked
+    super && unlocked && (owner ? owner.unlocked : true)
   end
 
   def deletable?
-    0 == vehicles.count
+    user? or 0 == vehicles.count
   end
 
   protected

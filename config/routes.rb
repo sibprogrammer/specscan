@@ -11,6 +11,10 @@ Specscan::Application.routes.draw do
       post 'lock', :on => :member
       post 'unlock', :on => :member
     end
+    resources :additional_users do
+      post 'lock', :on => :member
+      post 'unlock', :on => :member
+    end
     resources :vehicles do
       get 'map', :on => :member
       get 'reports', :on => :member

@@ -18,13 +18,15 @@
     .control-group
       = f.label :role, t('.field.role'), :class => 'control-label'
       .controls
-        = f.select :role, options_for_select(User::ROLES.collect{ |role| [t('.field.role_' + role[0]), role[1]] }, { :selected => @user.role || User::ROLE_CLIENT })
+        = f.select :role, options_for_select([[t('.field.role_client'), User::ROLE_CLIENT], [t('.field.role_admin'), User::ROLE_ADMIN]], { :selected => @user.role || User::ROLE_CLIENT })
 
   - if @profile
     = hidden_field_tag :profile, true
 
-  - form_field f, :contact_name, :text_field
-  - form_field f, :phone, :text_field
+  - unless @user.user?
+    - form_field f, :contact_name, :text_field
+    - form_field f, :phone, :text_field
+
   - form_field f, :additional_info, :text_area, :rows => 2
   - if can? :manage, @user
     - form_field f, :comment, :text_area, :rows => 2

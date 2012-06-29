@@ -1,6 +1,7 @@
 class Admin::VehiclesController < Admin::Base
 
   before_filter :check_manage_permission, :only => [:new, :create, :destroy, :calibration, :calibration_save]
+  before_filter :check_edit_permission, :only => [:edit, :update]
   before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports, :day_report, :destroy, :get_movement_points,
     :calibration, :calibration_save]
 
@@ -8,10 +9,11 @@ class Admin::VehiclesController < Admin::Base
     @columns = %w{ name reg_number imei owner created_at }
     @sort_state = get_list_sort_state(@columns, :users_list, :dir => 'desc', :field => 'created_at')
     order = "#{@sort_state[:field]} #{@sort_state[:dir]}"
-    if can?(:manage, Vehicle)
+    if can?(:manage, Vehicle) or (current_user.owner and current_user.owner.admin?)
       @vehicles = Vehicle.page(params[:page]).joins(:user).select('vehicles.*, users.login as owner').order(order)
     else
-      @vehicles = current_user.vehicles.page(params[:page]).order(order)
+      user = current_user.user? ? current_user.owner : current_user
+      @vehicles = user.vehicles.page(params[:page]).order(order)
     end
   end
 
@@ -126,9 +128,13 @@ class Admin::VehiclesController < Admin::Base
       authorize! :manage, Vehicle
     end
 
+    def check_edit_permission
+      authorize! :edit, Vehicle
+    end
+
     def set_selected_vehicle
       @vehicle = Vehicle.find(params[:id])
-      authorize! :edit, @vehicle
+      authorize! :view, @vehicle
     end
 
     def get_boundary_movements(movements)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120612061551) do
+ActiveRecord::Schema.define(:version => 20120629043342) do
 
   create_table "fuel_sensor_models", :force => true do |t|
     t.string "title"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(:version => 20120612061551) do
     t.string   "additional_info"
     t.string   "comment"
     t.boolean  "locked",                                :default => false
+    t.integer  "owner_id",                              :default => 0
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

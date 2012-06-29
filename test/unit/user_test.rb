@@ -33,7 +33,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "user with too long login" do
-    user = User.new(:login => '1234567890123456', :password => 'test123')
+    user = User.new(:login => '123456789012345678901', :password => 'test123')
     assert user.invalid?
   end
 
@@ -45,6 +45,11 @@ class UserTest < ActiveSupport::TestCase
   test "user login should not contain special characters" do
     user = User.new(:login => 'test!', :password => '123456')
     assert user.invalid?
+  end
+
+  test "user login can contain dashes" do
+    user = User.new(:login => 'company-user', :password => '123456')
+    assert user.valid?
   end
 
   test "user password should not contain special characters" do

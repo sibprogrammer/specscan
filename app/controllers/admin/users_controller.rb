@@ -9,6 +9,7 @@ class Admin::UsersController < Admin::Base
     @users = User.page(get_list_page).
       joins("LEFT JOIN vehicles ON users.id = vehicles.user_id").
       select("users.*, COUNT(vehicles.user_id) AS vehicles_total").
+      where('role IN (?)', [User::ROLE_CLIENT, User::ROLE_ADMIN]).
       group("users.id").
       order("#{@sort_state[:field]} #{@sort_state[:dir]}")
   end
@@ -47,7 +48,7 @@ class Admin::UsersController < Admin::Base
     end
 
     params[:user].delete(:login)
-    params[:user].delete(:role_id) unless can? :manage, @user
+    params[:user].delete(:role) unless can? :manage, @user
 
     if @user.update_attributes(params[:user])
       if params.key?(:profile)

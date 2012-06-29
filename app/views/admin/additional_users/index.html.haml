@@ -1,0 +1,30 @@
+- @page_title = t '.page_title'
+
+- content_for :sidebar_actions do
+  %li= link_to t('.action.add_user'), new_admin_additional_user_path
+
+- if @users.empty?
+  %p= t('.no_data')
+- else
+  %table.table.table-bordered.table-striped
+    %thead
+      %tr
+        - @columns.each do |column_name|
+          - if 'owner_id' == column_name
+            %th= t(".column.owner")
+          - else
+            - sortable_column column_name, t(".column.#{column_name}"), @sort_state
+
+    %tbody
+      - @users.each do |user|
+        %tr
+          %td
+            - if user.locked
+              = image_tag "icons/lock.png", :class => 'inline-icon', :title => t('.hint.locked')
+            = link_to user.login, admin_additional_user_path(user)
+          %td= user.name
+          %td= mail_to user.email
+          - if can? :manage, :all
+            %td= user.owner.login
+
+  = will_paginate @users

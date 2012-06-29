@@ -1,0 +1,27 @@
+= form_for([:admin_additional, @user], :html => { :class => 'form-horizontal' }) do |f|
+  = render :partial => 'partials/form_errors', :locals => { :resource => @user, :locale_scope => 'admin.additional_users.form' }
+
+  .control-group
+    = f.label :login, t('.field.login'), :class => 'control-label'
+    .controls
+      - if @user.new_record?
+        = f.text_field :login, :required => true
+      - else
+        %span.uneditable-input= @user.login
+
+  - form_field f, :name, :text_field
+
+  - if can? :manage, :all
+    .control-group
+      = f.label :user, t('.field.owner'), :class => 'control-label'
+      .controls
+        = select 'user', 'owner_id', User.clients.collect { |user| [user.login, user.id] }
+
+  - form_field f, :email, :email_field
+  - form_field f, :password, :password_field
+  - form_field f, :password_confirmation, :password_field
+  - form_field f, :additional_info, :text_area, :rows => 2
+
+  .form-actions
+    = f.submit t('.button.' + (@user.new_record? ? 'create' : 'update')), :class => 'btn btn-primary'
+    = link_to t('.button.back'), admin_additional_users_path, :class => 'btn'
