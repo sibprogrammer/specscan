@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
 
   has_many :vehicles
   belongs_to :owner, :class_name => 'User', :foreign_key => 'owner_id'
+  has_many :additional_users, :class_name => 'User', :foreign_key => 'owner_id', :dependent => :destroy
 
   scope :clients, where('role IN (?)', [User::ROLE_CLIENT, User::ROLE_ADMIN])
 
