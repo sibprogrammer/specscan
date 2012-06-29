@@ -10,14 +10,15 @@ class Server::Tracker::Tk103b < Server::Tracker::Abstract
     loop do
       data = read_data(client)
       data.split(';').each do |packet|
-        process_packet(data)
+        next if packet.to_s.chomp.empty?
+        process_packet(client, packet)
       end
     end
   end
 
   private
 
-    def process_packet(data)
+    def process_packet(client, data)
       if data.starts_with?('##')
         # process header
         send_data(client, 'LOAD')
