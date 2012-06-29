@@ -37,7 +37,7 @@ class Movement
     all_points = WayPoint.where(:imei => imei, :timestamp.gte => from_timestamp, :timestamp.lte => to_timestamp, :coors_valid => true).all
 
     all_points.collect do |point|
-      [point.latitude, point.longitude, Time.at(point.timestamp).to_formatted_s(:time), point.speed]
+      [point.latitude, point.longitude, Time.at(point.timestamp).to_formatted_s(:time), point.speed.to_i]
     end
   end
 
