@@ -120,7 +120,7 @@ class Server::Analyzer < Server::Abstract
           last_movement = add_way_point(last_movement, way_point)
         else
           distance = way_point.distance(WayPoint.get_by_timestamp(last_movement.from_timestamp, imei))
-          if distance > MIN_METERS_FOR_MOVEMENT_START and way_point.speed > MIN_SPEED_KM
+          if distance > MIN_METERS_FOR_MOVEMENT_START or way_point.speed > MIN_SPEED_KM
             last_movement.save
             last_movement = create_movement(imei, last_movement, way_point)
           else

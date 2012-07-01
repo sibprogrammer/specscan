@@ -9,12 +9,14 @@ class WayPoint
   key :speed
   key :sens_moving
   key :rs232_1
+  key :coors_valid
 
   def zero_speed?
     speed.to_f.abs < 0.1
   end
 
   def distance(to_point)
+    return 0 if !(coors_valid and to_point.coors_valid)
     coors_to_distance_haversine(latitude, longitude, to_point.latitude, to_point.longitude)
   end
 
