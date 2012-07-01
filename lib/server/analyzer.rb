@@ -119,8 +119,8 @@ class Server::Analyzer < Server::Abstract
         if !way_point.engine_on and !way_point.sens_moving
           last_movement = add_way_point(last_movement, way_point)
         else
-          distance = way_point.distance(WayPoint.get_by_timestamp(last_movement.from_timestamp, imei))
-          if distance > MIN_METERS_FOR_MOVEMENT_START or way_point.speed > MIN_SPEED_KM
+          distance = way_point.distance(WayPoint.get_by_timestamp(last_movement.from_timestamp, imei, :coors_valid => true))
+          if distance > MIN_METERS_FOR_MOVEMENT_START and way_point.speed > MIN_SPEED_KM
             last_movement.save
             last_movement = create_movement(imei, last_movement, way_point)
           else
@@ -131,30 +131,13 @@ class Server::Analyzer < Server::Abstract
         last_movement.save
       else
         # if last was a movement
-        if !way_point.engine_on and !way_point.sens_moving
-          prev_way_point = WayPoint.nearest_point(way_point.timestamp, imei)
-
-          if prev_way_point and (prev_way_point.engine_on or prev_way_point.sens_moving) and prev_way_point.timestamp > last_movement.from_timestamp
-            last_movement = add_way_point(last_movement, way_point)
-          else
-            prev_way_point = WayPoint.find_closest_older(way_point, last_movement)
-
-            if prev_way_point
-              last_movement = add_way_point(last_movement, prev_way_point)
-              last_movement.save
-            end
-
-            last_movement = create_parking(imei, last_movement, way_point)
-          end
+        prev_way_point = WayPoint.nearest_point(way_point.timestamp - MIN_SECONDS_FOR_PARKING_WITH_ENGINE_ON, imei)
+        if way_point.zero_speed? and prev_way_point and prev_way_point.timestamp > last_movement.from_timestamp and prev_way_point.distance(way_point) < MIN_METERS_FOR_MOVEMENT_START
+          last_movement = add_way_point(last_movement, prev_way_point)
+          last_movement.save
+          last_movement = create_parking(imei, last_movement, way_point)
         else
-          prev_way_point = WayPoint.nearest_point(way_point.timestamp - MIN_SECONDS_FOR_PARKING_WITH_ENGINE_ON, imei)
-          if prev_way_point and prev_way_point.timestamp > last_movement.from_timestamp and prev_way_point.distance(way_point) < MIN_METERS_FOR_MOVEMENT_START
-            last_movement = add_way_point(last_movement, prev_way_point)
-            last_movement.save
-            last_movement = create_parking(imei, last_movement, way_point)
-          else
-            last_movement = add_way_point(last_movement, way_point)
-          end
+          last_movement = add_way_point(last_movement, way_point)
         end
 
         last_movement.save

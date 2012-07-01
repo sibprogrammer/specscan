@@ -16,7 +16,6 @@ class WayPoint
   end
 
   def distance(to_point)
-    return 0 if !(coors_valid and to_point.coors_valid)
     coors_to_distance_haversine(latitude, longitude, to_point.latitude, to_point.longitude)
   end
 
