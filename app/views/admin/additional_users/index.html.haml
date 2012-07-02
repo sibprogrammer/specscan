@@ -6,6 +6,8 @@
 - if @users.empty?
   %p= t('.no_data')
 - else
+  = will_paginate @users
+
   %table.table.table-bordered.table-striped
     %thead
       %tr

@@ -1,7 +1,7 @@
 require 'will_paginate/view_helpers/link_renderer'
 require 'will_paginate/view_helpers/action_view'
 
-WillPaginate.per_page = 10
+WillPaginate.per_page = 15
 WillPaginate::ViewHelpers.pagination_options[:inner_window] = 2
 
 module WillPaginate

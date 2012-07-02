@@ -4,6 +4,8 @@
   - if can? :manage, FuelSensor
     %li= link_to t('.action.add_fuel_sensor'), new_admin_fuel_sensor_path
 
+= will_paginate @fuel_sensors
+
 %table.table.table-bordered.table-striped
   %thead
     %tr

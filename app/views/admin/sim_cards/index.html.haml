@@ -3,6 +3,8 @@
 - content_for :sidebar_actions do
   %li= link_to t('.action.add_sim_card'), new_admin_sim_card_path
 
+= will_paginate @sim_cards
+
 %table.table.table-bordered.table-striped
   %thead
     %tr

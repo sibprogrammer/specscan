@@ -3,6 +3,8 @@
 - content_for :sidebar_actions do
   %li= link_to t('.action.add_user'), new_admin_user_path
 
+= will_paginate @users
+
 %table.table.table-bordered.table-striped
   %thead
     %tr

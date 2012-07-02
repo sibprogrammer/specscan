@@ -4,6 +4,8 @@
   - if can? :manage, Vehicle
     %li= link_to t('.action.add_vehicle'), new_admin_vehicle_path
 
+= will_paginate @vehicles
+
 %table.table.table-bordered.table-striped
   %thead
     %tr
