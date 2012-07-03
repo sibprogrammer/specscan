@@ -194,6 +194,17 @@ $ ->
       url += '?date=' + $('#selectedDate').text()
       document.location = url
 
+  if $('body.vehicles.reports').length > 0
+
+    $('#reports-list').tablesorter({
+      sortList: [[0, 1]],
+      headers: {
+        0: {
+          sorter: 'text'
+        }
+      }
+    })
+
   if $('body.vehicles.day_report').length > 0
 
     showMovementsChart = ->
@@ -373,3 +384,7 @@ $ ->
 
     showMovementsChart() if $('#movementsChart').length > 0
     showFuelChangesChart() if $('#fuelChangesChart').length > 0
+
+    $('#movements-list').tablesorter({
+      sortList: [[1, 0]]
+    })

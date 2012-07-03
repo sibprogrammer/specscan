@@ -1,6 +1,7 @@
 - @page_title = t '.page_title', :vehicle_title => @vehicle.title
 
 = javascript_include_tag "external/highcharts"
+= javascript_include_tag "external/jquery.tablesorter.min"
 = javascript_tag "movementRanges = #{@movements_ranges.to_json}"
 = javascript_tag "selectedDateLastMinute = #{@selected_date_last_minute}"
 = javascript_tag "jsLocaleKeys = #{Hash[*@js_locale_keys.collect{ |key| [key, t('.' + key)] }.flatten].to_json}"
@@ -94,13 +95,13 @@
               %td= decimal_human(fuel_change.amount)
 
   %h3= t '.header.movements_list'
-  %table.table.table-bordered.table-striped
+  %table#movements-list.table.table.table-bordered.table-striped.tablesorter
     %thead
       %tr
-      - %w{ type from_time to_time duration distance }.each do |column_name|
-        %th= t ".column.#{column_name}"
-      - if @vehicle.fuel_sensor
-        %th= t '.column.fuel_used'
+        - %w{ type from_time to_time duration distance }.each do |column_name|
+          %th= link_to t(".column.#{column_name}"), '#'
+        - if @vehicle.fuel_sensor
+          %th= link_to t('.column.fuel_used'), '#'
 
     %tbody
       - @movements.each do |movement|

@@ -1,5 +1,7 @@
 - @page_title = t '.page_title', :vehicle_title => @vehicle.title
 
+= javascript_include_tag "external/jquery.tablesorter.min"
+
 - content_for :sidebar_actions do
   %li= link_to t('.action.map'), map_admin_vehicle_path
   %li= link_to t('.action.details'), admin_vehicle_path
@@ -39,16 +41,13 @@
         %td= decimal_human(@reports_summary[:fuel_used])
 
   %h3= t '.header.list_by_days'
-  %table.table.table-bordered.table-striped
+  %table#reports-list.table.table-bordered.table-striped.tablesorter
     %thead
       %tr
-      - %w{ date parking movement movement_time distance fuel fuel_norm_fact refuels map }.each do |column_name|
-        - next if 'fuel' == column_name and @vehicle.fuel_sensor
-        - next if %w{ fuel_norm_fact refuels }.include?(column_name) and !@vehicle.fuel_sensor
-        - if %w{ movement_time fuel_norm_fact refuels }.include?(column_name)
-          %th{ :colspan => 2 }= t ".column.#{column_name}"
-        - else
-          %th= t ".column.#{column_name}"
+        - %w{ date parking movement parking_time movements_time distance fuel fuel_norm fuel_fact refuels fuel_theft map }.each do |column_name|
+          - next if 'fuel' == column_name and @vehicle.fuel_sensor
+          - next if %w{ fuel_norm fuel_fact refuels fuel_theft }.include?(column_name) and !@vehicle.fuel_sensor
+          %th= link_to t(".column.#{column_name}"), '#'
 
     %tbody
       - @reports.each do |report|

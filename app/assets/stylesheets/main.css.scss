@@ -39,3 +39,6 @@ ul.movements-list { list-style: none outside none; margin: 0 0 0 10px; overflow-
 table.table thead .sorting_asc { background: image-url('sort_asc.png') no-repeat center right; }
 table.table thead .sorting_desc { background: image-url('sort_desc.png') no-repeat center right; }
 table th, table th a, table th a:hover { color: #000; }
+
+table.tablesorter thead tr .headerSortUp { background: image-url('sort_asc.png') no-repeat center right; }
+table.tablesorter thead tr .headerSortDown { background: image-url('sort_desc.png') no-repeat center right; }
