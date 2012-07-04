@@ -187,6 +187,10 @@ $ ->
       map.setCenter(new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude))
       lastPointPlacemark.openBalloon()
 
+    selectedMovementId = window.location.hash.substr(1)
+    if selectedMovementId
+      $('a[data-id="' + selectedMovementId + '"]').click()
+
   if $('body.vehicles.map').length > 0 or $('body.vehicles.day_report').length > 0
 
     $('#selectedDate').on 'custom:dateChanged', ->

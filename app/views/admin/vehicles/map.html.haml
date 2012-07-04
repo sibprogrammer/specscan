@@ -18,7 +18,7 @@
       %li= link_to t('.action.show_all'), '#map-canvas', :class => 'ico-show-all'
       %li= link_to t('.action.hide_all'), '#map-canvas', :class => 'ico-hide-all'
       - @movements.each do |movement|
-        %li= link_to timeframe(movement), "#map-canvas", 'data-info' => movement_info(movement, @vehicle.id).to_json,
+        %li= link_to timeframe(movement), "#map-canvas", 'data-info' => movement_info(movement, @vehicle.id).to_json, 'data-id' => movement._id,
           :class => (movement.parking ? 'ico-parking' : 'ico-moving') + ' movement-info'
   - else
     = t('.no_data')

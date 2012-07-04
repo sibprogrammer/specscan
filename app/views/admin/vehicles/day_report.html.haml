@@ -108,7 +108,7 @@
         %tr
           %td
             = image_tag "icons/#{movement.parking ? 'parking' : 'arrow_down'}.png", :class => 'inline-icon'
-            = t('.' + (movement.parking ? 'parking_title' : 'movement_title'))
+            = link_to t('.' + (movement.parking ? 'parking_title' : 'movement_title')), map_admin_vehicle_path(:date => @selected_date, :anchor => movement._id)
           %td= movement.from_time.to_formatted_s(:date_time)
           %td= movement.to_time.to_formatted_s(:date_time)
           %td= duration_human(movement.elapsed_time)
