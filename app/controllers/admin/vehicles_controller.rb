@@ -3,7 +3,7 @@ class Admin::VehiclesController < Admin::Base
   before_filter :check_manage_permission, :only => [:new, :create, :destroy, :calibration, :calibration_save]
   before_filter :check_edit_permission, :only => [:edit, :update]
   before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports, :day_report, :destroy, :get_movement_points,
-    :calibration, :calibration_save]
+    :calibration, :calibration_save, :get_last_point]
 
   def index
     @columns = %w{ name reg_number imei owner created_at }
@@ -67,6 +67,11 @@ class Admin::VehiclesController < Admin::Base
   def get_movement_points
     movement = Movement.where(:imei => @vehicle.imei, '_id' => params[:movement_id]).first
     render :json => movement ? movement.get_points : []
+  end
+
+  def get_last_point
+    @last_point = WayPoint.where(:imei => @vehicle.imei, :coors_valid => true).sort(:timestamp.desc).first
+    render :json => { :latitude => @last_point.latitude, :longitude => @last_point.longitude }
   end
 
   def reports

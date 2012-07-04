@@ -20,6 +20,7 @@ Specscan::Application.routes.draw do
       get 'reports', :on => :member
       get 'day_report', :on => :member
       get 'get_movement_points', :on => :member
+      get 'get_last_point', :on => :member
       get 'calibration', :on => :member
       put 'calibration_save', :on => :member
     end

@@ -259,6 +259,7 @@ ru:
           show_all: "Показать все"
           hide_all: "Скрыть все"
           last_point: "Последняя точка"
+          monitor: "Слежение"
         movement:
           movement_title: "Перемещение"
           parking_title: "Стоянка"

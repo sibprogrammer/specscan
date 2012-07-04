@@ -145,6 +145,36 @@ $ ->
       else
         renderMovementPoints(element, move, moveMap)
 
+    updatePosition = (map) ->
+      pointLink = $('a.ico-last-point').first()
+      lastPoint = pointLink.data('info')
+      lastPlacemark = pointLink.data('placemark')
+      oldGeoPoint = new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude)
+
+      overlays = pointLink.data('overlays')
+      overlays = [] unless overlays
+
+      if lastPlacemark
+        map.removeOverlay(lastPlacemark)
+
+      $.ajax({
+        url: '/admin/vehicles/' + vehicleId + '/get_last_point'
+      }).done (data) ->
+        lastPoint.longitude = data.longitude
+        lastPoint.latitude = data.latitude
+        newGeoPoint = new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude)
+
+        lastPlacemark = getPlacemark({
+          map: map, title: lastPoint.title, description: lastPoint.description,
+          geoPoint: newGeoPoint, bigIcon: vehicleIcon, moveMap: true
+        })
+        pointLink.data('placemark', lastPlacemark)
+
+        polyline = new PolylineWithArrows([oldGeoPoint, newGeoPoint], { style: 'user#routeLine' })
+        map.addOverlay(polyline)
+        overlays.push(polyline)
+        pointLink.data('overlays', overlays)
+
     resizeMap()
     $(window).resize(resizeMap)
 
@@ -186,6 +216,27 @@ $ ->
       lastPoint = $(this).data('info')
       map.setCenter(new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude))
       lastPointPlacemark.openBalloon()
+
+    $('a.ico-monitor').first().on 'click', ->
+      onlineMonitoring = $(this).data('onlineMonitoring')
+      onlineMonitoring = !onlineMonitoring
+      $(this).data('onlineMonitoring', onlineMonitoring)
+      if onlineMonitoring
+        $(this).parent('li').append('<img src="' + image_path('icons/monitor.gif') + '" class="inline-icon" width="16" height="16">')
+        map.setZoom(12)
+        updatePosition(map)
+        timerId = setInterval ->
+          updatePosition(map)
+        , 5000
+        $(this).data('timerId', timerId)
+      else
+        $(this).parent('li').find('img:last-child').remove()
+        clearInterval($(this).data('timerId'))
+        overlays = $('a.ico-last-point').first().data('overlays')
+        if overlays && overlays.length
+          for overlay in overlays
+            map.removeOverlay(overlay)
+          $('a.ico-last-point').first().data('overlays', null)
 
     selectedMovementId = window.location.hash.substr(1)
     if selectedMovementId
