@@ -40,3 +40,8 @@ gem 'digest-crc'
 gem 'cancan'
 gem 'will_paginate'
 gem 'airbrake'
+
+group :development do
+  gem 'ruby18_source_location'
+  gem 'pry'
+end
