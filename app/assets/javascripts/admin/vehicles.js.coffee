@@ -227,7 +227,7 @@ $ ->
         updatePosition(map)
         timerId = setInterval ->
           updatePosition(map)
-        , 5000
+        , 10000
         $(this).data('timerId', timerId)
       else
         $(this).parent('li').find('img:last-child').remove()
