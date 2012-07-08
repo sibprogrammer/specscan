@@ -44,4 +44,5 @@ gem 'airbrake'
 group :development do
   gem 'ruby18_source_location'
   gem 'pry'
+  gem 'ruby-debug'
 end
