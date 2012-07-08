@@ -158,6 +158,7 @@ DEPENDENCIES
   airbrake
   bson_ext
   cancan
+  coderay
   coffee-rails (~> 3.1.1)
   devise
   digest-crc

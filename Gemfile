@@ -42,6 +42,7 @@ gem 'will_paginate'
 gem 'airbrake'
 
 group :development do
+  gem 'coderay'
   gem 'ruby18_source_location'
   gem 'pry'
 end
