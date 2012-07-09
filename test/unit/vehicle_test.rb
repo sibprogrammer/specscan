@@ -130,4 +130,11 @@ class VehicleTest < ActiveSupport::TestCase
     assert car.invalid?
   end
 
+  test "registration numbers should be unique" do
+    car = Vehicle.new(:name => 'Car', :imei => '1234567890', :user_id => users(:client).id, :reg_number => 'A000AA 154')
+    car.save
+    another_car = Vehicle.new(:name => 'Car2', :imei => '1234567899', :user_id => users(:client).id, :reg_number => 'A000AA 154')
+    assert another_car.invalid?
+  end
+
 end

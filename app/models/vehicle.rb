@@ -3,7 +3,7 @@ class Vehicle < ActiveRecord::Base
   validates :imei, :uniqueness => true, :allow_blank => true, :length => { :in => 5..50 },
     :numericality => { :only_integer => true }
   validates :user_id, :presence => true
-  validates :reg_number, :length => { :in => 3..15 }, :allow_blank => true
+  validates :reg_number, :length => { :in => 3..15 }, :allow_blank => true, :uniqueness => true
   validates :name, :presence => true, :uniqueness => { :scope => :user_id }
   validates :vehicle_type_id, :presence => true
 
