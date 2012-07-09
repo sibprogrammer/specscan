@@ -385,7 +385,7 @@ class Server::Tracker::GalileoTest < ActiveSupport::TestCase
     0.upto(3).each do |tag_index|
       packet = @server.parse_packet((0x50 + tag_index).chr + "\x5A\x5A")
       tag_key = "power_input_#{tag_index}".to_sym
-      assert(packet.key?(tag_key), tag_key)
+      assert(packet.key?(tag_key), tag_key.to_s)
       assert_equal(23130, packet[tag_key], tag_key)
     end
   end
@@ -412,7 +412,7 @@ class Server::Tracker::GalileoTest < ActiveSupport::TestCase
     1.upto(7).each do |tag_index|
       packet = @server.parse_packet((0x70 + tag_index).chr + "\x01\xD8")
       tag_key = "thermometer_#{tag_index}".to_sym
-      assert(packet.key?(tag_key), tag_key)
+      assert(packet.key?(tag_key), tag_key.to_s)
       assert_equal(-40, packet[tag_key], tag_key)
     end
   end
@@ -455,7 +455,7 @@ class Server::Tracker::GalileoTest < ActiveSupport::TestCase
     0.upto(17).each do |tag_index|
       packet = @server.parse_packet((0xC4 + tag_index).chr + "\xA5")
       tag_key = "can8bitr#{tag_index}".to_sym
-      assert(packet.key?(tag_key), tag_key)
+      assert(packet.key?(tag_key), tag_key.to_s)
       assert_equal(165, packet[tag_key], tag_key)
     end
   end
@@ -464,7 +464,7 @@ class Server::Tracker::GalileoTest < ActiveSupport::TestCase
     0.upto(4).each do |tag_index|
       packet = @server.parse_packet((0xD6 + tag_index).chr + "\x5A\x5A")
       tag_key = "can16bitr#{tag_index}".to_sym
-      assert(packet.key?(tag_key), tag_key)
+      assert(packet.key?(tag_key), tag_key.to_s)
       assert_equal(23130, packet[tag_key], tag_key)
     end 
   end
@@ -473,7 +473,7 @@ class Server::Tracker::GalileoTest < ActiveSupport::TestCase
     0.upto(4).each do |tag_index|
       packet = @server.parse_packet((0xDB + tag_index).chr + "\x01\x02\x03\x04")
       tag_key = "can32bitr#{tag_index}".to_sym
-      assert(packet.key?(tag_key), tag_key)
+      assert(packet.key?(tag_key), tag_key.to_s)
       assert_equal(67305985, packet[tag_key], tag_key)
     end
   end
