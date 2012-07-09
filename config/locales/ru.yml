@@ -42,6 +42,10 @@ ru:
           attributes:
             phone:
               blank: "Не указан номер телефона."
+              invalid: "Номер телефона должен состоять из 10 цифр."
+              taken: "SIM-карта с таким номером уже существует."
+            helper_password:
+              invalid: "Пароль должен содержать только цифры и английские буквы."
   will_paginate:
     next_label: "→"
     previous_label: "←"

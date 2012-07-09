@@ -4,7 +4,9 @@ require 'base64'
 
 class SimCard < ActiveRecord::Base
 
-  validates :phone, :uniqueness => true, :presence => true
+  validates :phone, :uniqueness => true, :presence => true, :format => { :with => /\A\d{10}\z/ }
+  validates :mobile_operator_id, :presence => true
+  validates :helper_password, :format => { :with => /\A[\da-zA-Z]+\z/ }, :allow_blank => true
 
   attr_accessible :phone, :helper_password, :mobile_operator_id, :description, :vehicle_id
 
