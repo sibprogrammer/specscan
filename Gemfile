@@ -46,3 +46,7 @@ group :development do
   gem 'pry'
   gem 'ruby-debug'
 end
+
+group :tools do
+  gem 'guard-test'
+end
