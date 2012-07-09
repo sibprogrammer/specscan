@@ -46,6 +46,12 @@ ru:
               taken: "SIM-карта с таким номером уже существует."
             helper_password:
               invalid: "Пароль должен содержать только цифры и английские буквы."
+        fuel_sensor:
+          attributes:
+            code:
+              blank: "Не указан идентификационный номер."
+              invalid: "Идентификационный номер должен состоять из цифр."
+              taken: "Датчик с таким номером уже существует."
   will_paginate:
     next_label: "→"
     previous_label: "←"
