@@ -4,7 +4,7 @@ class Vehicle < ActiveRecord::Base
     :numericality => { :only_integer => true }
   validates :user_id, :presence => true
   validates :reg_number, :length => { :in => 3..15 }, :allow_blank => true, :uniqueness => true
-  validates :name, :presence => true, :uniqueness => { :scope => :user_id }
+  validates :name, :presence => true
   validates :vehicle_type_id, :presence => true
 
   attr_accessible :imei, :user_id, :reg_number, :name, :description, :tracker_model_id, :fuel_norm, :fuel_tank, :fuel_tank2,

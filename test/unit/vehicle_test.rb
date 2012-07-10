@@ -17,11 +17,11 @@ class VehicleTest < ActiveSupport::TestCase
     assert vehicles(:truck).valid?
   end
 
-  test "vehicle name should be unique for same user" do
-    car = Vehicle.new(:name => 'Car X', :imei => '1234567890', :user_id => users(:client).id)
+  test "vehicle names can be the same" do
+    car = Vehicle.new(:name => 'Reno Logan', :imei => '1234567890', :user_id => users(:client).id)
     car.save
-    another_car = Vehicle.new(:name => 'Car X', :imei => '1234567899', :user_id => users(:client).id)
-    assert another_car.invalid?
+    another_car = Vehicle.new(:name => 'Reno Logan', :imei => '1234567899', :user_id => users(:client).id)
+    assert another_car.valid?
   end
 
   test "vehicle can have empty imei" do
