@@ -23,7 +23,13 @@ Recommended environment is Debian 6 32-bit.
 
 ## 3. Installation
 
-TBD
+The following commands should be performed to install the product:
+* git clone url
+* cd specscan
+* bundle install
+* rake db:migrate
+* rake test
+* rails server
 
 
 ## 4. Usage
