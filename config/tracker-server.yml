@@ -2,3 +2,5 @@ galileo:
   port: 5000
 tk103b:
   port: 5100
+teltonika:
+  port: 5200

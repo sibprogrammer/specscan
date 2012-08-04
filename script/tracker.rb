@@ -2,7 +2,7 @@
 
 require File.dirname(__FILE__) + '/../lib/server/control'
 
-server_names = %w{ galileo tk103b }
+server_names = %w{ galileo tk103b teltonika }
 server_name = ARGV[0]
 ARGV[1] = 'help' unless server_names.include? server_name
 
