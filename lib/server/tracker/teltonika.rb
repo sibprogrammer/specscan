@@ -14,7 +14,13 @@ class Server::Tracker::Teltonika < Server::Tracker::Abstract
     send_data(client, "\001")
 
     loop do
-      header = read_data(client, 8)
+      begin
+        header = read_data(client, 8)
+      rescue Exception => e
+        logger.debug "#{e.message}"
+        return
+      end
+
       data_length = header[4,4].unpack('N')[0]
       logger.debug "AVL data length: #{data_length}"
 
