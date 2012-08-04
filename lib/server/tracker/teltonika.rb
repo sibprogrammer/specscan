@@ -52,11 +52,11 @@ class Server::Tracker::Teltonika < Server::Tracker::Abstract
         total_1byte_io = body[bytes_offset]
         bytes_offset += 1 + total_1byte_io * 2
         total_2bytes_io = body[bytes_offset]
-        bytes_offset += 1 + total_2bytes_io * 2
+        bytes_offset += 1 + total_2bytes_io * 3
         total_4bytes_io = body[bytes_offset]
-        bytes_offset += 1 + total_4bytes_io * 2
+        bytes_offset += 1 + total_4bytes_io * 5
         total_8bytes_io = body[bytes_offset]
-        bytes_offset += 1 + total_8bytes_io * 2
+        bytes_offset += 1 + total_8bytes_io * 9
 
         logger.debug packet.inspect
         WayPoint.create(packet)

@@ -36,6 +36,7 @@ class Server::Tracker::Abstract < Server::Abstract
           process_data client
         rescue Exception => e
           logger.debug "Error: #{e.message}"
+          logger.debug "Backtrace: #{e.backtrace.join('; ')}"
         end
 
         client.close
