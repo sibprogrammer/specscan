@@ -191,11 +191,15 @@ ru:
           name: "Название"
           description: "Описание"
           unknown_tracker: "Не указан"
-          fuel_norm: "Расход топлива, л. на 100 км."
+          fuel_norm: "Расход топлива, л."
           fuel_tank: "Топливный бак, л."
           fuel_tank2: "Дополнительный бак, л."
           fuel_sensor: "Датчик топлива"
           vehicle_type: "Тип машины"
+          fuel_calc_method: "Метод расчета топлива"
+        fuel_calc_method:
+          distance: "По расстоянию"
+          mhours: "По моточасам"
         button:
           create: "Добавить"
           back: "Назад"
@@ -297,6 +301,7 @@ ru:
           movement: "Перемещения"
           parking_time: "С, Ч:ММ"
           movements_time: "П, Ч:ММ"
+          active_time: "М, Ч:ММ"
           distance: "Пробег, км."
           fuel: "Расход по норме, л."
           fuel_norm: "Норма, л."
@@ -313,6 +318,8 @@ ru:
           fuel: "Расход топлива по норме, л."
           fuel_used: "Расход топлива по факту, л."
           refuels: "Заправки / сливы, л."
+          active_duration: "Моточасы"
+          static_work_duration: "Время работы без движения"
         action:
           details: "Детали по машине"
           map: "Карта перемещений"
@@ -362,6 +369,8 @@ ru:
           refuels: "Заправки / сливы, л."
           fuel_on_start: "Уровень топлива в начале, л."
           fuel_on_end: "Уровень топлива в конце, л."
+          active_duration: "Моточасы"
+          static_work_duration: "Время работы без движения, ЧЧ:ММ"
         action:
           reports: "Список отчетов"
           map: "Карта перемещений"

@@ -1,14 +1,18 @@
 class Vehicle < ActiveRecord::Base
 
+  FUEL_CALC_BY_DISTANCE = 1
+  FUEL_CALC_BY_MHOURS = 2
+
   validates :imei, :uniqueness => true, :allow_blank => true, :length => { :in => 5..50 },
     :numericality => { :only_integer => true }
   validates :user_id, :presence => true
   validates :reg_number, :length => { :in => 3..15 }, :allow_blank => true, :uniqueness => true
   validates :name, :presence => true
   validates :vehicle_type_id, :presence => true
+  validates :fuel_calc_method, :inclusion => { :in => 1..2 }
 
   attr_accessible :imei, :user_id, :reg_number, :name, :description, :tracker_model_id, :fuel_norm, :fuel_tank, :fuel_tank2,
-    :calibration_table, :calibration_table2, :vehicle_type_id
+    :calibration_table, :calibration_table2, :vehicle_type_id, :fuel_calc_method
 
   belongs_to :user
   belongs_to :tracker_model

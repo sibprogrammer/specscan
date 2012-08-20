@@ -26,6 +26,12 @@
 
   - form_field f, :reg_number, :text_field
   - form_field f, :fuel_norm, :text_field
+
+  .control-group
+    = f.label :fuel_calc_method, t('.field.fuel_calc_method'), :class => 'control-label'
+    .controls
+      = select 'vehicle', 'fuel_calc_method', [[t('.fuel_calc_method.distance'), Vehicle::FUEL_CALC_BY_DISTANCE], [t('.fuel_calc_method.mhours'), Vehicle::FUEL_CALC_BY_MHOURS]]
+
   - form_field f, :fuel_tank, :text_field
   - form_field f, :fuel_tank2, :text_field
 

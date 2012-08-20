@@ -57,13 +57,19 @@
         %th= t '.stats.distance'
         %td= decimal_human(@report.distance.to_f / 1000)
         %th= t '.stats.fuel'
-        %td= decimal_human(@report.fuel_norm.to_f / 1000)
+        %td= decimal_human(Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method ? @report.fuel_norm.to_f : (@report.fuel_norm.to_f / 1000))
       - if @vehicle.fuel_sensor
         %tr
           %th= t '.stats.refuels'
           %td= decimal_human(@report.fuel_added.to_f) + ' / ' + decimal_human(@report.fuel_stolen.to_f)
           %th= t '.stats.fuel_used'
           %td= decimal_human(@report.fuel_used)
+      - if Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method
+        %tr
+          %th= t '.stats.active_duration'
+          %td= duration_human(@report.active_time)
+          %th= t '.stats.static_work_duration'
+          %td= duration_human(@report.static_work_time) 
 
   %h3= t '.header.chart'
   #movementsChart{ :style => 'width: 100%; height: 100px;' }

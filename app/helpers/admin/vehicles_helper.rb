@@ -45,6 +45,7 @@ module Admin::VehiclesHelper
   end
 
   def duration_human(duration)
+    duration = 0 if duration.blank?
     seconds = duration % 60
     minutes = duration / 60
     hours = minutes / 60

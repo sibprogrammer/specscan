@@ -55,6 +55,7 @@ class Server::Analyzer < Server::Abstract
 
       WayPoint.where(conditions).sort(:timestamp).each do |way_point|
         update_fuel_changes(way_point, prev_way_point, vehicle, last_movement) if prev_way_point
+        update_activity_changes(way_point, vehicle)
         prev_way_point = way_point unless 0 == way_point.fuel_signal
         next unless way_point.coors_valid
         last_movement = analyze_way_point(way_point, vehicle.imei, last_movement)
@@ -62,6 +63,54 @@ class Server::Analyzer < Server::Abstract
       end
 
       movements.each{ |movement| update_distance(movement) }
+    end
+
+    def update_activity_changes(way_point, vehicle)
+      prev_activity_change = Activity.where(:imei => vehicle.imei, :to_timestamp.lt => way_point.timestamp).sort(:to_timestamp.desc).first
+
+      if !prev_activity_change
+        logger.debug "Initial activity was created."
+        activity_change = Activity.create({
+          :imei => vehicle.imei,
+          :from_timestamp => way_point.timestamp,
+          :to_timestamp => way_point.timestamp,
+          :active => way_point.active?
+        })
+        return
+      end
+
+      if prev_activity_change.active != way_point.active?
+        return if (way_point.timestamp - prev_activity_change.from_timestamp) < 2
+        logger.debug "Activity state was changed (was: #{prev_activity_change.active}, now: #{way_point.active?}, time: #{way_point.timestamp}, #{Time.at(way_point.timestamp)})."
+        add_activity_change(prev_activity_change, way_point)
+
+        activity_change = Activity.create({
+          :imei => vehicle.imei,
+          :from_timestamp => way_point.timestamp,
+          :to_timestamp => way_point.timestamp,
+          :active => way_point.active?
+        })
+      else
+        add_activity_change(prev_activity_change, way_point)
+      end
+    end
+
+    def add_activity_change(activity_change, way_point)
+      if Time.at(activity_change.to_timestamp).yday == Time.at(way_point.timestamp).yday
+        activity_change.to_timestamp = way_point.timestamp - 1
+        activity_change.save
+        return
+      end
+
+      activity_change.to_timestamp = Time.at(activity_change.to_timestamp).end_of_day.to_i
+      activity_change.save
+
+      Activity.create({
+        :imei => activity_change.imei,
+        :from_timestamp => Time.at(way_point.timestamp).beginning_of_day.to_i,
+        :to_timestamp => way_point.timestamp - 1,
+        :active => activity_change.active
+      })
     end
 
     def update_fuel_changes(way_point, prev_way_point, vehicle, last_movement)
@@ -215,7 +264,7 @@ class Server::Analyzer < Server::Abstract
       conditions = { :imei => vehicle.imei, :from_timestamp.gte => date.to_time.to_i, :from_timestamp.lt => date.to_time.to_i + 86400 }
       movements = Movement.where(conditions).sort(:from_timestamp.desc)
 
-      movement_count = parking_count = movement_time = parking_time = distance = fuel_used = fuel_added = fuel_stolen = 0
+      movement_count = parking_count = movement_time = parking_time = distance = fuel_used = fuel_added = fuel_stolen = active_time = 0
 
       movements.each do |movement|
         if movement.parking
@@ -239,9 +288,15 @@ class Server::Analyzer < Server::Abstract
         end
       end
 
+      activity_changes = Activity.where(conditions).sort(:from_timestamp.desc)
+      activity_changes.each{ |activity_change| active_time += activity_change.elapsed_time if activity_change.active }
+
       date_compact = date.to_formatted_s(:date_compact).to_i
       report = Report.where(:imei => vehicle.imei, :date => date_compact).first
       report = Report.new if !report
+
+      fuel_norm = get_fuel_by_norm(vehicle, distance, active_time)
+      logger.debug "Fuel by norm: #{fuel_norm} litres"
 
       report.update_attributes({
         :imei => vehicle.imei,
@@ -251,24 +306,36 @@ class Server::Analyzer < Server::Abstract
         :parking_time => parking_time,
         :movement_time => movement_time,
         :distance => distance,
-        :fuel_norm => get_fuel_by_norm(vehicle, distance),
+        :fuel_norm => fuel_norm,
         :fuel_used => fuel_used,
         :fuel_added => fuel_added,
         :fuel_stolen => fuel_stolen,
+        :active_time => active_time,
       })
 
       report.save
 
       logger.debug "Parkings: #{parking_count} (#{parking_time} sec.), movements: #{movement_count} (#{movement_time} sec.)"
+      logger.debug "Report: #{report.inspect}"
     end
 
     def update_distance(movement)
       movement.recalculate_distance unless movement.parking
     end
 
-    def get_fuel_by_norm(vehicle, distance)
-      return 0 if vehicle.fuel_norm.blank? or (distance.abs <= 0.01)
-      distance * vehicle.fuel_norm / 100
+    def get_fuel_by_norm(vehicle, distance, active_time)
+      return 0 if vehicle.fuel_norm.blank?
+
+      if Vehicle::FUEL_CALC_BY_DISTANCE == vehicle.fuel_calc_method
+        return 0 if (distance.abs <= 0.01)
+        return (distance.to_f * vehicle.fuel_norm / 100).to_f
+      elsif Vehicle::FUEL_CALC_BY_MHOURS == vehicle.fuel_calc_method
+        return 0 if active_time < 1.minute
+        return (active_time.to_f / 1.hour * vehicle.fuel_norm).to_f
+      else
+        # unknown calculation method
+        return 0
+      end
     end
 
 end

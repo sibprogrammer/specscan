@@ -10,9 +10,14 @@ class WayPoint
   key :sens_moving
   key :rs232_1
   key :coors_valid
+  key :power_input_0
 
   def zero_speed?
     speed.to_f.abs < 0.1
+  end
+
+  def active?
+    !power_input_0.blank? and (power_input_0 > 0)
   end
 
   def distance(to_point)

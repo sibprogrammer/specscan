@@ -32,21 +32,28 @@
       %th= t '.stats.distance'
       %td= decimal_human(@reports_summary[:distance].to_f / 1000)
       %th= t '.stats.fuel'
-      %td= decimal_human(@reports_summary[:fuel_norm].to_f / 1000)
+      %td= decimal_human(Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method ? @reports_summary[:fuel_norm].to_f : (@reports_summary[:fuel_norm].to_f / 1000))
     - if @vehicle.fuel_sensor
       %tr
         %th= t '.stats.refuels'
         %td= decimal_human(@reports_summary[:fuel_added].to_f) + ' / ' + decimal_human(@reports_summary[:fuel_stolen].to_f)
         %th= t '.stats.fuel_used'
         %td= decimal_human(@reports_summary[:fuel_used])
+    - if Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method
+      %tr
+        %th= t '.stats.active_duration'
+        %td= duration_human(@reports_summary[:active_time])
+        %th= t '.stats.static_work_duration'
+        %td= duration_human(@reports_summary[:active_time] - @reports_summary[:movement_time])
 
   %h3= t '.header.list_by_days'
   %table#reports-list.table.table-bordered.table-striped.tablesorter
     %thead
       %tr
-        - %w{ date parking movement parking_time movements_time distance fuel fuel_norm fuel_fact refuels fuel_theft map }.each do |column_name|
+        - %w{ date parking movement parking_time movements_time active_time distance fuel fuel_norm fuel_fact refuels fuel_theft map }.each do |column_name|
           - next if 'fuel' == column_name and @vehicle.fuel_sensor
           - next if %w{ fuel_norm fuel_fact refuels fuel_theft }.include?(column_name) and !@vehicle.fuel_sensor
+          - next if 'active_time' == column_name and Vehicle::FUEL_CALC_BY_MHOURS != @vehicle.fuel_calc_method
           %th= link_to t(".column.#{column_name}"), '#'
 
     %tbody
@@ -57,9 +64,10 @@
           %td= report.movement_count
           %td= duration_human(report.parking_time)
           %td= duration_human(report.movement_time)
+          %td= duration_human(report.active_time)
           %td= decimal_human(report.distance.to_f / 1000)
           - if @vehicle.fuel_sensor
-            %td= decimal_human(report.fuel_norm.to_f / 1000)
+            %td= decimal_human(Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method ? report.fuel_norm.to_f : (report.fuel_norm.to_f / 1000))
             %td= decimal_human(report.fuel_used.to_f)
             %td= decimal_human(report.fuel_added.to_f)
             %td= decimal_human(report.fuel_stolen.to_f)

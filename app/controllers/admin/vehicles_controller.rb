@@ -160,7 +160,7 @@ class Admin::VehiclesController < Admin::Base
     end
 
     def get_reports_summary(reports, vehicle)
-      fields = %w{ movement_count movement_time parking_count parking_time distance fuel_norm }
+      fields = %w{ movement_count movement_time parking_count parking_time distance fuel_norm active_time }
       fields << 'fuel_used' << 'fuel_added' << 'fuel_stolen' if vehicle.fuel_sensor
 
       reports_summary = {}
