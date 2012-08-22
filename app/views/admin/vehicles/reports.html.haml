@@ -44,7 +44,7 @@
         %th= t '.stats.active_duration'
         %td= duration_human(@reports_summary[:active_time])
         %th= t '.stats.static_work_duration'
-        %td= duration_human(@reports_summary[:active_time] - @reports_summary[:movement_time])
+        %td= duration_human(@reports_summary[:static_work_time])
 
   %h3= t '.header.list_by_days'
   %table#reports-list.table.table-bordered.table-striped.tablesorter
