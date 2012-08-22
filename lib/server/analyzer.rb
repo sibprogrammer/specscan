@@ -66,6 +66,7 @@ class Server::Analyzer < Server::Abstract
     end
 
     def update_activity_changes(way_point, vehicle)
+      return unless way_point.activity_support?
       prev_activity_change = Activity.where(:imei => vehicle.imei, :to_timestamp.lt => way_point.timestamp).sort(:to_timestamp.desc).first
 
       if !prev_activity_change

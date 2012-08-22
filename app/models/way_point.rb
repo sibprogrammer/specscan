@@ -20,6 +20,10 @@ class WayPoint
     !power_input_0.blank? and (power_input_0 > 0)
   end
 
+  def activity_support?
+    power_input_0?
+  end
+
   def distance(to_point)
     coors_to_distance_haversine(latitude, longitude, to_point.latitude, to_point.longitude)
   end
