@@ -7,7 +7,7 @@
       = select 'sim_card', 'mobile_operator_id', MobileOperator.all.collect { |operator| [operator.title, operator.id] }
 
   - form_field f, :phone, :text_field
-  - form_field f, :helper_password, :password_field, { :placeholder => (@sim_card.helper_password? ? '******' : '') }
+  - form_field f, :helper_password, :password_field, { :value => @sim_card.helper_password, :title => @sim_card.helper_password }
 
   .control-group
     = f.label :user, t('.field.vehicle'), :class => 'control-label'
