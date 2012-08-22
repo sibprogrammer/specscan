@@ -54,7 +54,7 @@
           - next if 'fuel' == column_name and @vehicle.fuel_sensor
           - next if %w{ fuel_norm fuel_fact refuels fuel_theft }.include?(column_name) and !@vehicle.fuel_sensor
           - next if 'active_time' == column_name and Vehicle::FUEL_CALC_BY_MHOURS != @vehicle.fuel_calc_method
-          %th= link_to t(".column.#{column_name}"), '#'
+          %th= link_to t(".column.#{column_name}"), '#', { :title => t(".column.#{column_name}_hint", :default => ''), :rel => 'tooltip' }
 
     %tbody
       - @reports.each do |report|
