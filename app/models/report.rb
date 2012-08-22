@@ -18,7 +18,7 @@ class Report
   end
 
   def static_work_time
-    time = active_time - movement_time
+    time = active_time.to_i - movement_time.to_i
     time > 0 ? time : 0
   end
 
