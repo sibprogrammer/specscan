@@ -19,8 +19,14 @@
         %td= link_to number_to_phone(sim_card.phone), admin_sim_card_path(sim_card), :title => sim_card.description
         %td= sim_card.mobile_operator.title
         %td
-          - if sim_card.balance.to_f < 0
+          - if sim_card.balance.blank?
+            &mdash;
+          - elsif sim_card.last_check_error
+            %span.badge.badge-inverse= sim_card.balance
+          - elsif sim_card.balance.to_f < 0
             %span.badge.badge-important= sim_card.balance
+          - elsif sim_card.balance.to_f < 10
+            %span.badge.badge-warning= sim_card.balance
           - else
             = sim_card.balance
         %td= sim_card.vehicle ? link_to(sim_card.vehicle.title, admin_vehicle_path(sim_card.vehicle)) : sim_card.description

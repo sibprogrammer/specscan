@@ -16,11 +16,14 @@ class SimCard < ActiveRecord::Base
   def update_balance
     begin
       self.balance = Balance::Mts.get(self) if 'mts' == mobile_operator.code
+      self.last_check_error = false
     rescue
-      return false
+      self.balance = balance_was
+      self.last_check_error = true
     end
 
     save
+    !self.last_check_error
   end
 
   def balance_check_support?
