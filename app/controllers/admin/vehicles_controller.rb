@@ -174,10 +174,10 @@ class Admin::VehiclesController < Admin::Base
             reports_summary[field.to_sym] += report.send(field).to_i
           end
         end
-        reports_summary[:static_work_time] = 0 unless reports_summary.has_key?(:static_work_time)
-        static_work_time = reports_summary[:active_time] - reports_summary[:movement_time]
-        reports_summary[:static_work_time] += static_work_time if static_work_time > 0
       end
+
+      static_work_time = reports_summary[:active_time] - reports_summary[:movement_time]
+      reports_summary[:static_work_time] = (static_work_time > 0) ? static_work_time : 0
 
       reports_summary
     end
