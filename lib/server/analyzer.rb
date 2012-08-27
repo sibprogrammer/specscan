@@ -8,7 +8,7 @@ class Server::Analyzer < Server::Abstract
   MAX_METERS_FOR_FALSE_MOVEMENT_START = 1000
   MIN_SECONDS_FOR_PARKING_WITH_ENGINE_ON = 120
   MIN_SPEED_KM = 3
-  FUEL_TRESHOLD_LITRES = 10
+  FUEL_TRESHOLD_MOVEMENT_LITRES = 15
   FUEL_TRESHOLD_PARKING_LITRES = 8
   MIN_SECONDS_BETWEEN_REFILLS = 180
 
@@ -20,6 +20,7 @@ class Server::Analyzer < Server::Abstract
     loop do
       Vehicle.with_imei.each do |vehicle|
         update_movements(vehicle)
+        update_fuel_changes(vehicle) if vehicle.fuel_sensor
         update_reports(vehicle)
       end
       sleep(5.minutes.to_i)
@@ -54,7 +55,6 @@ class Server::Analyzer < Server::Abstract
       prev_way_point = WayPoint.where(:imei => vehicle.imei, :timestamp.lte => last_movement.to_timestamp).sort(:timestamp.desc).first
 
       WayPoint.where(conditions).sort(:timestamp).each do |way_point|
-        update_fuel_changes(way_point, prev_way_point, vehicle, last_movement) if prev_way_point
         update_activity_changes(way_point, vehicle)
         prev_way_point = way_point unless 0 == way_point.fuel_signal
         next unless way_point.coors_valid
@@ -114,18 +114,71 @@ class Server::Analyzer < Server::Abstract
       })
     end
 
-    def update_fuel_changes(way_point, prev_way_point, vehicle, last_movement)
+    def update_fuel_changes(vehicle)
+      logger.debug "Updating fuel changes for vehicle ##{vehicle.id} (IMEI: #{vehicle.imei})"
+      last_way_point = vehicle.last_analyzed_way_point_for_fuel
+      from_timestamp = last_way_point.timestamp + 1 if last_way_point
+      logger.debug "Start from previous last point, timestamp: #{from_timestamp}" if from_timestamp
+
+      if !from_timestamp
+        last_fuel_change = FuelChange.where(:imei => vehicle.imei).sort(:to_timestamp).last
+        last_way_point = WayPoint.where(:imei => vehicle.imei, :timestamp.gt => last_fuel_change.to_timestamp).sort(:timestamp.desc).first if last_fuel_change
+        from_timestamp = last_way_point.timestamp if last_way_point
+        logger.debug "Found last fuel change finished at #{from_timestamp}, #{Time.at(from_timestamp)}" if from_timestamp
+      end
+
+      if !from_timestamp
+        last_way_point = WayPoint.where(:imei => vehicle.imei, :coors_valid => true).sort(:timestamp).first
+        return if !last_way_point
+        from_timestamp = last_way_point.timestamp
+      end
+
+      to_timestamp = Time.now.to_i - 5.minutes
+      logger.debug "Find points from #{from_timestamp}, #{Time.at(from_timestamp)} to #{to_timestamp}, #{Time.at(to_timestamp)}"
+
+      prev_way_point = WayPoint.where(:imei => vehicle.imei, :coors_valid => true, :timestamp.lt => from_timestamp).sort(:timestamp.desc).first
+
+      way_points = WayPoint.where(:imei => vehicle.imei, :timestamp => { :$gt => from_timestamp, :$lt => to_timestamp }).sort(:timestamp)
+      logger.debug "Found way points: #{way_points.count}"
+
+      way_points.each do |way_point|
+        movement = Movement.where(:imei => vehicle.imei, :from_timestamp.lt => way_point.timestamp, :to_timestamp.gte => way_point.timestamp).sort(:to_timestamp).first
+        next unless movement
+        analyze_fuel_changes(way_point, prev_way_point, vehicle, movement) if prev_way_point
+        prev_way_point = way_point unless 0 == way_point.fuel_signal
+        last_way_point = way_point
+      end
+
+      vehicle.last_analyzed_way_point_for_fuel = last_way_point if last_way_point
+      logger.debug "Last way point time: #{last_way_point.timestamp}" if last_way_point
+
+      logger.debug "Fuel changes analysis was finished."
+    end
+
+    def analyze_fuel_changes(way_point, prev_way_point, vehicle, movement)
       # ignore sensor invalid values
       return if 0 == prev_way_point.fuel_signal or 0 == way_point.fuel_signal
 
       fuel_diff = vehicle.get_fuel_amount(prev_way_point.fuel_signal) - vehicle.get_fuel_amount(way_point.fuel_signal)
       return if fuel_diff.abs < 0.01
 
-      fuel_treshold = (last_movement.parking and fuel_diff > 0) ? FUEL_TRESHOLD_PARKING_LITRES : FUEL_TRESHOLD_LITRES
+      #fuel_treshold = movement.parking ? FUEL_TRESHOLD_PARKING_LITRES : FUEL_TRESHOLD_MOVEMENT_LITRES
+      #fuel_treshold = FUEL_TRESHOLD_PARKING_LITRES if !movement.parking and prev_way_point.timestamp < movement.from_timestamp
 
-      if fuel_diff.abs < fuel_treshold
-        last_movement.fuel_used = (last_movement.fuel_used.to_f + fuel_diff).to_f
-        last_movement.save
+      if movement.parking
+        fuel_minor_change = false
+        fuel_minor_change = true if fuel_diff.abs < FUEL_TRESHOLD_PARKING_LITRES
+        logger.debug "Parking, fuel major change" unless fuel_minor_change
+      else
+        fuel_minor_change = true
+        fuel_minor_change = false if fuel_diff.abs > FUEL_TRESHOLD_PARKING_LITRES and prev_way_point.timestamp < movement.from_timestamp
+        fuel_minor_change = false if fuel_diff.abs > FUEL_TRESHOLD_MOVEMENT_LITRES
+        logger.debug "Movement, fuel major change" unless fuel_minor_change
+      end
+
+      if fuel_minor_change
+        movement.fuel_used = (movement.fuel_used.to_f + fuel_diff).to_f
+        movement.save
       else
         prev_fuel_change = FuelChange.where(:imei => vehicle.imei, :to_timestamp.lt => way_point.timestamp).sort(:to_timestamp.desc).first
         multiplier = (fuel_diff > 0) ? -1 : 1
@@ -146,7 +199,7 @@ class Server::Analyzer < Server::Abstract
             :way_point => way_point,
           })
 
-          logger.debug "New fuel change detected: #{fuel_diff} litres."
+          logger.debug "New fuel change detected: #{fuel_diff} litres at #{way_point.timestamp}, #{Time.at(way_point.timestamp)}"
         end
       end
     end

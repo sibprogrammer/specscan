@@ -167,7 +167,13 @@ class Admin::VehiclesController < Admin::Base
       fields.each{ |field| reports_summary[field.to_sym] = 0 }
 
       reports.each do |report|
-        fields.each{ |field| reports_summary[field.to_sym] += report.send(field).to_i }
+        fields.each do |field|
+          if %w{ fuel_norm fuel_used fuel_added fuel_stolen }.include?(field)
+            reports_summary[field.to_sym] += report.send(field).to_f
+          else
+            reports_summary[field.to_sym] += report.send(field).to_i
+          end
+        end
         reports_summary[:static_work_time] = 0 unless reports_summary.has_key?(:static_work_time)
         static_work_time = reports_summary[:active_time] - reports_summary[:movement_time]
         reports_summary[:static_work_time] += static_work_time if static_work_time > 0
