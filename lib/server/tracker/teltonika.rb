@@ -51,6 +51,11 @@ class Server::Tracker::Teltonika < Server::Tracker::Abstract
         packet[:speed] = body[bytes_offset, 2].unpack('n')[0]
         bytes_offset += 2
 
+        if packet[:coors_valid]
+          packet[:engine_on] = packet[:speed] > 0.001
+          packet[:sens_moving] = packet[:speed] > 0.001
+        end
+
         event_io_id = body[bytes_offset]
         bytes_offset += 1
         total_io_values = body[bytes_offset]
