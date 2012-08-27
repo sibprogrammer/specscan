@@ -16,7 +16,7 @@ class Balance::Mts
 
     resp, data = http.get('/SelfCarePda/Home.mvc', headers)
 
-    balance = data.match('<strong>\-?(\d+,\d+) .*?</strong>')[1].sub(',', '.').to_f
+    balance = data.match('<strong>(\-?\d+,\d+) .*?</strong>')[1].sub(',', '.').to_f
   end
 
 end
