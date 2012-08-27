@@ -64,7 +64,8 @@
           %td= report.movement_count
           %td= duration_human(report.parking_time)
           %td= duration_human(report.movement_time)
-          %td= duration_human(report.active_time)
+          - if Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method
+            %td= duration_human(report.active_time)
           %td= decimal_human(report.distance.to_f / 1000)
           - if @vehicle.fuel_sensor
             %td= decimal_human(Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method ? report.fuel_norm.to_f : (report.fuel_norm.to_f / 1000))
