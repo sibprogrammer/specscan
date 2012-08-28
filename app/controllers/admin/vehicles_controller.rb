@@ -1,9 +1,9 @@
 class Admin::VehiclesController < Admin::Base
 
-  before_filter :check_manage_permission, :only => [:new, :create, :destroy, :calibration, :calibration_save]
+  before_filter :check_manage_permission, :only => [:new, :create, :destroy, :calibration, :calibration_save, :clear, :clear_do]
   before_filter :check_edit_permission, :only => [:edit, :update]
   before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports, :day_report, :destroy, :get_movement_points,
-    :calibration, :calibration_save, :get_last_point]
+    :calibration, :calibration_save, :get_last_point, :clear, :clear_do]
 
   def index
     @columns = %w{ name reg_number imei owner created_at }
@@ -125,6 +125,18 @@ class Admin::VehiclesController < Admin::Base
     else
       render :action => 'calibration'
     end
+  end
+
+  def clear
+  end
+
+  def clear_do
+    WayPoint.delete_all(:imei => @vehicle.imei) if params.key?(:way_points)
+    Movement.delete_all(:imei => @vehicle.imei) if params.key?(:movements)
+    Report.delete_all(:imei => @vehicle.imei) if params.key?(:reports)
+    Activity.delete_all(:imei => @vehicle.imei) if params.key?(:activities)
+    FuelChange.delete_all(:imei => @vehicle.imei) if params.key?(:fuel_changes)
+    redirect_to(admin_vehicle_path(@vehicle), :notice => t('admin.vehicles.clear_do.cleared'))
   end
 
   private

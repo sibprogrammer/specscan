@@ -37,4 +37,5 @@
       = link_to t('.button.edit'), edit_admin_vehicle_path(@vehicle), :class => 'btn btn-primary'
     = link_to t('.button.back'), admin_vehicles_path, :class => 'btn'
     - if can? :destroy, @vehicle
+      = link_to t('.button.clear_data'), clear_admin_vehicle_path(@vehicle), :class => 'btn'
       = link_to t('.button.delete'), admin_vehicle_path(@vehicle), :class => 'btn btn-danger', :method => :delete, 'data-confirm' => t('.button.confirm_delete')

@@ -10,7 +10,7 @@
       .control-label { width: 190px; }
       .controls { margin-left: 210px; }
       .controls {
-        input, textarea, select, .uneditable-input { width: 280px; }
+        input:not([type='checkbox']), textarea, select, .uneditable-input { width: 280px; }
       }
       .form-actions { padding-left: 210px; }
     }

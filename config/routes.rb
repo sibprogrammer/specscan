@@ -23,6 +23,8 @@ Specscan::Application.routes.draw do
       get 'get_last_point', :on => :member
       get 'calibration', :on => :member
       put 'calibration_save', :on => :member
+      get 'clear', :on => :member
+      put 'clear_do', :on => :member
     end
     match "profile" => "users#profile"
     resources :sim_cards do
