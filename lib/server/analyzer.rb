@@ -122,7 +122,7 @@ class Server::Analyzer < Server::Abstract
 
       if !from_timestamp
         last_fuel_change = FuelChange.where(:imei => vehicle.imei).sort(:to_timestamp).last
-        last_way_point = WayPoint.where(:imei => vehicle.imei, :timestamp.gt => last_fuel_change.to_timestamp).sort(:timestamp.desc).first if last_fuel_change
+        last_way_point = WayPoint.where(:imei => vehicle.imei, :timestamp.gt => last_fuel_change.to_timestamp).sort(:timestamp).first if last_fuel_change
         from_timestamp = last_way_point.timestamp if last_way_point
         logger.debug "Found last fuel change finished at #{from_timestamp}, #{Time.at(from_timestamp)}" if from_timestamp
       end
@@ -161,9 +161,6 @@ class Server::Analyzer < Server::Abstract
 
       fuel_diff = vehicle.get_fuel_amount(prev_way_point.fuel_signal) - vehicle.get_fuel_amount(way_point.fuel_signal)
       return if fuel_diff.abs < 0.01
-
-      #fuel_treshold = movement.parking ? FUEL_TRESHOLD_PARKING_LITRES : FUEL_TRESHOLD_MOVEMENT_LITRES
-      #fuel_treshold = FUEL_TRESHOLD_PARKING_LITRES if !movement.parking and prev_way_point.timestamp < movement.from_timestamp
 
       if movement.parking
         fuel_minor_change = false
