@@ -69,7 +69,7 @@
           %td= decimal_human(report.distance.to_f / 1000)
           - if @vehicle.fuel_sensor
             %td= decimal_human(Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method ? report.fuel_norm.to_f : (report.fuel_norm.to_f / 1000))
-            %td= decimal_human(report.fuel_used.to_f)
+            %td= decimal_human(report.fuel_used.to_f > 0 ? report.fuel_used.to_f : 0)
             %td= decimal_human(report.fuel_added.to_f)
             %td= decimal_human(report.fuel_stolen.to_f)
           - else

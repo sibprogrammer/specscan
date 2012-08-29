@@ -63,7 +63,7 @@
           %th= t '.stats.refuels'
           %td= decimal_human(@report.fuel_added.to_f) + ' / ' + decimal_human(@report.fuel_stolen.to_f)
           %th= t '.stats.fuel_used'
-          %td= decimal_human(@report.fuel_used)
+          %td= decimal_human(@report.fuel_used > 0 ? @report.fuel_used : 0)
       - if Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method
         %tr
           %th= t '.stats.active_duration'
