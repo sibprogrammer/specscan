@@ -19,6 +19,9 @@
             = current_user.login
             %span.caret
           %ul.dropdown-menu
+            - if session[:impersonated_user_id]
+              %li= link_to t('menu.impersonation_logout'), impersonation_logout_admin_users_path
+              %li.divider
             %li= link_to t('menu.profile'), admin_profile_path
             %li.divider
             %li= link_to t('menu.back_to_site'), AppConfig.host.site_url

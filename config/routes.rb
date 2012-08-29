@@ -10,6 +10,8 @@ Specscan::Application.routes.draw do
     resources :users do
       post 'lock', :on => :member
       post 'unlock', :on => :member
+      get 'impersonate', :on => :member
+      get 'impersonation_logout', :on => :collection
     end
     resources :additional_users do
       post 'lock', :on => :member

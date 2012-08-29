@@ -90,6 +90,7 @@ ru:
     fuel_sensors: "Датчики топлива"
     sim_cards: "SIM-карты"
     tools: "Инструменты"
+    impersonation_logout: "Вернуться к администрированию"
     profile: "Профиль"
     logout: "Выход"
     search: "Поиск"
@@ -146,8 +147,10 @@ ru:
           email: "E-mail"
           vehicles_total: "Машины"
           created_at: "Дата создания"
+          impersonation: "Вход"
         action:
           add_user: "Добавить клиента"
+          impersonation: "Вход"
         hint:
           locked: "заблокирован"
           admin: "администратор"

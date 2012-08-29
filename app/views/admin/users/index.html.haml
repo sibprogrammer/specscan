@@ -10,6 +10,7 @@
     %tr
       - @columns.each do |column_name|
         - sortable_column column_name, t(".column.#{column_name}"), @sort_state
+      %th= t '.column.impersonation'
 
   %tbody
     - @users.each do |user|
@@ -24,5 +25,11 @@
         %td= mail_to user.email
         %td= user.vehicles.count
         %td= l user.created_at.localtime
+        %td
+          - if user.admin?
+            &mdash;
+          - else
+            = image_tag "icons/door_in.png", :class => 'inline-icon'
+            = link_to(t('.action.impersonation'), impersonate_admin_user_path(user))
 
 = will_paginate @users

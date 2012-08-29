@@ -1,7 +1,7 @@
 class Admin::UsersController < Admin::Base
 
-  before_filter :check_manage_permission, :except => [:profile, :update, :destroy]
-  before_filter :set_selected_user, :only => [:show, :edit, :update, :lock, :unlock, :destroy]
+  before_filter :check_manage_permission, :except => [:profile, :update, :destroy, :impersonation_logout]
+  before_filter :set_selected_user, :only => [:show, :edit, :update, :lock, :unlock, :destroy, :impersonate]
 
   def index
     @columns = %w{ login name email vehicles_total created_at }
@@ -76,6 +76,17 @@ class Admin::UsersController < Admin::Base
     redirect_to(admin_users_path, :notice => t('admin.users.destroy.user_deleted'))
   end
 
+  def impersonate
+    session[:impersonated_user_id] = current_user.id
+    relogin(@user)
+  end
+
+  def impersonation_logout
+    user = User.find(session[:impersonated_user_id])
+    session.delete(:impersonated_user_id)
+    relogin(user)
+  end
+
   private
 
     def check_manage_permission
@@ -84,6 +95,12 @@ class Admin::UsersController < Admin::Base
 
     def set_selected_user
       @user = User.find(params[:id])
+    end
+
+    def relogin(user)
+      sign_out :user
+      sign_in user
+      redirect_to root_path
     end
 
 end
