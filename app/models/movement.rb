@@ -8,6 +8,7 @@ class Movement
   key :parking
   key :distance
   key :fuel_used
+  key :fuel_last_update_timestamp
 
   def from_time
     Time.at(from_timestamp)

@@ -54,7 +54,10 @@ class Server::Analyzer < Server::Abstract
       movements = [last_movement]
       prev_way_point = WayPoint.where(:imei => vehicle.imei, :timestamp.lte => last_movement.to_timestamp).sort(:timestamp.desc).first
 
-      WayPoint.where(conditions).sort(:timestamp).each do |way_point|
+      way_points = WayPoint.where(conditions).sort(:timestamp)
+      logger.debug "Found way points: #{way_points.count} (conditions: #{conditions.inspect})"
+
+      way_points.each do |way_point|
         update_activity_changes(way_point, vehicle)
         prev_way_point = way_point unless 0 == way_point.fuel_signal
         next unless way_point.coors_valid
@@ -62,6 +65,7 @@ class Server::Analyzer < Server::Abstract
         movements << last_movement if last_movement.id.to_s != movements.last.id.to_s
       end
 
+      logger.debug "Re-calculate distances for #{movements.count} movements"
       movements.each{ |movement| update_distance(movement) }
     end
 
@@ -116,16 +120,12 @@ class Server::Analyzer < Server::Abstract
 
     def update_fuel_changes(vehicle)
       logger.debug "Updating fuel changes for vehicle ##{vehicle.id} (IMEI: #{vehicle.imei})"
-      last_way_point = vehicle.last_analyzed_way_point_for_fuel
-      from_timestamp = last_way_point.timestamp + 1 if last_way_point
-      logger.debug "Start from previous last point, timestamp: #{from_timestamp}" if from_timestamp
 
-      if !from_timestamp
-        last_fuel_change = FuelChange.where(:imei => vehicle.imei).sort(:to_timestamp).last
-        last_way_point = WayPoint.where(:imei => vehicle.imei, :timestamp.gt => last_fuel_change.to_timestamp).sort(:timestamp).first if last_fuel_change
-        from_timestamp = last_way_point.timestamp if last_way_point
-        logger.debug "Found last fuel change finished at #{from_timestamp}, #{Time.at(from_timestamp)}" if from_timestamp
-      end
+      movement = Movement.where(:imei => vehicle.imei, :fuel_last_update_timestamp.gt => 0).sort(:to_timestamp.desc).first
+      last_way_point = WayPoint.where(:imei => vehicle.imei, :timestamp.gte => movement.fuel_last_update_timestamp).sort(:timestamp).first if movement
+      from_timestamp = last_way_point.timestamp + 1 if last_way_point
+
+      logger.debug "Start from previous last point, timestamp: #{from_timestamp}" if from_timestamp
 
       if !from_timestamp
         last_way_point = WayPoint.where(:imei => vehicle.imei, :coors_valid => true).sort(:timestamp).first
@@ -144,13 +144,12 @@ class Server::Analyzer < Server::Abstract
       way_points.each do |way_point|
         movement = Movement.where(:imei => vehicle.imei, :from_timestamp.lt => way_point.timestamp, :to_timestamp.gte => way_point.timestamp).sort(:to_timestamp).first
         next unless movement
+        movement.fuel_last_update_timestamp = way_point.timestamp
+        movement.save
         analyze_fuel_changes(way_point, prev_way_point, vehicle, movement) if prev_way_point
         prev_way_point = way_point unless 0 == way_point.fuel_signal
         last_way_point = way_point
       end
-
-      vehicle.last_analyzed_way_point_for_fuel = last_way_point if last_way_point
-      logger.debug "Last way point time: #{last_way_point.timestamp}" if last_way_point
 
       logger.debug "Fuel changes analysis was finished."
     end
