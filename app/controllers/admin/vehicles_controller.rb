@@ -163,10 +163,14 @@ class Admin::VehiclesController < Admin::Base
     def movements_ranges(movements, day_start_time)
       ranges = []
       movements.each do |movement|
-        next if movement.parking?
         from_time = (movement.from_time - day_start_time) / 60
         to_time = (movement.to_time - day_start_time) / 60
-        ranges << [from_time.to_i, to_time.to_i]
+        ranges << [
+          from_time.to_i,
+          to_time.to_i,
+          movement.parking? ? 0 : 1,
+          movement.id
+        ]
       end
       ranges
     end

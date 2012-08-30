@@ -261,14 +261,15 @@ $ ->
     })
 
   if $('body.vehicles.day_report').length > 0
+    movementsChartData = []
+    movementIdsMap = []
+
+    for index, range of movementRanges
+      for i in [range[0]..range[1]]
+        if (1 == range[2]) then movementsChartData[i] = 9 else movementsChartData[i] = 1
+        movementIdsMap[i] = range[3]
 
     showMovementsChart = ->
-      chartData = []
-      chartData[i] = 1 for i in [0..(selectedDateLastMinute-1)]
-
-      for index, range of movementRanges
-        chartData[i] = 9 for i in [range[0]..range[1]]
-
       chart = new Highcharts.Chart({
         chart: {
           renderTo: 'movementsChart',
@@ -343,7 +344,14 @@ $ ->
           enabled: false
         },
         series: [{
-          data: chartData
+          data: movementsChartData,
+          cursor: 'pointer',
+          events: {
+            click: (event) ->
+              selectedMinute = event.point.category
+              movementId = movementIdsMap[selectedMinute]
+              document.location = document.location.href.replace('/day_report', '/map') + '#' + movementId
+          }
         }]
       })
 
@@ -427,6 +435,13 @@ $ ->
         },
         series: [{
           data: chartData
+          cursor: 'pointer',
+          events: {
+            click: (event) ->
+              selectedMinute = event.point.category
+              movementId = movementIdsMap[selectedMinute]
+              document.location = document.location.href.replace('/day_report', '/map') + '#' + movementId
+          }
         }]
       })
 
