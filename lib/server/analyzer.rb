@@ -323,7 +323,7 @@ class Server::Analyzer < Server::Abstract
         else
           movement_count += 1
           movement_time += movement.elapsed_time
-          distance += movement.distance
+          distance += movement.distance.to_i
         end
         fuel_used += movement.fuel_used.to_f
       end
