@@ -12,6 +12,7 @@
   %li= link_to t('.action.map'), map_admin_vehicle_path(:date => @selected_date)
   %li= link_to t('.action.reports'), reports_admin_vehicle_path
   %li= link_to t('.action.details'), admin_vehicle_path
+  %li= link_to t('.action.download'), '#'
 
 - content_for :sidebar do
   %h4= t '.date_picker'

@@ -5,6 +5,7 @@
 - content_for :sidebar_actions do
   %li= link_to t('.action.map'), map_admin_vehicle_path
   %li= link_to t('.action.details'), admin_vehicle_path
+  %li= link_to t('.action.download'), reports_admin_vehicle_path(:format => :xls, :date => @selected_month)
 
 - content_for :sidebar do
   %h4= t '.month'
