@@ -26,7 +26,7 @@ module Admin::VehiclesHelper
   end
 
   def movement_fuel_used(movement)
-    return raw('&mdash;') if movement.fuel_used.to_i < FuelChange::FUEL_TRESHOLD_LITRES
+    return 0 if movement.fuel_used.to_i < FuelChange::FUEL_TRESHOLD_LITRES
     decimal_human(movement.fuel_used)
   end
 
