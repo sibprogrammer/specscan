@@ -84,8 +84,14 @@ class Admin::VehiclesController < Admin::Base
     end
 
     month = (params.key?(:date) ? Date.parse(params[:date]) : Date.today).strftime('%Y%m')
+    @selected_month = (params.key?(:date) ? Date.parse(params[:date]) : Date.today).strftime('%Y.%m.01')
     @reports = Report.where(:imei => @vehicle.imei, :date.gte => (month + '01').to_i, :date.lte => (month + '31').to_i).sort(:date.desc)
     @reports_summary = get_reports_summary(@reports, @vehicle)
+
+    respond_to do |format|
+      format.html
+      format.xls if params[:format] == 'xls'
+    end
   end
 
   def day_report
@@ -104,6 +110,11 @@ class Admin::VehiclesController < Admin::Base
     @fuel_chart_data = get_fuel_details(time, @selected_date_last_minute)
 
     @js_locale_keys = %w{ parking_title movement_title reset_zoom reset_zoom_title }
+
+    respond_to do |format|
+      format.html
+      format.xls if params[:format] == 'xls'
+    end
   end
 
   def destroy
