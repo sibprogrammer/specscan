@@ -31,7 +31,7 @@ namespace :deploy do
 
   desc "Symlink files"
   task :symlink_files, :roles => :app do
-    %w{ config/database.yml config/config.yml db/production.sqlite3 }.each do |file|
+    %w{ config/database.yml config/config.yml config/daemons.yml db/production.sqlite3 }.each do |file|
       run "ln -nfs #{deploy_to}/shared/#{file} #{release_path}/#{file}"
     end
   end
