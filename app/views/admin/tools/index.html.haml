@@ -1,6 +1,7 @@
 - @page_title = t '.page_title'
 
 %table.table.table-striped
-  %tr
-    %th{ :width => '20%' }= link_to t('.tool.packets_monitor'), url_for(:action => 'packets_monitor')
-    %td= t '.tool.packets_monitor_help'
+  - %w{ packets_monitor daemons_status }.each do |module_name|
+    %tr
+      %th{ :width => '20%' }= link_to t(".tool.#{module_name}"), url_for(:action => module_name)
+      %td= t ".tool.#{module_name}_help"

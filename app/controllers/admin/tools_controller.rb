@@ -14,10 +14,28 @@ class Admin::ToolsController < Admin::Base
     end
   end
 
+  def daemons_status
+    config_file_name = Rails.root + 'config/daemons.yml'
+    return unless File.exists? config_file_name
+    @daemons = YAML.load_file(config_file_name)
+    @daemons.each do |daemon|
+      daemon['status'] = process_alive?(File.read(daemon['pid_file']).to_i)
+    end
+  end
+
   private
 
     def check_manage_permission
       current_user.admin?
+    end
+
+    def process_alive?(pid)
+      begin
+        Process.getpgid(pid)
+        true
+      rescue Errno::ESRCH
+        false
+      end
     end
 
 end
