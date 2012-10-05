@@ -5,7 +5,7 @@
     = f.label :login, t('.field.login'), :class => 'control-label'
     .controls
       - if @user.new_record?
-        = f.text_field :login, :required => true
+        = f.text_field :login, :required => true, :autofocus => true
       - else
         %span.uneditable-input= @user.login
 

@@ -12,7 +12,7 @@
   .control-group
     %label.control-label= t '.form.imei'
     .controls
-      = text_field_tag :imei, params[:imei]
+      = text_field_tag :imei, params[:imei], :autofocus => true
 
   .control-group
     %label.control-label= t '.form.tags_filter'
