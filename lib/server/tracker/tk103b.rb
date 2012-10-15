@@ -7,6 +7,7 @@ class Server::Tracker::Tk103b < Server::Tracker::Abstract
   READ_BUFFER_BYTES = 8192
 
   def process_data(client)
+    @prev_points = {}
     loop do
       data = read_data(client)
       data.split(';').each do |packet|
@@ -33,8 +34,14 @@ class Server::Tracker::Tk103b < Server::Tracker::Abstract
         packet = parse_packet(data)
         logger.debug packet.inspect
 
-        point = WayPoint.new(packet)
-        point.save
+        prev_point = @prev_points[packet[:imei]]
+        unless prev_point and packet[:coors_valid] and (0 == packet[:speed].to_i) and (0 == prev_point[:speed].to_i) and (packet[:timestamp].to_i - prev_point[:timestamp].to_i) < 5.minutes
+          point = WayPoint.new(packet)
+          point.save
+          @prev_points[packet[:imei]] = point
+        else
+          logger.debug "Ignoring way point cause it is equal to previous one."
+        end
       else
         raise "Unrecognized data packet #{data}"
       end
