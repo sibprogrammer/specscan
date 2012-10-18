@@ -269,6 +269,9 @@ $ ->
         if (1 == range[2]) then movementsChartData[i] = 9 else movementsChartData[i] = 1
         movementIdsMap[i] = range[3]
 
+    for i in [0...movementsChartData.length]
+      movementsChartData[i] = 1 if 'undefined' == typeof movementsChartData[i] 
+
     showMovementsChart = ->
       chart = new Highcharts.Chart({
         chart: {
