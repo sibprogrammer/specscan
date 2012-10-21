@@ -2,19 +2,39 @@
 
 %h3= t '.stats_title'
 
-%table.table.table-striped
-  - if can? :manage, User
-    %tr
-      %th= link_to t('.stats.column.users'), admin_users_path
-      %td= @clients_total
-  %tr
-    %th= link_to t('.stats.column.vehicles'), admin_vehicles_path
-    %td= @vehicles_total
-  - if can? :manage, SimCard
-    %tr
-      %th= link_to t('.stats.column.sim_cards'), admin_sim_cards_path
-      %td= @sim_cards_total
-  - if can? :manage, FuelSensor
-    %tr
-      %th= link_to t('.stats.column.fuel_sensors'), admin_fuel_sensors_path
-      %td= @fuel_sensors_total
+.row-fluid
+  .span6
+    %table.table.table-striped
+      - if can? :manage, User
+        %tr
+          %th= link_to t('.stats.column.users'), admin_users_path
+          %td= @clients_total
+      %tr
+        %th= link_to t('.stats.column.vehicles'), admin_vehicles_path
+        %td= @vehicles_total
+      - if can? :manage, SimCard
+        %tr
+          %th= link_to t('.stats.column.sim_cards'), admin_sim_cards_path
+          %td= @sim_cards_total
+      - if can? :manage, FuelSensor
+        %tr
+          %th= link_to t('.stats.column.fuel_sensors'), admin_fuel_sensors_path
+          %td= @fuel_sensors_total
+  .span6
+    %table.table.table-striped
+      %tr
+        %th= t('.stats.column.way_points')
+        %td= number_with_delimiter(@way_points_total, :delimiter => ' ')
+      %tr
+        %th= t('.stats.column.movements')
+        %td= number_with_delimiter(@movements_total, :delimiter => ' ')
+      %tr
+        %th= t('.stats.column.reports')
+        %td= number_with_delimiter(@reports_total, :delimiter => ' ')
+      %tr
+        %th= t('.stats.column.fuel_changes')
+        %td= number_with_delimiter(@fuel_changes_total, :delimiter => ' ')
+      %tr
+        %th= t('.stats.column.activities')
+        %td= number_with_delimiter(@activities_total, :delimiter => ' ')
+

@@ -114,6 +114,11 @@ ru:
             vehicles: "Машины"
             sim_cards: "SIM-карты"
             fuel_sensors: "Датчики топлива"
+            way_points: "Путевые точки"
+            movements: "Перемещения"
+            reports: "Отчеты"
+            fuel_changes: "Заправки и сливы"
+            activities: "Зажигания и выключения"
         access_denied: "Доступ запрещен."
         unknown_object: "Неизвестный объект."
     users:
