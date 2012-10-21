@@ -210,6 +210,7 @@ class Admin::VehiclesController < Admin::Base
     end
 
     def get_fuel_details(start_time, selected_date_last_minute)
+      return [] unless @vehicle.fuel_sensor
       initial_way_point = WayPoint.get_by_timestamp(start_time.to_i, @vehicle.imei, { :rs232_1.gt => 0 })
       fuel_initial_value = initial_way_point ? @vehicle.get_fuel_amount(initial_way_point.fuel_signal).to_i : 0
 
