@@ -215,7 +215,7 @@ class Admin::VehiclesController < Admin::Base
       fuel_initial_value = initial_way_point ? @vehicle.get_fuel_amount(initial_way_point.fuel_signal).to_i : 0
 
       way_points = WayPoint.where(:imei => @vehicle.imei, :timestamp.gte => start_time.to_i, :timestamp.lt => start_time.to_i + 86400).
-        sort(:from_timestamp)
+        fields(:rs232_1, :timestamp).sort(:timestamp)
       fuel_values = {}
       last_fuel_value = fuel_initial_value
 
