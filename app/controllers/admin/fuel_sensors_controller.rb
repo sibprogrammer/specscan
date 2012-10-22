@@ -29,7 +29,7 @@ class Admin::FuelSensorsController < Admin::Base
 
   def update
     if @fuel_sensor.update_attributes(params[:fuel_sensor])
-      redirect_to(admin_fuel_sensor_path(@fuel_sensor), :notice => t('admin.fuel_sensors.update.fuel_sensor_updated', :title => @fuel_sensor.title))
+      redirect_to(admin_fuel_sensor_path(@fuel_sensor), :notice => t('admin.fuel_sensors.update.fuel_sensor_updated', :title => @fuel_sensor.code))
     else
       render :action => 'edit'
     end
