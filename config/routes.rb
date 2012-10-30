@@ -19,6 +19,7 @@ Specscan::Application.routes.draw do
     end
     resources :vehicles do
       get 'map', :on => :member
+      get 'overview_map', :on => :collection
       get 'reports', :on => :member
       get 'day_report', :on => :member
       get 'get_movement_points', :on => :member

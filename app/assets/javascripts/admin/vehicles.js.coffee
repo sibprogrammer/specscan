@@ -1,62 +1,110 @@
 $ ->
-  if $('body.vehicles.map').length > 0
+  createMap = ->
+    map = new YMaps.Map($("#map-canvas")[0])
+    map.addControl(new YMaps.TypeControl())
+    map.addControl(new YMaps.Zoom())
+    map.addControl(new YMaps.ScaleLine())
+    map.addControl(new YMaps.ToolBar())
+    map.enableScrollZoom()
+    map
 
-    createMap = ->
-      map = new YMaps.Map($("#map-canvas")[0])
-      map.addControl(new YMaps.TypeControl())
-      map.addControl(new YMaps.Zoom())
-      map.addControl(new YMaps.ScaleLine())
-      map.addControl(new YMaps.ToolBar())
-      map.enableScrollZoom()
-      map
+  resizeMap = ->
+    mapHeight = if ($(window).width() < 768) then $(window).height() else ($(window).height() - $('#map-canvas').offset().top - 20)
+    $('#map-canvas').height(mapHeight)
 
-    resizeMap = ->
-      mapHeight = if ($(window).width() < 768) then $(window).height() else ($(window).height() - $('#map-canvas').offset().top - 20)
-      $('#map-canvas').height(mapHeight)
+  createLineStyle = ->
+    style = new YMaps.Style()
+    style.polygonStyle = new YMaps.PolygonStyle()
+    style.polygonStyle.strokeColor = '0000FFA5'
+    style.polygonStyle.fillColor = '0000FFA5'
+    style.lineStyle = new YMaps.LineStyle()
+    style.lineStyle.strokeColor = '0000FFA5'
+    style.lineStyle.strokeWidth = 4
+    YMaps.Styles.add("user#routeLine", style)
 
-    createLineStyle = ->
-      style = new YMaps.Style()
-      style.polygonStyle = new YMaps.PolygonStyle()
-      style.polygonStyle.strokeColor = '0000FFA5'
-      style.polygonStyle.fillColor = '0000FFA5'
-      style.lineStyle = new YMaps.LineStyle()
-      style.lineStyle.strokeColor = '0000FFA5'
-      style.lineStyle.strokeWidth = 4
-      YMaps.Styles.add("user#routeLine", style)
+  getIconStyle = (image) ->
+    iconStyle = new YMaps.Style();
+    iconStyle.iconStyle = new YMaps.IconStyle();
+    iconStyle.iconStyle.size = new YMaps.Point(16, 16);
+    iconStyle.iconStyle.offset = new YMaps.Point(0, -16);
+    iconStyle.iconStyle.href = image_path(image)
+    iconStyle
 
-    getIconStyle = (image) ->
-      iconStyle = new YMaps.Style();
-      iconStyle.iconStyle = new YMaps.IconStyle();
-      iconStyle.iconStyle.size = new YMaps.Point(16, 16);
-      iconStyle.iconStyle.offset = new YMaps.Point(0, -16);
-      iconStyle.iconStyle.href = image_path(image)
-      iconStyle
+  getBigIconStyle = (image) ->
+    iconStyle = new YMaps.Style();
+    iconStyle.iconStyle = new YMaps.IconStyle();
+    iconStyle.iconStyle.size = new YMaps.Point(48, 48);
+    iconStyle.iconStyle.offset = new YMaps.Point(-24, -24);
+    iconStyle.iconStyle.href = image_path(image)
+    iconStyle
 
-    getBigIconStyle = (image) ->
-      iconStyle = new YMaps.Style();
-      iconStyle.iconStyle = new YMaps.IconStyle();
-      iconStyle.iconStyle.size = new YMaps.Point(48, 48);
-      iconStyle.iconStyle.offset = new YMaps.Point(-24, -24);
-      iconStyle.iconStyle.href = image_path(image)
-      iconStyle
+  getPlacemark = (config) ->
+    if config.bigIcon
+      icon = config.bigIcon
+      iconStyle = getBigIconStyle('icons/' + icon + '.png')
+    else
+      icon = config.icon
+      iconStyle = getIconStyle('icons/' + icon + '.png')
 
-    getPlacemark = (config) ->
-      if config.bigIcon
-        icon = config.bigIcon
-        iconStyle = getBigIconStyle('icons/' + icon + '.png')
+    placemark = new YMaps.Placemark(config.geoPoint, { style: "user#" + icon, hideIcon: false })
+    YMaps.Styles.add("user#" + icon, iconStyle)
+    placemark.name = config.title || ''
+    placemark.description = config.description || ''
+    bounds = new YMaps.GeoBounds(config.geoPoint, config.geoPoint)
+    placemark.setBounds(bounds)
+    config.map.addOverlay(placemark)
+    config.map.setBounds(placemark.getBounds()) if config.moveMap
+    placemark
+
+  if $('body.vehicles.overview_map').length > 0
+
+    renderPlacemark = (map, pointLink, lastPoint, geoPoint, vehicleIcon, options) ->
+      lastPlacemark = getPlacemark({
+        map: map, title: lastPoint.title, description: lastPoint.description,
+        geoPoint: geoPoint, bigIcon: vehicleIcon, moveMap: options.moveMap
+      })
+      pointLink.data('placemark', lastPlacemark)
+      lastPlacemark.openBalloon() if options.moveMap
+
+    showLastPoint = (element, map, options) ->
+      pointLink = $(element).first()
+      lastPoint = pointLink.data('info')
+      geoPoint = new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude)
+      vehicleIcon = pointLink.data('icon')
+      vehicleId = pointLink.data('id')
+
+      lastPlacemark = pointLink.data('placemark')
+
+      if lastPlacemark
+        $(element).parent('li').append('<img src="' + image_path('icons/loading.gif') + '" class="inline-icon" width="16" height="16">')
+        $.ajax({
+          url: '/admin/vehicles/' + vehicleId + '/get_last_point',
+          async: true
+        }).done (data) ->
+          $(element).parent('li').find('img:last-child').remove()
+
+          if lastPlacemark
+            map.removeOverlay(lastPlacemark)
+
+          lastPoint.longitude = data.longitude
+          lastPoint.latitude = data.latitude
+          geoPoint = new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude)
+
+          renderPlacemark(map, pointLink, lastPoint, geoPoint, vehicleIcon, options)
       else
-        icon = config.icon
-        iconStyle = getIconStyle('icons/' + icon + '.png')
+        renderPlacemark(map, pointLink, lastPoint, geoPoint, vehicleIcon, options)
 
-      placemark = new YMaps.Placemark(config.geoPoint, { style: "user#" + icon, hideIcon: false })
-      YMaps.Styles.add("user#" + icon, iconStyle)
-      placemark.name = config.title || ''
-      placemark.description = config.description || ''
-      bounds = new YMaps.GeoBounds(config.geoPoint, config.geoPoint)
-      placemark.setBounds(bounds)
-      config.map.addOverlay(placemark)
-      config.map.setBounds(placemark.getBounds()) if config.moveMap
-      placemark
+    resizeMap()
+    $(window).resize(resizeMap)
+    map = createMap()
+    map.setCenter(new YMaps.GeoPoint(82.933957, 55.007224), 12)
+
+    $('.vehicles-list a.ico-vehicle').each (index, element) ->
+      showLastPoint(this, map, { moveMap: false })
+      $(element).on 'click', ->
+        showLastPoint(this, map, { moveMap: true })
+
+  if $('body.vehicles.map').length > 0
 
     loadMovementPoints = (element, move, moveMap) ->
       $(element).parent('li').append('<img src="' + image_path('icons/loading.gif') + '" class="inline-icon" width="16" height="16">')
@@ -145,7 +193,7 @@ $ ->
       else
         renderMovementPoints(element, move, moveMap)
 
-    updatePosition = (map) ->
+    updatePosition = (map, vehicleId) ->
       pointLink = $('a.ico-last-point').first()
       lastPoint = pointLink.data('info')
       lastPlacemark = pointLink.data('placemark')
@@ -224,9 +272,9 @@ $ ->
       if onlineMonitoring
         $(this).parent('li').append('<img src="' + image_path('icons/monitor.gif') + '" class="inline-icon" width="16" height="16">')
         map.setZoom(12)
-        updatePosition(map)
+        updatePosition(map, vehicleId)
         timerId = setInterval ->
-          updatePosition(map)
+          updatePosition(map, vehicleId)
         , 10000
         $(this).data('timerId', timerId)
       else
@@ -270,7 +318,7 @@ $ ->
         movementIdsMap[i] = range[3]
 
     for i in [0...movementsChartData.length]
-      movementsChartData[i] = 1 if 'undefined' == typeof movementsChartData[i] 
+      movementsChartData[i] = 1 if 'undefined' == typeof movementsChartData[i]
 
     showMovementsChart = ->
       chart = new Highcharts.Chart({

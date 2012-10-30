@@ -3,6 +3,7 @@
 - content_for :sidebar_actions do
   - if can? :manage, Vehicle
     %li= link_to t('.action.add_vehicle'), new_admin_vehicle_path
+  %li= link_to t('.action.overview_map'), overview_map_admin_vehicles_path
 
 = will_paginate @vehicles
 

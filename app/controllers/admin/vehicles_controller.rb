@@ -64,6 +64,17 @@ class Admin::VehiclesController < Admin::Base
     @js_locale_keys = %w{ time speed }
   end
 
+  def overview_map
+    @api_key = get_map_api_key :yandex, request.host
+
+    if can?(:manage, Vehicle) or (current_user.owner and current_user.owner.admin?)
+      @vehicles = Vehicle.all
+    else
+      user = current_user.user? ? current_user.owner : current_user
+      @vehicles = user.vehicles
+    end
+  end
+
   def get_movement_points
     movement = Movement.where(:imei => @vehicle.imei, '_id' => params[:movement_id]).first
     render :json => movement ? movement.get_points : []

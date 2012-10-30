@@ -228,6 +228,7 @@ ru:
           type: "Тип"
         action:
           add_vehicle: "Добавить машину"
+          overview_map: "Обзорная карта"
       show:
         page_title: "Машина %{vehicle_title}"
         help: "Здесь представлена обзорная информация по выбранной машине."
@@ -295,6 +296,12 @@ ru:
           distance: "Расстояние: %{distance} км"
         last_point:
           title: "Последняя точка"
+          time: "Время: %{time}"
+      overview_map:
+        page_title: "Обзорная карта"
+        help: "Здесь показано текущее расположение всех машин на карте."
+        vehicles_list: "Список машин"
+        last_point:
           time: "Время: %{time}"
       reports:
         page_title: "Отчеты - %{vehicle_title}"

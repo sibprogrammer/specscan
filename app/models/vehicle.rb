@@ -81,4 +81,8 @@ class Vehicle < ActiveRecord::Base
     get_fuel_amount(way_point.fuel_signal)
   end
 
+  def last_point
+    WayPoint.where(:imei => imei, :coors_valid => true).sort(:timestamp.desc).limit(1).first
+  end
+
 end

@@ -1,0 +1,20 @@
+- @page_title = t '.page_title'
+
+- content_for :sidebar do
+  %h4= t '.vehicles_list'
+  - if @vehicles.count > 0
+    %ul.vehicles-list
+      - @vehicles.each do |vehicle|
+        - last_point = vehicle.last_point
+        - if last_point
+          %li= link_to vehicle.name, '#map-canvas', :class => 'ico-vehicle', 'data-info' => last_point_info(last_point, vehicle.title).to_json, 'data-icon' => "vehicle_#{vehicle.vehicle_type.code}", 'data-id' => vehicle.id
+        - else
+          %li
+            %span.ico-vehicle= vehicle.name
+  - else
+    = t('.no_data')
+
+
+= javascript_include_tag "http://api-maps.yandex.ru/1.1/index.xml?key=#{@api_key}"
+= javascript_include_tag "extensions/yandex-maps"
+#map-canvas{ :style => "width: 100%; height: 0px;", :name => 'map-canvas' }
