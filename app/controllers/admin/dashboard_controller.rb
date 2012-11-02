@@ -13,6 +13,7 @@ class Admin::DashboardController < Admin::Base
     @reports_total = Report.count
     @fuel_changes_total = FuelChange.count
     @activities_total = Activity.count
+    @locations_total = Location.count
   end
 
 end

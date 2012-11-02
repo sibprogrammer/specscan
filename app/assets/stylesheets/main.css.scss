@@ -28,6 +28,8 @@ ul.movements-list { list-style: none outside none; margin: 0 0 0 10px; overflow-
 ul.vehicles-list { list-style: none outside none; margin: 0 0 0 10px; overflow-y: auto; overflow-x: hidden; max-height: 450px; }
 .vehicles-list li { line-height: 22px; white-space: nowrap; }
 
+#movements-list td { vertical-align: middle; }
+
 .ico-parking { background: image-url('icons/parking.png') no-repeat 0 2px; padding: 2px 22px; }
 .ico-moving { background: image-url('icons/arrow_down.png') no-repeat 0 2px; padding: 2px 22px; }
 .ico-show-all { background: image-url('icons/map_add.png') no-repeat 0 2px; padding: 2px 22px; }

@@ -119,6 +119,7 @@ ru:
             reports: "Отчеты"
             fuel_changes: "Заправки и сливы"
             activities: "Зажигания и выключения"
+            locations: "Адреса"
         access_denied: "Доступ запрещен."
         unknown_object: "Неизвестный объект."
     users:
@@ -371,6 +372,8 @@ ru:
           type: "Тип"
           from_time: "Начало"
           to_time: "Конец"
+          from_location: "Начальный адрес"
+          to_location: "Конечный адрес"
           duration: "Продолжительность, Ч:ММ"
           distance: "Пробег, км."
           fuel_used: "Расход топлива, л."

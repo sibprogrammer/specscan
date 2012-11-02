@@ -23,6 +23,9 @@ class Server::Analyzer < Server::Abstract
         update_fuel_changes(vehicle) if vehicle.fuel_sensor
         update_reports(vehicle)
       end
+
+      update_locations
+
       sleep(5.minutes.to_i)
     end
   end
@@ -386,6 +389,14 @@ class Server::Analyzer < Server::Abstract
         # unknown calculation method
         return 0
       end
+    end
+
+    def update_locations
+      conditions = { :from_location => nil, :from_timestamp.gt => (Time.now.to_i - 2.months), :to_timestamp.lt => (Time.now.to_i - 5.minutes) }
+      movements = Movement.where(conditions).sort(:from_timestamp.desc).limit(100)
+      logger.debug "Total not processed movements without locations info: #{movements.count}"
+      movements.each{ |movement| movement.update_locations }
+      logger.debug "Locations update have been finished."
     end
 
 end

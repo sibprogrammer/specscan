@@ -119,16 +119,22 @@ $ ->
     renderMovementPoints = (element, move, moveMap) ->
       overlays = []
 
+      firstPointDescription = lastPointDescription = move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration
+      if move.from_location
+        firstPointDescription += "<br/>" + move.from_location
+      if move.to_location
+        lastPointDescription += "<br/>" + move.to_location
+
       firstGeoPoint = new YMaps.GeoPoint(move.first_point.longitude, move.first_point.latitude)
       placemark = getPlacemark({
-        map: map, title: move.title, description: move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration,
+        map: map, title: move.title, description: firstPointDescription,
         geoPoint: firstGeoPoint, icon: 'flag_green', moveMap: false
       })
       overlays.push(placemark)
 
       lastGeoPoint = new YMaps.GeoPoint(move.last_point.longitude, move.last_point.latitude)
       placemark = getPlacemark({
-        map: map, title: move.title, description: move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration,
+        map: map, title: move.title, description: lastPointDescription,
         geoPoint: lastGeoPoint, icon: 'flag_finish', moveMap: false
       })
       overlays.push(placemark)
@@ -142,6 +148,10 @@ $ ->
       polyline = new PolylineWithArrows(mapPoints, { style: 'user#routeLine' })
       polyline.name = move.title
       polyline.description = move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration + "<br/>" + move.distance
+
+      if move.from_location
+        polyline.description += "<br/>" + move.from_location + "<br/>" + move.to_location
+
       map.addOverlay(polyline)
       if moveMap
         bounds = new YMaps.GeoCollectionBounds(mapPoints)
@@ -182,9 +192,10 @@ $ ->
       if move.parking
         point = move.first_point
         geoPoint = new YMaps.GeoPoint(point.longitude, point.latitude)
+        description = move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration + '<br/>' + move.from_location
 
         placemark = getPlacemark({
-          map: map, title: move.title, description: move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration,
+          map: map, title: move.title, description: description,
           geoPoint: geoPoint, icon: 'parking', moveMap: moveMap
         })
         placemark.openBalloon() if moveMap

@@ -37,4 +37,6 @@
       %tr
         %th= t('.stats.column.activities')
         %td= number_with_delimiter(@activities_total, :delimiter => ' ')
-
+      %tr
+        %th= t('.stats.column.locations')
+        %td= number_with_delimiter(@locations_total, :delimiter => ' ')
