@@ -80,6 +80,7 @@ class Movement
       unless location
         begin
           location_info = Geocoder.get_address(way_point.latitude, way_point.longitude)
+          raise "Unable to detect the location for coordinates: lat - #{way_point.latitude}, lon - #{way_point.longitude}" unless location_info
         rescue Exception => e
           Rails.logger.error e
           return nil
