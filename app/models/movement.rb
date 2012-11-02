@@ -26,11 +26,11 @@ class Movement
   end
 
   def from_way_point
-    WayPoint.where(:imei => imei, :timestamp.lte => from_timestamp).sort(:timestamp.desc).first
+    WayPoint.where(:imei => imei, :coors_valid => true, :timestamp.lte => from_timestamp).sort(:timestamp.desc).first
   end
 
   def to_way_point
-    WayPoint.where(:imei => imei, :timestamp.lte => to_timestamp).sort(:timestamp.desc).first
+    WayPoint.where(:imei => imei, :coors_valid => true, :timestamp.lte => to_timestamp).sort(:timestamp.desc).first
   end
 
   def elapsed_time

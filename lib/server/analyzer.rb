@@ -392,10 +392,13 @@ class Server::Analyzer < Server::Abstract
     end
 
     def update_locations
-      conditions = { :from_location => nil, :from_timestamp.gt => (Time.now.to_i - 2.months), :to_timestamp.lt => (Time.now.to_i - 5.minutes) }
-      movements = Movement.where(conditions).sort(:from_timestamp.desc).limit(100)
+      conditions = { :from_location => nil, :from_timestamp.gt => (Time.now.to_i - 2.months) }
+      movements = Movement.where(conditions).sort(:from_timestamp.desc).limit(200)
       logger.debug "Total not processed movements without locations info: #{movements.count}"
-      movements.each{ |movement| movement.update_locations }
+      movements.each do |movement|
+        next if !movement.parking and (Time.now.to_i - movement.to_timestamp < 5.minutes)
+        movement.update_locations
+      end
       logger.debug "Locations update have been finished."
     end
 
