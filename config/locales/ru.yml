@@ -206,6 +206,7 @@ ru:
           fuel_sensor: "Датчик топлива"
           vehicle_type: "Тип машины"
           fuel_calc_method: "Метод расчета топлива"
+          comment: "Примечание администратора"
         fuel_calc_method:
           distance: "По расстоянию"
           mhours: "По моточасам"

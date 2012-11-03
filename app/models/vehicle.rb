@@ -12,7 +12,7 @@ class Vehicle < ActiveRecord::Base
   validates :fuel_calc_method, :inclusion => { :in => 1..2 }
 
   attr_accessible :imei, :user_id, :reg_number, :name, :description, :tracker_model_id, :fuel_norm, :fuel_tank, :fuel_tank2,
-    :calibration_table, :calibration_table2, :vehicle_type_id, :fuel_calc_method
+    :calibration_table, :calibration_table2, :vehicle_type_id, :fuel_calc_method, :comment
 
   belongs_to :user
   belongs_to :tracker_model

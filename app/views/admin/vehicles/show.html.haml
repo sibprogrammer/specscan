@@ -20,17 +20,9 @@
             - else
               = @vehicle.send(field_name)
 
-  - if can? :manage, @vehicle
-    .control-group
-      %label.control-label= t('admin.vehicles.form.field.user')
-      .controls
-        %span.uneditable-input= @vehicle.user.login
-
-  - if !@vehicle.description.blank?
-    .control-group
-      %label.control-label= t('admin.vehicles.form.field.description')
-      .controls
-        %span.uneditable-input= simple_format @vehicle.description
+  - readonly_field(t('admin.vehicles.form.field.user'), @vehicle.user.login) if can? :manage, @vehicle
+  - readonly_field(t('admin.vehicles.form.field.description'), simple_format(@vehicle.description)) if !@vehicle.description.blank?
+  - readonly_field(t('admin.vehicles.form.field.comment'), simple_format(@vehicle.comment)) if can?(:manage, @vehicle) and !@vehicle.comment.blank?
 
   .form-actions
     - if can? :edit, @vehicle

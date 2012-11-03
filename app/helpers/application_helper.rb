@@ -17,6 +17,19 @@ module ApplicationHelper
     end
   end
 
+  def readonly_field(title, value)
+    haml_tag '.control-group' do
+      haml_tag 'label.control-label' do
+        haml_concat title
+      end
+      haml_tag '.controls' do
+        haml_tag 'span.uneditable-input' do
+          haml_concat value
+        end
+      end
+    end
+  end
+
   def sortable_column(name, title, sort_state)
     sort_dir = 'desc' == sort_state[:dir] ? 'asc' : 'desc'
     sort_link = link_to(title, url_for(:page => params[:page], :sort_dir => sort_dir, :sort_field => name))

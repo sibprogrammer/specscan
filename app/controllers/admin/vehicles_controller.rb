@@ -40,9 +40,8 @@ class Admin::VehiclesController < Admin::Base
   end
 
   def update
-    params[:vehicle].delete(:imei) unless can? :manage, @vehicle
-    params[:vehicle].delete(:user_id) unless can? :manage, @vehicle
-    params[:vehicle].delete(:tracker_model_id) unless can? :manage, @vehicle
+    manager_only_fields = %w{ imei user_id tracker_model_id comment }
+    manager_only_fields.each{ |field| params[:vehicle].delete(field.to_sym) } unless can? :manage, @vehicle
 
     if @vehicle.update_attributes(params[:vehicle])
       redirect_to(admin_vehicle_path(@vehicle), :notice => t('admin.vehicles.update.vehicle_updated'))
