@@ -32,12 +32,13 @@ module Admin::VehiclesHelper
     decimal_human(movement.fuel_used)
   end
 
-  def last_point_info(way_point, title)
+  def last_point_info(way_point, title, link = nil)
     {
       :title => title,
       :description => t('.last_point.time', :time => way_point.time.to_formatted_s(:date_time)),
       :latitude => way_point.latitude,
       :longitude => way_point.longitude,
+      :link => link ? link : ''
     }
   end
 

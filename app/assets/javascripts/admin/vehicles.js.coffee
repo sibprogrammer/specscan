@@ -49,6 +49,8 @@ $ ->
     placemark = new YMaps.Placemark(config.geoPoint, { style: "user#" + icon, hideIcon: false })
     YMaps.Styles.add("user#" + icon, iconStyle)
     placemark.name = config.title || ''
+    if placemark.name and config.link
+      placemark.name = '<a href="' + config.link + '">' + placemark.name + '</a>'
     placemark.description = config.description || ''
     bounds = new YMaps.GeoBounds(config.geoPoint, config.geoPoint)
     placemark.setBounds(bounds)
@@ -61,7 +63,7 @@ $ ->
     renderPlacemark = (map, pointLink, lastPoint, geoPoint, vehicleIcon, options) ->
       lastPlacemark = getPlacemark({
         map: map, title: lastPoint.title, description: lastPoint.description,
-        geoPoint: geoPoint, bigIcon: vehicleIcon, moveMap: options.moveMap
+        geoPoint: geoPoint, bigIcon: vehicleIcon, moveMap: options.moveMap, link: lastPoint.link
       })
       pointLink.data('placemark', lastPlacemark)
       lastPlacemark.openBalloon() if options.moveMap
