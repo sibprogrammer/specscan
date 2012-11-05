@@ -27,6 +27,9 @@ config_defaults = {
   'google_analytics' => {
     'account_id' => '',
   },
+  'billing' => {
+    'debt_notification_limit' => 1500,
+  },
 }
 
 def hashes2ostruct(object)

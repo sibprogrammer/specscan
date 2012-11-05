@@ -23,6 +23,7 @@
   - readonly_field(t('admin.vehicles.form.field.user'), @vehicle.user.login) if can? :manage, @vehicle
   - readonly_field(t('admin.vehicles.form.field.description'), simple_format(@vehicle.description)) if !@vehicle.description.blank?
   - readonly_field(t('admin.vehicles.form.field.comment'), simple_format(@vehicle.comment)) if can?(:manage, @vehicle) and !@vehicle.comment.blank?
+  - readonly_field(t('admin.vehicles.form.field.debt'), @vehicle.debt) if can?(:manage, @vehicle) and !@vehicle.debt.zero?
 
   .form-actions
     - if can? :edit, @vehicle

@@ -1,7 +1,7 @@
 class Admin::Base < ApplicationController
 
   layout 'admin'
-  before_filter :authenticate_user!, :set_menu, :set_search, :set_sidebar_actions
+  before_filter :authenticate_user!, :set_menu, :set_search, :set_sidebar_actions, :set_billing_notifications
 
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to root_url, :alert => t('admin.dashboard.index.access_denied')
@@ -56,6 +56,14 @@ class Admin::Base < ApplicationController
     def get_map_api_key(vendor, host)
       dev_request = AppConfig.host.development == host
       @api_key = AppConfig.maps.send(vendor.to_s).send('api_key' + (dev_request ? '_dev' : ''))
+    end
+
+    def set_billing_notifications
+      return if can?(:manage, Vehicle) or (current_user.owner and current_user.owner.admin?)
+      user = current_user.user? ? current_user.owner : current_user
+      debt = 0
+      user.vehicles.each{ |vehicle| debt += vehicle.debt }
+      flash.now[:alert] = t('admin.vehicles.index.debt_notice', :debt => debt) if debt >= AppConfig.billing.debt_notification_limit
     end
 
 end

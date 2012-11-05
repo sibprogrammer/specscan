@@ -10,9 +10,10 @@ class Vehicle < ActiveRecord::Base
   validates :name, :presence => true
   validates :vehicle_type_id, :presence => true
   validates :fuel_calc_method, :inclusion => { :in => 1..2 }
+  validates :debt, :numericality => true
 
   attr_accessible :imei, :user_id, :reg_number, :name, :description, :tracker_model_id, :fuel_norm, :fuel_tank, :fuel_tank2,
-    :calibration_table, :calibration_table2, :vehicle_type_id, :fuel_calc_method, :comment
+    :calibration_table, :calibration_table2, :vehicle_type_id, :fuel_calc_method, :comment, :debt
 
   belongs_to :user
   belongs_to :tracker_model
