@@ -5,6 +5,7 @@ $ ->
     map.addControl(new YMaps.Zoom())
     map.addControl(new YMaps.ScaleLine())
     map.addControl(new YMaps.ToolBar())
+    map.addControl(new YMaps.SearchControl())
     map.enableScrollZoom()
     map
 
