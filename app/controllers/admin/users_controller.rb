@@ -78,7 +78,7 @@ class Admin::UsersController < Admin::Base
 
   def impersonate
     redirect_to(root_path) unless session[:impersonated_user_id] or authorize! :manage, User
-    session[:impersonated_user_id] = current_user.id
+    session[:impersonated_user_id] = current_user.id unless session[:impersonated_user_id]
     relogin(@user)
   end
 
