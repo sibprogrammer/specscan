@@ -1,6 +1,6 @@
 class Admin::UsersController < Admin::Base
 
-  before_filter :check_manage_permission, :except => [:profile, :update, :destroy, :impersonation_logout]
+  before_filter :check_manage_permission, :except => [:profile, :update, :destroy, :impersonate, :impersonation_logout]
   before_filter :set_selected_user, :only => [:show, :edit, :update, :lock, :unlock, :destroy, :impersonate]
 
   def index
@@ -77,6 +77,7 @@ class Admin::UsersController < Admin::Base
   end
 
   def impersonate
+    redirect_to(root_path) unless session[:impersonated_user_id] or authorize! :manage, User
     session[:impersonated_user_id] = current_user.id
     relogin(@user)
   end
