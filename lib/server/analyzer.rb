@@ -20,6 +20,7 @@ class Server::Analyzer < Server::Abstract
     loop do
       Vehicle.with_imei.each do |vehicle|
         update_movements(vehicle)
+        update_distances(vehicle)
         update_fuel_changes(vehicle) if vehicle.fuel_sensor
         update_reports(vehicle)
       end
@@ -69,7 +70,7 @@ class Server::Analyzer < Server::Abstract
       end
 
       logger.debug "Re-calculate distances for #{movements.count} movements"
-      movements.each{ |movement| update_distance(movement) }
+      movements.each{ |movement| movement.recalculate_distance unless movement.parking }
     end
 
     def update_activity_changes(way_point, vehicle)
@@ -164,9 +165,13 @@ class Server::Analyzer < Server::Abstract
       fuel_diff = vehicle.get_fuel_amount(prev_way_point.fuel_signal) - vehicle.get_fuel_amount(way_point.fuel_signal)
       return if fuel_diff.abs < 0.01
 
+      prev_fuel_change = FuelChange.where(:imei => vehicle.imei, :to_timestamp.lt => way_point.timestamp).sort(:to_timestamp.desc).first
+
       if movement.parking
-        fuel_minor_change = false
-        fuel_minor_change = true if fuel_diff.abs < FUEL_TRESHOLD_PARKING_LITRES
+        fuel_minor_change = true
+        fuel_minor_change = false if fuel_diff.abs >= FUEL_TRESHOLD_PARKING_LITRES
+        within_last_refuel = (prev_fuel_change and prev_fuel_change.to_timestamp >= prev_way_point.timestamp)
+        fuel_minor_change = false if prev_way_point.timestamp >= movement.from_timestamp and fuel_diff.abs > 1 and fuel_diff < 0 and within_last_refuel
         logger.debug "Parking, fuel major change" unless fuel_minor_change
       else
         fuel_minor_change = true
@@ -179,7 +184,6 @@ class Server::Analyzer < Server::Abstract
         movement.fuel_used = (movement.fuel_used.to_f + fuel_diff).to_f
         movement.save
       else
-        prev_fuel_change = FuelChange.where(:imei => vehicle.imei, :to_timestamp.lt => way_point.timestamp).sort(:to_timestamp.desc).first
         multiplier = (fuel_diff > 0) ? -1 : 1
 
         if prev_fuel_change and prev_fuel_change.multiplier == multiplier and (way_point.timestamp - prev_fuel_change.to_timestamp) < MIN_SECONDS_BETWEEN_REFILLS
@@ -328,6 +332,7 @@ class Server::Analyzer < Server::Abstract
           movement_time += movement.elapsed_time
           distance += movement.distance.to_i
         end
+
         fuel_used += movement.fuel_used.to_f
       end
 
@@ -372,8 +377,13 @@ class Server::Analyzer < Server::Abstract
       logger.debug "Report: #{report.inspect}"
     end
 
-    def update_distance(movement)
-      movement.recalculate_distance unless movement.parking
+    def update_distances(vehicle)
+      movements = Movement.where({ :imei => vehicle.imei, :to_timestamp.gte => Time.now.beginning_of_day.to_i })
+      logger.debug "Re-calculate distances for #{movements.count} movements"
+
+      movements.each do |movement|
+        movement.recalculate_distance unless movement.parking
+      end
     end
 
     def get_fuel_by_norm(vehicle, distance, active_time)
