@@ -8,6 +8,7 @@
 
 %form.form-horizontal
   - %w{ name vehicle_type tracker_name imei fuel_sensor reg_number fuel_norm fuel_tank fuel_tank2 }.each do |field_name|
+    - next if %w{ imei tracker_name fuel_sensor }.include?(field_name) and !can?(:manage, @vehicle)
     - if !@vehicle.send(field_name).blank?
       .control-group
         %label.control-label= t('admin.vehicles.form.field.' + field_name)
@@ -15,6 +16,8 @@
           %span.uneditable-input
             - if 'fuel_sensor' == field_name
               = @vehicle.fuel_sensor.fuel_sensor_model.title
+            - elsif 'imei' == field_name
+              = link_to(@vehicle.imei, { :controller => 'admin/tools', :action => 'packets_monitor', :imei => @vehicle.imei }, :class => 'ico-monitor')
             - elsif 'vehicle_type' == field_name
               = @vehicle.vehicle_type.title
             - else
