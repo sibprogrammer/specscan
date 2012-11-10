@@ -197,6 +197,9 @@ class Server::Tracker::Galileo < Server::Tracker::Abstract
       index += 1 + value_length
     end
 
+    # engine should be off if there is no power
+    packet[:engine_on] = false if packet[:engine_on] and packet[:power_input_0] and 0 == packet[:power_input_0]
+
     packet
   end
 

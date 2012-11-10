@@ -478,4 +478,11 @@ class Server::Tracker::GalileoTest < ActiveSupport::TestCase
     end
   end
 
+  test "engine off if there is no power" do
+    packet = @server.parse_packet("\x40\x00\x02\x50\x00\x00")
+    validate_status_props(packet)
+    assert_equal(0, packet[:power_input_0])
+    assert_equal(false, packet[:engine_on])
+  end
+
 end
