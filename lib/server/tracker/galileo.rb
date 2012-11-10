@@ -7,23 +7,34 @@ class Server::Tracker::Galileo < Server::Tracker::Abstract
   HEADER_SIZE = 3
 
   def process_data(client)
-    head_packet = read_packet(client)
+    head_packet = read_packet(client, true)
     logger.debug head_packet.inspect
 
     raise "Head packet has no IMEI" unless head_packet.key?(:imei)
 
     loop do
-      packet = read_packet(client)
-      packet.merge! head_packet
+      packets = read_packet(client)
 
-      logger.debug packet.inspect
-      logger.debug "IMEI #{packet[:imei]} record id: #{packet[:record_id]}" if packet.key?(:record_id)
+      logger.debug "Packets received: #{packets.count}"
 
-      point = WayPoint.new(packet)
-      if packet.key?(:timestamp) and (Time.now.to_i - packet[:timestamp]) > 1.year.to_i
-        logger.debug "Packet with very old timestamp was recieved - #{packet[:timestamp]}"
-      else
-        point.save
+      packets.each do |packet|
+        packet.merge! head_packet
+
+        # engine should be off if there is no power
+        packet[:engine_on] = false if packet[:engine_on] and packet[:power_input_0] and 0 == packet[:power_input_0]
+
+        logger.debug packet.inspect
+
+        point = WayPoint.new(packet)
+
+        if !packet.key?(:timestamp)
+          logger.debug "Packet without timestamp, dropping"
+        elsif (Time.now.to_i - packet[:timestamp]) > 1.year.to_i
+          logger.debug "Packet with very old timestamp #{packet[:timestamp]} was recieved, dropping"
+        else
+          logger.debug "Saving packet with IMEI #{packet[:imei]}, #{Time.at(packet[:timestamp])}"
+          point.save
+        end
       end
     end
   end
@@ -38,14 +49,14 @@ class Server::Tracker::Galileo < Server::Tracker::Abstract
     data.unpack('H2'*data.length).join(', ')
   end
 
-  def read_packet(client)
+  def read_packet(client, single = false)
     data = read_data(client, HEADER_SIZE)
     packet_size = get_packet_size(data[1,2])
 
     data += read_data(client, packet_size + CHECKSUM_BYTES)
-    packet = parse_packet(data[HEADER_SIZE, data.length - CHECKSUM_BYTES - HEADER_SIZE])
+    packets = parse_packet(data[HEADER_SIZE, data.length - CHECKSUM_BYTES - HEADER_SIZE])
     send_accept(client, data)
-    packet
+    single ? packets.first : packets
   end
 
   def read_data(client, size)
@@ -57,11 +68,21 @@ class Server::Tracker::Galileo < Server::Tracker::Abstract
   end
 
   def parse_packet(data)
+    packets = []
     packet = {}
     index = 1
+    prev_tag = 0
 
     while index < data.length do
       tag = data[index-1]
+
+      if tag <= prev_tag
+        packets << packet
+        packet = {}
+        prev_tag = 0
+      else
+        prev_tag = tag
+      end
 
       case tag
         when 0x01
@@ -197,10 +218,8 @@ class Server::Tracker::Galileo < Server::Tracker::Abstract
       index += 1 + value_length
     end
 
-    # engine should be off if there is no power
-    packet[:engine_on] = false if packet[:engine_on] and packet[:power_input_0] and 0 == packet[:power_input_0]
-
-    packet
+    packets << packet
+    packets
   end
 
   def send_accept(client, data)
