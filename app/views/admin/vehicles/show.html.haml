@@ -17,7 +17,7 @@
             - if 'fuel_sensor' == field_name
               = @vehicle.fuel_sensor.fuel_sensor_model.title
             - elsif 'imei' == field_name
-              = link_to(@vehicle.imei, { :controller => 'admin/tools', :action => 'packets_monitor', :imei => @vehicle.imei }, :class => 'ico-monitor')
+              = link_to(@vehicle.imei, { :controller => 'admin/tools', :action => 'packets_monitor', :imei => @vehicle.imei }, :class => 'ico-packets-monitor')
             - elsif 'vehicle_type' == field_name
               = @vehicle.vehicle_type.title
             - else
