@@ -8,6 +8,7 @@ class Server::Tracker::Galileo < Server::Tracker::Abstract
 
   def process_data(client)
     head_packet = read_packet(client, true)
+    head_packet.delete(:ready)
     logger.debug head_packet.inspect
 
     raise "Head packet has no IMEI" unless head_packet.key?(:imei)
@@ -35,6 +36,11 @@ class Server::Tracker::Galileo < Server::Tracker::Abstract
           logger.debug "Saving packet with IMEI #{packet[:imei]}, #{Time.at(packet[:timestamp])}"
           point.save
         end
+
+        if point.ready and (total_not_ready_points = WayPoint.where(:imei => point.imei, :ready => false).count) > 0
+          logger.debug "Total number of way points that will be marked as ready for IMEI #{point.imei} - #{total_not_ready_points}"
+          WayPoint.set({ :imei => point.imei, :ready => false }, :ready => true)
+        end
       end
     end
   end
@@ -52,10 +58,12 @@ class Server::Tracker::Galileo < Server::Tracker::Abstract
   def read_packet(client, single = false)
     data = read_data(client, HEADER_SIZE)
     packet_size = get_packet_size(data[1,2])
+    data_ready = (data[2,1].unpack('C')[0] & 0x80) == 0
 
     data += read_data(client, packet_size + CHECKSUM_BYTES)
     packets = parse_packet(data[HEADER_SIZE, data.length - CHECKSUM_BYTES - HEADER_SIZE])
     send_accept(client, data)
+    packets.each{ |packet| packet[:ready] = data_ready }
     single ? packets.first : packets
   end
 

@@ -20,7 +20,6 @@ class Server::Analyzer < Server::Abstract
     loop do
       Vehicle.with_imei.each do |vehicle|
         update_movements(vehicle)
-        update_distances(vehicle)
         update_fuel_changes(vehicle) if vehicle.fuel_sensor
         update_reports(vehicle)
       end
@@ -62,6 +61,10 @@ class Server::Analyzer < Server::Abstract
       logger.debug "Found way points: #{way_points.count} (conditions: #{conditions.inspect})"
 
       way_points.each do |way_point|
+        if !way_point.ready.nil? and !way_point.ready
+          logger.debug "Not ready way point found with time #{Time.at(way_point.timestamp)}, stop analyzing of way_points"
+          break
+        end
         update_activity_changes(way_point, vehicle)
         prev_way_point = way_point unless 0 == way_point.fuel_signal
         next unless way_point.coors_valid

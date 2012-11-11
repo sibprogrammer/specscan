@@ -13,6 +13,7 @@ class WayPoint
   key :rs232_1
   key :coors_valid
   key :power_input_0
+  key :ready
 
   def zero_speed?
     speed.to_f.abs < 0.1
