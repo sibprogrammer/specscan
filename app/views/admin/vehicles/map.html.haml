@@ -11,14 +11,15 @@
     %li= link_to @selected_date, '#', :id => 'selectedDate', 'data-datepicker' => 'datepicker'
 
   %h4= t '.movements_list'
-  - if @movements.count > 0
+  - if @movements.count > 0 or @show_last_point
     %ul.movements-list
       - if @show_last_point
         %li= link_to t('.action.monitor'), '#map-canvas', :class => 'ico-monitor'
       %li= link_to t('.action.last_point'), '#map-canvas', 'data-info' => last_point_info(@last_point, t('.last_point.title')).to_json,
         :class => "ico-last-point #{@show_last_point ? '' : 'ico-hidden'}"
-      %li= link_to t('.action.show_all'), '#map-canvas', :class => 'ico-show-all'
-      %li= link_to t('.action.hide_all'), '#map-canvas', :class => 'ico-hide-all'
+      - if @movements.count > 0
+        %li= link_to t('.action.show_all'), '#map-canvas', :class => 'ico-show-all'
+        %li= link_to t('.action.hide_all'), '#map-canvas', :class => 'ico-hide-all'
       - @movements.each do |movement|
         %li= link_to timeframe(movement), "#map-canvas", 'data-info' => movement_info(movement, @vehicle.id).to_json, 'data-id' => movement._id,
           :class => (movement.parking ? 'ico-parking' : 'ico-moving') + ' movement-info'
