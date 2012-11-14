@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   attr_accessible :login, :name, :email, :password, :password_confirmation, :remember_me, :role, :contact_name,
     :phone, :additional_info, :comment, :owner_id
 
-  has_many :vehicles
+  has_many :vehicles, :order => 'name'
   belongs_to :owner, :class_name => 'User', :foreign_key => 'owner_id'
   has_many :additional_users, :class_name => 'User', :foreign_key => 'owner_id', :dependent => :destroy
 

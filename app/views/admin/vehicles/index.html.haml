@@ -22,7 +22,7 @@
         %th= t(".column.fuel_sensor")
         %th= t(".column.sim_card_balance")
       - sortable_column 'owner', t(".column.owner"), @sort_state if can? :manage, User
-      - sortable_column 'created_at', t(".column.created_at"), @sort_state
+      - sortable_column 'created_at', t(".column.created_at"), @sort_state if can? :manage, Vehicle
 
   %tbody
     - @vehicles.each do |vehicle|
@@ -42,6 +42,7 @@
           %td= vehicle.sim_card ? vehicle.sim_card.balance : ''
         - if can? :manage, User
           %td= link_to vehicle.user.login, admin_user_path(vehicle.user), :title => vehicle.user.name
-        %td= l vehicle.created_at.localtime
+        - if can? :manage, Vehicle
+          %td= l vehicle.created_at.localtime
 
 = will_paginate @vehicles

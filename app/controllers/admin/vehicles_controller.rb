@@ -7,11 +7,14 @@ class Admin::VehiclesController < Admin::Base
 
   def index
     @columns = %w{ name reg_number imei owner created_at }
-    @sort_state = get_list_sort_state(@columns, :users_list, :dir => 'desc', :field => 'created_at')
-    order = "#{@sort_state[:field]} #{@sort_state[:dir]}"
+
     if can?(:manage, Vehicle) or (current_user.owner and current_user.owner.admin?)
+      @sort_state = get_list_sort_state(@columns, :vehicles_admin_list, :dir => 'desc', :field => 'created_at')
+      order = "#{@sort_state[:field]} #{@sort_state[:dir]}"
       @vehicles = Vehicle.page(params[:page]).joins(:user).select('vehicles.*, users.login as owner').order(order)
     else
+      @sort_state = get_list_sort_state(@columns, :vehicles_list, :field => 'name')
+      order = "#{@sort_state[:field]} #{@sort_state[:dir]}"
       user = current_user.user? ? current_user.owner : current_user
       @vehicles = user.vehicles.page(params[:page]).order(order)
     end
@@ -67,7 +70,7 @@ class Admin::VehiclesController < Admin::Base
     @api_key = get_map_api_key :yandex, request.host
 
     if can?(:manage, Vehicle) or (current_user.owner and current_user.owner.admin?)
-      @vehicles = Vehicle.all
+      @vehicles = Vehicle.all(:order => 'name')
     else
       user = current_user.user? ? current_user.owner : current_user
       @vehicles = user.vehicles
