@@ -299,7 +299,7 @@ class Server::Analyzer < Server::Abstract
     def update_reports(vehicle)
       logger.debug "Updating reports for vehicle ##{vehicle.id} (IMEI: #{vehicle.imei})"
 
-      last_report = Report.where(:imei => vehicle.imei).sort(:date.desc).first
+      last_report = Report.where(:imei => vehicle.imei, :parking_time.gt => 0).sort(:date.desc).first
 
       if last_report
         start_date = Date.parse(last_report.date.to_s)
