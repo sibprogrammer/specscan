@@ -67,7 +67,6 @@ class Server::Analyzer < Server::Abstract
         end
         update_activity_changes(way_point, vehicle)
         prev_way_point = way_point unless 0 == way_point.fuel_signal
-        next unless way_point.coors_valid
         last_movement = analyze_way_point(way_point, vehicle.imei, last_movement)
         movements << last_movement if last_movement.id.to_s != movements.last.id.to_s
       end
@@ -225,7 +224,7 @@ class Server::Analyzer < Server::Abstract
 
       if last_movement.parking
         # if last was a parking
-        if !way_point.engine_on and !way_point.sens_moving
+        if (!way_point.engine_on and !way_point.sens_moving) or !way_point.coors_valid
           last_movement = add_way_point(last_movement, way_point)
         else
           distance = way_point.distance(WayPoint.get_by_timestamp(last_movement.from_timestamp, imei, :coors_valid => true))
@@ -241,7 +240,8 @@ class Server::Analyzer < Server::Abstract
       else
         # if last was a movement
         prev_way_point = WayPoint.nearest_point(way_point.timestamp - MIN_SECONDS_FOR_PARKING_WITH_ENGINE_ON, imei)
-        if way_point.zero_speed? and prev_way_point and prev_way_point.timestamp > last_movement.from_timestamp and prev_way_point.distance(way_point) < MIN_METERS_FOR_MOVEMENT_START
+        if way_point.zero_speed? and prev_way_point and prev_way_point.timestamp > last_movement.from_timestamp and
+          (!way_point.coors_valid or prev_way_point.distance(way_point) < MIN_METERS_FOR_MOVEMENT_START)
           last_movement = add_way_point(last_movement, prev_way_point)
           last_movement.save
           last_movement = create_parking(imei, last_movement, way_point)
