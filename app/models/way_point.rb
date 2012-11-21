@@ -55,6 +55,22 @@ class WayPoint
     return
   end
 
+  def find_refuel_start(before_time)
+    start_point = self
+
+    conditions = { :imei => start_point.imei, :timestamp.lt => start_point.timestamp }
+    points = WayPoint.where(conditions).sort(:timestamp.desc).limit(30).all
+
+    prev_point = start_point
+    points.each do |point|
+      return start_point if prev_point.fuel_signal <= point.fuel_signal or point.timestamp <= before_time
+      start_point = point if prev_point.fuel_signal > point.fuel_signal
+      prev_point = point
+    end
+
+    start_point
+  end
+
   def fuel_signal
     rs232_1.to_i
   end

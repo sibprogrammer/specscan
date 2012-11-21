@@ -19,6 +19,11 @@ class Server::Analyzer < Server::Abstract
   def start
     loop do
       Vehicle.with_imei.each do |vehicle|
+        if WayPoint.where(:imei => vehicle.imei, :ready => false).count > 0
+          logger.debug "Not ready way points found for imei #{vehicle.imei}, stop analyzing of way points"
+          next
+        end
+
         update_movements(vehicle)
         update_fuel_changes(vehicle) if vehicle.fuel_sensor
         update_reports(vehicle)
@@ -61,10 +66,6 @@ class Server::Analyzer < Server::Abstract
       logger.debug "Found way points: #{way_points.count} (conditions: #{conditions.inspect})"
 
       way_points.each do |way_point|
-        if !way_point.ready.nil? and !way_point.ready
-          logger.debug "Not ready way point found with time #{Time.at(way_point.timestamp)}, stop analyzing of way_points"
-          break
-        end
         update_activity_changes(way_point, vehicle)
         prev_way_point = way_point unless 0 == way_point.fuel_signal
         last_movement = analyze_way_point(way_point, vehicle.imei, last_movement)
@@ -195,16 +196,25 @@ class Server::Analyzer < Server::Abstract
 
           logger.debug "#{fuel_diff} litres were added to previous fuel change."
         else
+          start_way_point = way_point
+          if fuel_diff < 0
+            before_time = prev_fuel_change ? prev_fuel_change.to_timestamp : 0
+            start_way_point = way_point.find_refuel_start(before_time)
+            if start_way_point.id.to_s != way_point.id.to_s
+              fuel_diff = vehicle.get_fuel_amount(start_way_point.fuel_signal) - vehicle.get_fuel_amount(way_point.fuel_signal)
+            end
+          end
+
           FuelChange.create({
             :imei => vehicle.imei,
             :multiplier => multiplier,
             :amount => fuel_diff.abs.to_f,
-            :from_timestamp => way_point.timestamp,
+            :from_timestamp => start_way_point.timestamp,
             :to_timestamp => way_point.timestamp,
             :way_point => way_point,
           })
 
-          logger.debug "New fuel change detected: #{fuel_diff} litres at #{way_point.timestamp}, #{Time.at(way_point.timestamp)}"
+          logger.debug "New fuel change detected: #{fuel_diff} litres at #{start_way_point.timestamp}, #{Time.at(start_way_point.timestamp)}"
         end
       end
     end
