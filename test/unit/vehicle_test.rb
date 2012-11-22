@@ -137,4 +137,19 @@ class VehicleTest < ActiveSupport::TestCase
     assert another_car.invalid?
   end
 
+  test "valid distance multiplier" do
+    car = vehicles(:car)
+    car.distance_multiplier = 1.047
+    assert car.valid?
+  end
+
+  test "invalid distance multiplier" do
+    car = vehicles(:car)
+    car.distance_multiplier = 2
+    assert car.invalid?
+
+    car.distance_multiplier = -1
+    assert car.invalid?
+  end
+
 end

@@ -73,7 +73,7 @@ class Server::Analyzer < Server::Abstract
       end
 
       logger.debug "Re-calculate distances for #{movements.count} movements"
-      movements.each{ |movement| movement.recalculate_distance unless movement.parking }
+      movements.each{ |movement| movement.recalculate_distance(vehicle) unless movement.parking }
     end
 
     def update_activity_changes(way_point, vehicle)
@@ -395,7 +395,7 @@ class Server::Analyzer < Server::Abstract
       logger.debug "Re-calculate distances for #{movements.count} movements"
 
       movements.each do |movement|
-        movement.recalculate_distance unless movement.parking
+        movement.recalculate_distance(vehicle) unless movement.parking
       end
     end
 

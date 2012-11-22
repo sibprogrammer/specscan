@@ -14,6 +14,7 @@ class WayPoint
   key :coors_valid
   key :power_input_0
   key :ready
+  key :height
 
   def zero_speed?
     speed.to_f.abs < 0.1
@@ -28,7 +29,10 @@ class WayPoint
   end
 
   def distance(to_point)
-    Geocoder.coors_to_distance_haversine(latitude, longitude, to_point.latitude, to_point.longitude)
+    d = Geocoder.coors_to_distance_haversine(latitude, longitude, to_point.latitude, to_point.longitude)
+    return d
+    h = (!height.blank? and !to_point.height.blank?) ? (height - to_point.height) : 0
+    Math.sqrt(d*d + h*h)
   end
 
   def time

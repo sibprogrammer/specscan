@@ -208,6 +208,7 @@ ru:
           fuel_calc_method: "Метод расчета топлива"
           comment: "Примечание администратора"
           debt: "Долг по оплате, руб."
+          distance_multiplier: "Коэф. поправки пробега"
         fuel_calc_method:
           distance: "По расстоянию"
           mhours: "По моточасам"

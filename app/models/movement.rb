@@ -37,7 +37,7 @@ class Movement
     to_timestamp - from_timestamp
   end
 
-  def recalculate_distance
+  def recalculate_distance(vehicle)
     points = WayPoint.where(:imei => imei, :timestamp.gte => from_timestamp, :timestamp.lte => to_timestamp, :coors_valid => true).all
     distance = 0
     prev_point = points.first
@@ -45,7 +45,8 @@ class Movement
       distance += prev_point.distance(point)
       prev_point = point
     end
-    self.distance = distance
+    distance_multiplier = vehicle.distance_multiplier.blank? ? 1 : vehicle.distance_multiplier
+    self.distance = distance * distance_multiplier
     save
   end
 
