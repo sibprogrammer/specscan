@@ -52,7 +52,6 @@ class Server::Tracker::Teltonika < Server::Tracker::Abstract
         bytes_offset += 2
 
         if packet[:coors_valid]
-          packet[:engine_on] = packet[:speed] > 0.001
           packet[:sens_moving] = packet[:speed] > 0.001
         end
 
@@ -61,6 +60,9 @@ class Server::Tracker::Teltonika < Server::Tracker::Abstract
         total_io_values = body[bytes_offset]
         bytes_offset += 1
         total_1byte_io = body[bytes_offset]
+
+        packet[:engine_on] = total_1byte_io > 0 && 1 == body[bytes_offset+2]
+
         bytes_offset += 1 + total_1byte_io * 2
         total_2bytes_io = body[bytes_offset]
         bytes_offset += 1 + total_2bytes_io * 3
