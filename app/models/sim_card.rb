@@ -7,8 +7,10 @@ class SimCard < ActiveRecord::Base
   validates :phone, :uniqueness => true, :presence => true, :format => { :with => /\A\d{10}\z/ }
   validates :mobile_operator_id, :presence => true
   validates :helper_password, :format => { :with => /\A[\da-zA-Z]+\z/ }, :allow_blank => true
+  validates :pin_code, :allow_blank => true, :numericality => true
+  validates :puk_code, :allow_blank => true, :numericality => true
 
-  attr_accessible :phone, :helper_password, :mobile_operator_id, :description, :vehicle_id
+  attr_accessible :phone, :helper_password, :mobile_operator_id, :description, :vehicle_id, :pin_code, :puk_code
 
   belongs_to :mobile_operator
   belongs_to :vehicle

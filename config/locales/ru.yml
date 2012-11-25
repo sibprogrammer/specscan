@@ -47,6 +47,10 @@ ru:
               taken: "SIM-карта с таким номером уже существует."
             helper_password:
               invalid: "Пароль должен содержать только цифры и английские буквы."
+            pin_code:
+              not_a_number: "PIN код должен состоять из цифр."
+            puk_code:
+              not_a_number: "PUK код должен состоять из цифр."
         fuel_sensor:
           attributes:
             code:
@@ -435,6 +439,8 @@ ru:
           phone: "Телефонный номер"
           balance: "Баланс, р."
           helper_password: "Пароль в Интернет-помощник"
+          pin_code: "PIN код"
+          puk_code: "PUK код"
           vehicle: "Машина"
           unknown_vehicle: "Не указана"
           description: "Примечание"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121122132627) do
+ActiveRecord::Schema.define(:version => 20121125042334) do
 
   create_table "fuel_sensor_models", :force => true do |t|
     t.string "title"
@@ -42,6 +42,8 @@ ActiveRecord::Schema.define(:version => 20121122132627) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "last_check_error",   :default => false
+    t.string   "pin_code"
+    t.string   "puk_code"
   end
 
   create_table "tracker_models", :force => true do |t|

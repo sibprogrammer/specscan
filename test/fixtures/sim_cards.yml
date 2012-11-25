@@ -1,13 +1,4 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
-
-one:
-  phone: MyString
+typical:
+  phone: 9833006677
   mobile_operator_id: 1
   balance: 9.99
-  helper_password: MyString
-
-two:
-  phone: MyString
-  mobile_operator_id: 1
-  balance: 9.99
-  helper_password: MyString

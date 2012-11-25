@@ -58,4 +58,24 @@ class SimCardTest < ActiveSupport::TestCase
     assert_not_equal sim_card.helper_password, sim_card.read_attribute(:helper_password)
   end
 
+  test "pin code should consist of digits" do
+    sim_card = sim_cards(:typical)
+
+    sim_card.pin_code = 1234
+    assert sim_card.valid?
+
+    sim_card.pin_code = 'abcd'
+    assert sim_card.invalid?
+  end
+
+  test "puk code should consist of digits" do
+    sim_card = sim_cards(:typical)
+
+    sim_card.puk_code = 123456
+    assert sim_card.valid?
+
+    sim_card.puk_code = 'abcd'
+    assert sim_card.invalid?
+  end
+
 end

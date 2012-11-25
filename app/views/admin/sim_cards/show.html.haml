@@ -1,7 +1,7 @@
 - @page_title = t '.page_title', :phone => number_to_phone(@sim_card.phone)
 
 %form.form-horizontal
-  - %w{ mobile_operator phone balance vehicle description created_at updated_at }.each do |field_name|
+  - %w{ mobile_operator phone balance vehicle pin_code puk_code description created_at updated_at }.each do |field_name|
     - if !@sim_card.send(field_name).blank?
       .control-group
         %label.control-label= t('admin.sim_cards.form.field.' + field_name)
