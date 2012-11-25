@@ -369,7 +369,7 @@ $ ->
             lineWidth: 2,
             shadow: false,
             fillColor: {
-              linearGradient: [0, 0, 0, tankSize],
+              linearGradient: [0, 0, 0, 0],
               stops: [
                 [0, 'rgba(240,240,240,0)'],
                 [1, Highcharts.getOptions().colors[0]],
