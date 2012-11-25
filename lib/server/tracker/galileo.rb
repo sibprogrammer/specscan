@@ -51,10 +51,6 @@ class Server::Tracker::Galileo < Server::Tracker::Abstract
     (hi_byte << 8) + low_byte
   end
 
-  def get_human_data(data)
-    data.unpack('H2'*data.length).join(', ')
-  end
-
   def read_packet(client, single = false)
     data = read_data(client, HEADER_SIZE)
     packet_size = get_packet_size(data[1,2])
@@ -65,14 +61,6 @@ class Server::Tracker::Galileo < Server::Tracker::Abstract
     send_accept(client, data)
     packets.each{ |packet| packet[:ready] = data_ready }
     single ? packets.first : packets
-  end
-
-  def read_data(client, size)
-    logger.debug "reading data (size: #{size})..."
-    data = client.read(size)
-    raise "Socket was closed by server." if data.nil?
-    logger.debug get_human_data(data)
-    data
   end
 
   def parse_packet(data)

@@ -9,7 +9,7 @@ class Server::Tracker::Tk103b < Server::Tracker::Abstract
   def process_data(client)
     @prev_points = {}
     loop do
-      data = read_data(client)
+      data = read_data(client, nil, READ_BUFFER_BYTES)
       data.split(';').each do |packet|
         next if packet.to_s.chomp.empty?
         process_packet(client, packet)
@@ -45,14 +45,6 @@ class Server::Tracker::Tk103b < Server::Tracker::Abstract
       else
         raise "Unrecognized data packet #{data}"
       end
-    end
-
-    def read_data(client)
-      data = client.recv(READ_BUFFER_BYTES)
-      raise "Socket was closed by server." if data.blank?
-
-      logger.debug "Recieved data: #{data}"
-      data.to_s
     end
 
     def send_data(client, data)

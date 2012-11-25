@@ -6,7 +6,7 @@ class Server::Tracker::Teltonika < Server::Tracker::Abstract
   READ_BUFFER_BYTES = 8192
 
   def process_data(client)
-    imei_header = read_data(client)
+    imei_header = read_data(client, nil, READ_BUFFER_BYTES)
     imei = imei_header[2,15]
     logger.debug "IMEI: #{imei}"
 
@@ -93,21 +93,9 @@ class Server::Tracker::Teltonika < Server::Tracker::Abstract
 
   private
 
-    def read_data(client, size = nil)
-      data = !size ? client.recv(READ_BUFFER_BYTES) : client.read(size)
-      raise "Socket was closed by server." if data.blank?
-
-      logger.debug "Recieved data: #{get_human_data(data)}"
-      data.to_s
-    end
-
     def send_data(client, data)
       client.write(data)
       logger.debug "Sent data: #{get_human_data(data)}"
-    end
-
-    def get_human_data(data)
-      data.unpack('H2'*data.length).join(', ')
     end
 
 end
