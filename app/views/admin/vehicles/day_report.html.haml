@@ -75,7 +75,7 @@
   %h3= t '.header.chart'
   #movementsChart{ :style => 'width: 100%; height: 100px;' }
 
-  - if @vehicle.fuel_sensor and !@fuel_changes.blank?
+  - if @vehicle.fuel_sensor and @vehicle.fuel_tank.to_i > 0
     %h3= t '.header.fuel_chart'
     #fuelChangesChart{ :style => 'width: 100%; height: 200px;' }
 
