@@ -32,6 +32,8 @@ class Server::Tracker::Teltonika < Server::Tracker::Abstract
       logger.debug "Records count: #{records_count}"
       bytes_offset = 2
 
+      way_points = []
+
       1.upto(records_count).each do |record_index|
         packet = { :imei => imei }
         packet[:timestamp] = body[bytes_offset, 8].reverse.unpack('Q')[0] / 1000
@@ -58,6 +60,14 @@ class Server::Tracker::Teltonika < Server::Tracker::Abstract
         event_io_id = body[bytes_offset]
         bytes_offset += 1
         total_io_values = body[bytes_offset]
+
+        if 0 == total_io_values
+          logger.debug packet.inspect
+          logger.debug "Ignoring data generated not by event."
+          bytes_offset += 1
+          next
+        end
+
         bytes_offset += 1
         total_1byte_io = body[bytes_offset]
 
@@ -72,7 +82,7 @@ class Server::Tracker::Teltonika < Server::Tracker::Abstract
         bytes_offset += 1 + total_8bytes_io * 9
 
         logger.debug packet.inspect
-        WayPoint.create(packet)
+        way_points << WayPoint.new(packet)
       end
 
       raise "Number of records does not match" if body[bytes_offset] != records_count
@@ -85,6 +95,8 @@ class Server::Tracker::Teltonika < Server::Tracker::Abstract
       logger.debug "packet checksum: #{check_sum}"
 
       raise "Invalid checksum (#{check_sum} vs #{calculated_sum})" unless calculated_sum == check_sum
+
+      way_points.each{ |way_point| way_point.save }
 
       # send accept with number of accepted records
       send_data(client, [records_count].pack('N'))
