@@ -159,7 +159,11 @@ class Admin::VehiclesController < Admin::Base
     Movement.delete_all(:imei => @vehicle.imei) if params.key?(:movements)
     Report.delete_all(:imei => @vehicle.imei) if params.key?(:reports)
     Activity.delete_all(:imei => @vehicle.imei) if params.key?(:activities)
-    FuelChange.delete_all(:imei => @vehicle.imei) if params.key?(:fuel_changes)
+    if params.key?(:fuel_changes)
+      FuelChange.delete_all(:imei => @vehicle.imei)
+      Movement.unset({ :imei => @vehicle.imei }, :fuel_last_update_timestamp)
+      Movement.unset({ :imei => @vehicle.imei }, :fuel_used)
+    end
     redirect_to(admin_vehicle_path(@vehicle), :notice => t('admin.vehicles.clear_do.cleared'))
   end
 
