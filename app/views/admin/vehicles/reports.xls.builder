@@ -28,14 +28,14 @@ xml.Workbook({
           if Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method
             xml.Cell { xml.Data duration_human(report.active_time), 'ss:Type' => 'String' }
           end
-          xml.Cell { xml.Data decimal_human(report.distance.to_f / 1000), 'ss:Type' => 'Number' }
+          xml.Cell { xml.Data((report.distance.to_f / 1000).round, 'ss:Type' => 'Number') }
           if @vehicle.fuel_sensor
-            xml.Cell { xml.Data decimal_human(Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method ? report.fuel_norm.to_f : (report.fuel_norm.to_f / 1000)), 'ss:Type' => 'Number' }
-            xml.Cell { xml.Data decimal_human(report.fuel_used.to_f > 0 ? report.fuel_used.to_f : 0), 'ss:Type' => 'Number' }
-            xml.Cell { xml.Data decimal_human(report.fuel_added.to_f), 'ss:Type' => 'Number' }
-            xml.Cell { xml.Data decimal_human(report.fuel_stolen.to_f), 'ss:Type' => 'Number' }
+            xml.Cell { xml.Data((Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method ? report.fuel_norm.to_f : (report.fuel_norm.to_f / 1000)).round, 'ss:Type' => 'Number') }
+            xml.Cell { xml.Data((report.fuel_used.to_f > 0 ? report.fuel_used.to_f : 0).round, 'ss:Type' => 'Number') }
+            xml.Cell { xml.Data report.fuel_added.to_f.round, 'ss:Type' => 'Number' }
+            xml.Cell { xml.Data report.fuel_stolen.to_f.round, 'ss:Type' => 'Number' }
           else
-            xml.Cell { xml.Data decimal_human(report.fuel_norm.to_f / 1000), 'ss:Type' => 'Number' }
+            xml.Cell { xml.Data((report.fuel_norm.to_f / 1000).round, 'ss:Type' => 'Number') }
           end
         end
       end

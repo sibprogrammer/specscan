@@ -48,23 +48,23 @@
           %td= @first_movement.from_time.to_formatted_s(:date_time)
           %th= t '.stats.last_movement_end'
           %td= @last_movement.to_time.to_formatted_s(:date_time)
-        - if @vehicle.fuel_sensor
-          %tr
-            %th= t '.stats.fuel_on_start'
-            %td= decimal_human(@vehicle.fuel_by_time(@first_movement.from_timestamp))
-            %th= t '.stats.fuel_on_end'
-            %td= decimal_human(@vehicle.fuel_by_time(@last_movement.to_timestamp))
+      - if @movements.count > 0 and @vehicle.fuel_sensor
+        %tr
+          %th= t '.stats.fuel_on_start'
+          %td= @vehicle.fuel_by_time(@movements.first.from_timestamp).floor
+          %th= t '.stats.fuel_on_end'
+          %td= @vehicle.fuel_by_time(@movements.last.to_timestamp).floor
       %tr
         %th= t '.stats.distance'
-        %td= decimal_human(@report.distance.to_f / 1000)
+        %td= (@report.distance.to_f / 1000).round
         %th= t '.stats.fuel'
-        %td= decimal_human(Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method ? @report.fuel_norm.to_f : (@report.fuel_norm.to_f / 1000))
+        %td= (Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method ? @report.fuel_norm.to_f : (@report.fuel_norm.to_f / 1000)).round
       - if @vehicle.fuel_sensor
         %tr
           %th= t '.stats.refuels'
-          %td= decimal_human(@report.fuel_added.to_f) + ' / ' + decimal_human(@report.fuel_stolen.to_f)
+          %td= (@report.fuel_added.to_f).round.to_s + ' / ' + (@report.fuel_stolen.to_f).round.to_s
           %th= t '.stats.fuel_used'
-          %td= decimal_human(@report.fuel_used > 0 ? @report.fuel_used : 0)
+          %td= (@report.fuel_used > 0 ? @report.fuel_used : 0).round
       - if Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method
         %tr
           %th= t '.stats.active_duration'
@@ -99,7 +99,7 @@
               %td= fuel_change.from_time.to_formatted_s(:date_time)
               %td= fuel_change.to_time.to_formatted_s(:date_time)
               %td= duration_human(fuel_change.elapsed_time)
-              %td= decimal_human(fuel_change.amount)
+              %td= fuel_change.amount.round
 
   %h3= t '.header.movements_list'
   %table#movements-list.table.table.table-bordered.table-striped.tablesorter
