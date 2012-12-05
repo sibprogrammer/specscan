@@ -4,6 +4,7 @@
   %h4= t '.vehicles_list'
   - if @vehicles.count > 0
     %ul.vehicles-list
+      %li= link_to t('.action.monitor'), '#map-canvas', :class => 'ico-monitor'
       - @vehicles.each do |vehicle|
         - last_point = vehicle.last_point
         - if last_point

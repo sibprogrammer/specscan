@@ -107,6 +107,21 @@ $ ->
       $(element).on 'click', ->
         showLastPoint(this, map, { moveMap: true })
 
+    $('a.ico-monitor').first().on 'click', ->
+      onlineMonitoring = $(this).data('onlineMonitoring')
+      onlineMonitoring = !onlineMonitoring
+      $(this).data('onlineMonitoring', onlineMonitoring)
+      if onlineMonitoring
+        $(this).parent('li').append('<img src="' + image_path('icons/monitor.gif') + '" class="inline-icon" width="16" height="16">')
+        timerId = setInterval ->
+          $('.vehicles-list a.ico-vehicle').each (index, element) ->
+            showLastPoint(this, map, { moveMap: false })
+        , 10000
+        $(this).data('timerId', timerId)
+      else
+        $(this).parent('li').find('img:last-child').remove()
+        clearInterval($(this).data('timerId'))
+
   if $('body.vehicles.map').length > 0
 
     loadMovementPoints = (element, move, moveMap) ->

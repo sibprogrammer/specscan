@@ -312,6 +312,8 @@ ru:
         vehicles_list: "Список машин"
         last_point:
           time: "Время: %{time}"
+        action:
+          monitor: "Слежение"
       reports:
         page_title: "Отчеты - %{vehicle_title}"
         help: "Здесь представлены статистические отчеты по выбранной машине."
