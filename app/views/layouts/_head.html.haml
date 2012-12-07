@@ -3,8 +3,9 @@
   %meta{ :name => 'viewport', :content => 'width=device-width, initial-scale=1.0' }
   %meta{ :name => 'format-detection', :content => 'telephone=no' }
   %meta{ :name => 'SKYPE_TOOLBAR', :content => 'SKYPE_TOOLBAR_PARSER_COMPATIBLE' }
-  %title= "#{@page_title} - " + t('project.title')
-  = favicon_link_tag '/favicon.ico?2'
+  %title= (@pure_window_title ? "" : "#{@page_title} - ") + t('project.title')
+  = favicon_link_tag '/favicon.ico?5'
+  %link{ :rel => 'apple-touch-icon', :href => image_path('apple-touch-icon.png') }
   = stylesheet_link_tag 'application'
   = stylesheet_link_tag 'print', :media => 'print'
   = javascript_include_tag 'application'
