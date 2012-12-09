@@ -128,6 +128,11 @@ class Server::Analyzer < Server::Abstract
     def update_fuel_changes(vehicle)
       logger.debug "Updating fuel changes for vehicle ##{vehicle.id} (IMEI: #{vehicle.imei})"
 
+      if ('native' == vehicle.fuel_sensor.fuel_sensor_model.code)
+        logger.debug "Feature is not available for native fuel sensors."
+        return
+      end
+
       movement = Movement.where(:imei => vehicle.imei, :fuel_last_update_timestamp.gt => 0).sort(:to_timestamp.desc).first
       last_way_point = WayPoint.where(:imei => vehicle.imei, :timestamp.gte => movement.fuel_last_update_timestamp).sort(:timestamp).first if movement
       from_timestamp = last_way_point.timestamp + 1 if last_way_point

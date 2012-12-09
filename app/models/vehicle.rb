@@ -36,8 +36,18 @@ class Vehicle < ActiveRecord::Base
     name + (reg_number.blank? ? '' : (', ' + reg_number))
   end
 
-  def get_fuel_amount(signal)
+  def get_fuel_amount(way_point)
     return 0 if !self.fuel_sensor or fuel_tank.blank? or calibration_table.blank?
+
+    if ('native' == fuel_sensor.fuel_sensor_model.code)
+      if way_point.power_input_0.to_i < 10000
+        return 0
+      else
+        signal = way_point.power_input_1.to_i * 15000 / way_point.power_input_0.to_i
+      end
+    else
+      signal = way_point.rs232_1.to_i
+    end
 
     if @signals_table.blank?
       @signals_table = { 0 => 0 }
@@ -78,9 +88,13 @@ class Vehicle < ActiveRecord::Base
   end
 
   def fuel_by_time(timestamp)
-    way_point = WayPoint.get_by_timestamp(timestamp, imei, { :rs232_1.gt => 0 })
+    if ('native' == fuel_sensor.fuel_sensor_model.code)
+      way_point = WayPoint.get_by_timestamp(timestamp, imei, { :power_input_0.gt => 10000 })
+    else
+      way_point = WayPoint.get_by_timestamp(timestamp, imei, { :rs232_1.gt => 0 })
+    end
     return 0 unless way_point
-    get_fuel_amount(way_point.fuel_signal)
+    get_fuel_amount(way_point)
   end
 
   def last_point

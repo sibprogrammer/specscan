@@ -13,6 +13,7 @@ class WayPoint
   key :rs232_1
   key :coors_valid
   key :power_input_0
+  key :power_input_1
   key :ready
   key :height
 

@@ -228,22 +228,33 @@ class Admin::VehiclesController < Admin::Base
 
     def get_fuel_details(start_time, selected_date_last_minute)
       return [] unless @vehicle.fuel_sensor
-      initial_way_point = WayPoint.get_by_timestamp(start_time.to_i, @vehicle.imei, { :rs232_1.gt => 0 })
-      fuel_initial_value = initial_way_point ? @vehicle.get_fuel_amount(initial_way_point.fuel_signal).to_i : 0
+
+      if ('native' == @vehicle.fuel_sensor.fuel_sensor_model.code)
+        signal_field = :power_input_1
+        info_fields = signal_field, :timestamp, :power_input_0
+      else
+        signal_field = :rs232_1
+        info_fields = signal_field, :timestamp
+      end
+
+      fuel_initial_value = @vehicle.fuel_by_time(start_time.to_i)
 
       way_points = WayPoint.where(:imei => @vehicle.imei, :timestamp.gte => start_time.to_i, :timestamp.lt => start_time.to_i + 86400).
-        fields(:rs232_1, :timestamp).sort(:timestamp)
+        fields(info_fields).sort(:timestamp)
       fuel_values = {}
       last_fuel_value = fuel_initial_value
 
       way_points.each do |way_point|
-        next if 0 == way_point.fuel_signal
-        fuel_value = @vehicle.get_fuel_amount(way_point.fuel_signal).to_i
-        fuel_values[(way_point.timestamp - start_time.to_i) / 60] = fuel_value
+        next if 0 == way_point.send(signal_field)
+        fuel_value = @vehicle.get_fuel_amount(way_point).to_i
+        next if 0 == fuel_value
+        time_offset = (way_point.timestamp - start_time.to_i) / 60
+        fuel_values[time_offset] = fuel_values[time_offset] ? ((fuel_values[time_offset] + fuel_value) / 2) : fuel_value
         last_fuel_value = fuel_value
       end
 
       fuel_values[selected_date_last_minute] = last_fuel_value
+      fuel_values = approximate(fuel_values) if ('native' == @vehicle.fuel_sensor.fuel_sensor_model.code)
 
       minutes = fuel_values.keys.sort
       prev_minute = 0
@@ -257,6 +268,37 @@ class Admin::VehiclesController < Admin::Base
       end
 
       data
+    end
+
+    def approximate(values_hash)
+      data = []
+      values_hash.keys.sort.each{ |index| data << [index, values_hash[index]] }
+
+      approx_data = {}
+
+      data.each_with_index do |value, index|
+        key, value = value
+        if index < 2
+          approx_data[key] = value
+          next
+        end
+
+        if index == (data.length-2)
+          approx_data[key] = (4*data[index].last + 3*data[index-1].last + 2*data[index-2].last + data[index-3].last) / 10
+          next
+        end
+
+        if index == (data.length-1)
+          approx_data[key] = (3*data[index].last + 2*data[index-1].last + data[index-2].last - data[index-4].last) / 5
+          next
+        end
+
+        approx_value = 0
+        -2.upto(2).each{ |shift| approx_value += data[index+shift].last }
+        approx_data[key] = approx_value / 5
+      end
+
+      approx_data
     end
 
 end
