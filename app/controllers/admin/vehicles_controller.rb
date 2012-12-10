@@ -253,12 +253,14 @@ class Admin::VehiclesController < Admin::Base
         last_fuel_value = fuel_value
       end
 
+      fuel_values.keys.sort.each{ |key| logger.info "fuel_values: #{fuel_values[key]}" }
+
       fuel_values[selected_date_last_minute] = last_fuel_value
-      fuel_values = approximate(fuel_values) if ('native' == @vehicle.fuel_sensor.fuel_sensor_model.code)
+      fuel_values = approximate(fuel_values) if (fuel_values.length >= 5) and ('native' == @vehicle.fuel_sensor.fuel_sensor_model.code)
 
       minutes = fuel_values.keys.sort
       prev_minute = 0
-      prev_fuel_value = fuel_initial_value
+      prev_fuel_value = fuel_values[minutes.first]
       data = []
 
       minutes.each do |minute|
@@ -278,8 +280,13 @@ class Admin::VehiclesController < Admin::Base
 
       data.each_with_index do |value, index|
         key, value = value
-        if index < 2
-          approx_data[key] = value
+        if 0 == index
+          approx_data[key] = (3*data[0].last + 2*data[1].last + data[2].last - data[4].last) / 5
+          next
+        end
+
+        if 1 == index
+          approx_data[key] = (4*data[0].last + 3*data[1].last + 2*data[2].last + data[3].last) / 10
           next
         end
 
