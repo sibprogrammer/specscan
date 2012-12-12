@@ -117,12 +117,19 @@ class Admin::VehiclesController < Admin::Base
       sort(:from_timestamp)
     @movements_ranges = movements_ranges(@movements, time)
     @first_movement, @last_movement = get_boundary_movements(@movements)
+
+    if @vehicle.has_activity_sensor?
+      activities = Activity.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lt => time.to_i + 86400).
+        sort(:from_timestamp)
+      @activities_ranges = activities_ranges(activities, time)
+    end
+
     @report = Report.where(:imei => @vehicle.imei, :date => time.to_date.strftime('%Y%m%d').to_i).first
     @fuel_changes = FuelChange.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lt => time.to_i + 86400).
       sort(:from_timestamp)
     @fuel_chart_data = get_fuel_details(time, @selected_date_last_minute)
 
-    @js_locale_keys = %w{ parking_title movement_title reset_zoom reset_zoom_title }
+    @js_locale_keys = %w{ parking_title movement_title activity_title reset_zoom reset_zoom_title }
 
     respond_to do |format|
       format.html
@@ -198,6 +205,20 @@ class Admin::VehiclesController < Admin::Base
           to_time.to_i,
           movement.parking? ? 0 : 1,
           movement.id
+        ]
+      end
+      ranges
+    end
+
+    def activities_ranges(activities, day_start_time)
+      ranges = []
+      activities.each do |activity|
+        from_time = (activity.from_time - day_start_time) / 60
+        to_time = (activity.to_time - day_start_time) / 60
+        ranges << [
+          from_time.to_i,
+          to_time.to_i,
+          activity.active ? 1 : 0,
         ]
       end
       ranges

@@ -365,6 +365,7 @@ ru:
         help: "Здесь представлен отчет за сутки на указанную дату по выбранной машине."
         parking_title: "Стоянка"
         movement_title: "Перемещение"
+        activity_title: "Зажигание"
         refuel_title: "Заправка"
         fuel_theft_title: "Слив"
         reset_zoom: "Оригинал"

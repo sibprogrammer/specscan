@@ -3,6 +3,7 @@
 = javascript_include_tag "external/highcharts"
 = javascript_include_tag "external/jquery-tablesorter-min"
 = javascript_tag "movementRanges = #{@movements_ranges.to_json}"
+= javascript_tag "activityRanges = #{@activities_ranges ? @activities_ranges.to_json : '[]'}"
 = javascript_tag "selectedDateLastMinute = #{@selected_date_last_minute}"
 = javascript_tag "jsLocaleKeys = #{Hash[*@js_locale_keys.collect{ |key| [key, t('.' + key)] }.flatten].to_json}"
 = javascript_tag "fuelChartData = #{@vehicle.fuel_sensor ? @fuel_chart_data.to_json : '[]'}"

@@ -107,4 +107,8 @@ class Vehicle < ActiveRecord::Base
     fuel_sensor and ('native' != fuel_sensor.fuel_sensor_model.code)
   end
 
+  def has_activity_sensor?
+    tracker_model and %w{ galileo teltonika }.include?(tracker_model.code)
+  end
+
 end

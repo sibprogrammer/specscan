@@ -340,6 +340,7 @@ $ ->
   if $('body.vehicles.day_report').length > 0
     movementsChartData = []
     movementIdsMap = []
+    activitiesChartData = []
 
     for index, range of movementRanges
       for i in [range[0]..range[1]]
@@ -348,6 +349,13 @@ $ ->
 
     for i in [0...movementsChartData.length]
       movementsChartData[i] = 1 if 'undefined' == typeof movementsChartData[i]
+
+    for index, range of activityRanges
+      for i in [range[0]..range[1]]
+        if (1 == range[2]) then activitiesChartData[i] = 4 else activitiesChartData[i] = 0
+
+    for i in [0...activityRanges.length]
+      activitiesChartData[i] = 0 if 'undefined' == typeof activitiesChartData[i]
 
     showMovementsChart = ->
       chart = new Highcharts.Chart({
@@ -367,7 +375,7 @@ $ ->
           },
           max: 10,
           gridLineWidth: 0
-          categories: ['', jsLocaleKeys.parking_title, '', '', '', '', '', '', '', jsLocaleKeys.movement_title, '']
+          categories: ['', jsLocaleKeys.parking_title, '', '', '', jsLocaleKeys.activity_title, '', '', '', jsLocaleKeys.movement_title, '']
         },
         xAxis: {
           labels: {
@@ -384,10 +392,10 @@ $ ->
             lineWidth: 2,
             shadow: false,
             fillColor: {
-              linearGradient: [0, 0, 0, 0],
+              linearGradient: [0, 0, 0, 400],
               stops: [
                 [0, 'rgba(240,240,240,0)'],
-                [1, Highcharts.getOptions().colors[0]],
+                [1, Highcharts.getOptions().colors[0]]
               ]
             },
             marker: {
@@ -432,6 +440,8 @@ $ ->
               movementId = movementIdsMap[selectedMinute]
               document.location = document.location.href.replace('/day_report', '/map') + '#' + movementId
           }
+        }, {
+          data: activitiesChartData
         }]
       })
 
@@ -473,7 +483,7 @@ $ ->
             lineWidth: 2,
             shadow: false,
             fillColor: {
-              linearGradient: [0, 0, 0, tankSize],
+              linearGradient: [0, 0, 0, 400],
               stops: [
                 [0, 'rgba(240,240,240,0)'],
                 [1, Highcharts.getOptions().colors[0]],
