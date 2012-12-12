@@ -48,7 +48,7 @@
           %td= @first_movement.from_time.to_formatted_s(:date_time)
           %th= t '.stats.last_movement_end'
           %td= @last_movement.to_time.to_formatted_s(:date_time)
-      - if @movements.count > 0 and @vehicle.fuel_sensor
+      - if @movements.count > 0 and @vehicle.has_fuel_analytics?
         %tr
           %th= t '.stats.fuel_on_start'
           %td= @vehicle.fuel_by_time(@movements.first.from_timestamp).floor
@@ -59,7 +59,7 @@
         %td= (@report.distance.to_f / 1000).round
         %th= t '.stats.fuel'
         %td= (Vehicle::FUEL_CALC_BY_MHOURS == @vehicle.fuel_calc_method ? @report.fuel_norm.to_f : (@report.fuel_norm.to_f / 1000)).round
-      - if @vehicle.fuel_sensor
+      - if @vehicle.has_fuel_analytics?
         %tr
           %th= t '.stats.refuels'
           %td= (@report.fuel_added.to_f).round.to_s + ' / ' + (@report.fuel_stolen.to_f).round.to_s
@@ -107,7 +107,7 @@
       %tr
         - %w{ type from_time to_time duration distance }.each do |column_name|
           %th= link_to t(".column.#{column_name}"), '#'
-        - if @vehicle.fuel_sensor
+        - if @vehicle.has_fuel_analytics?
           %th= link_to t('.column.fuel_used'), '#'
 
     %tbody
@@ -132,5 +132,5 @@
                 = raw("&mdash;")
           %td{ :width => 185 }= duration_human(movement.elapsed_time)
           %td{ :width => 80 }= movement.parking ? raw('&mdash;') : decimal_human(movement.distance_km)
-          - if @vehicle.fuel_sensor
+          - if @vehicle.has_fuel_analytics?
             %td= (0 == movement_fuel_used(movement)) ? raw('&mdash;') : movement_fuel_used(movement)

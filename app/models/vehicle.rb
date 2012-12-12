@@ -103,4 +103,8 @@ class Vehicle < ActiveRecord::Base
     WayPoint.where(:imei => imei, :coors_valid => true).sort(:timestamp.desc).limit(1).first
   end
 
+  def has_fuel_analytics?
+    fuel_sensor and ('native' != fuel_sensor.fuel_sensor_model.code)
+  end
+
 end

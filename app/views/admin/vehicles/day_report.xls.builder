@@ -20,7 +20,7 @@ xml.Workbook({
 
       xml.Row do
         %w{ type from_time from_location to_time to_location duration distance fuel_used }.each do |column_name|
-          next if 'fuel_used' == column_name and !@vehicle.fuel_sensor
+          next if 'fuel_used' == column_name and !@vehicle.has_fuel_analytics?
           xml.Cell { xml.Data t(".column.#{column_name}"), 'ss:Type' => 'String' }
         end
       end
@@ -34,7 +34,7 @@ xml.Workbook({
           xml.Cell { xml.Data((movement.to_location ? movement.to_location.address : ''), 'ss:Type' => 'String') }
           xml.Cell { xml.Data duration_human(movement.elapsed_time), 'ss:Type' => 'String' }
           xml.Cell { xml.Data((movement.parking ? '' : decimal_human(movement.distance_km)), 'ss:Type' => 'Number') }
-          xml.Cell { xml.Data(((0 == movement_fuel_used(movement)) ? '' : movement_fuel_used(movement)), 'ss:Type' => 'Number') } if @vehicle.fuel_sensor
+          xml.Cell { xml.Data(((0 == movement_fuel_used(movement)) ? '' : movement_fuel_used(movement)), 'ss:Type' => 'Number') } if @vehicle.has_fuel_analytics?
         end
       end
     end
