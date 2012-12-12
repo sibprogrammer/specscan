@@ -36,6 +36,8 @@
   - form_field f, :fuel_tank, :text_field
   - form_field f, :fuel_tank2, :text_field
 
+  - form_field(f, :min_parking_time, :text_field) if can? :manage, @vehicle
+
   - if can? :manage, @vehicle
     .control-group
       = f.label :user, t('.field.user'), :class => 'control-label'

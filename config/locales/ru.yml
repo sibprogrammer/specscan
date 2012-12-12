@@ -213,6 +213,7 @@ ru:
           comment: "Примечание администратора"
           debt: "Долг по оплате, руб."
           distance_multiplier: "Коэф. поправки пробега"
+          min_parking_time: "Мин. время парковки, с."
         fuel_calc_method:
           distance: "По расстоянию"
           mhours: "По моточасам"

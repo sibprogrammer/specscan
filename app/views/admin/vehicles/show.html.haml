@@ -23,6 +23,7 @@
             - else
               = @vehicle.send(field_name)
 
+  - readonly_field(t('admin.vehicles.form.field.min_parking_time'), @vehicle.min_parking_time) if can?(:manage, @vehicle) and !@vehicle.min_parking_time.blank?
   - readonly_field(t('admin.vehicles.form.field.user'), @vehicle.user.login) if can? :manage, @vehicle
   - readonly_field(t('admin.vehicles.form.field.description'), simple_format(@vehicle.description)) if !@vehicle.description.blank?
   - readonly_field(t('admin.vehicles.form.field.comment'), simple_format(@vehicle.comment)) if can?(:manage, @vehicle) and !@vehicle.comment.blank?

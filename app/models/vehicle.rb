@@ -12,9 +12,11 @@ class Vehicle < ActiveRecord::Base
   validates :fuel_calc_method, :inclusion => { :in => 1..2 }
   validates :debt, :numericality => true
   validates :distance_multiplier, :numericality => { :greater_than => 0, :less_than_or_equal_to => 1.2 }, :allow_blank => true
+  validates :min_parking_time, :numericality => { :greater_than_or_equal_to => 10, :less_than_or_equal_to => 600 }, :allow_blank => true
 
   attr_accessible :imei, :user_id, :reg_number, :name, :description, :tracker_model_id, :fuel_norm, :fuel_tank, :fuel_tank2,
-    :calibration_table, :calibration_table2, :vehicle_type_id, :fuel_calc_method, :comment, :debt, :distance_multiplier
+    :calibration_table, :calibration_table2, :vehicle_type_id, :fuel_calc_method, :comment, :debt, :distance_multiplier,
+    :min_parking_time
 
   belongs_to :user
   belongs_to :tracker_model
