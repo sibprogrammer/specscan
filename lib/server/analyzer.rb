@@ -62,14 +62,20 @@ class Server::Analyzer < Server::Abstract
       movements = [last_movement]
       prev_way_point = WayPoint.where(:imei => vehicle.imei, :timestamp.lte => last_movement.to_timestamp).sort(:timestamp.desc).first
 
-      way_points = WayPoint.where(conditions).sort(:timestamp)
-      logger.debug "Found way points: #{way_points.count} (conditions: #{conditions.inspect})"
+      total_way_points = WayPoint.where(conditions).sort(:timestamp).count
+      logger.debug "Found way points: #{total_way_points} (conditions: #{conditions.inspect})"
 
-      way_points.each do |way_point|
-        update_activity_changes(way_point, vehicle)
-        prev_way_point = way_point unless 0 == way_point.fuel_signal
-        last_movement = analyze_way_point(way_point, vehicle, last_movement)
-        movements << last_movement if last_movement.id.to_s != movements.last.id.to_s
+      1.upto((total_way_points.to_f / 1000).ceil).each do
+        conditions[:timestamp] = { :$gt => last_movement.to_timestamp }
+        way_points = WayPoint.where(conditions).sort(:timestamp).limit(1000)
+        logger.debug "Not processed way points: #{way_points.count}"
+
+        way_points.each do |way_point|
+          update_activity_changes(way_point, vehicle)
+          prev_way_point = way_point unless 0 == way_point.fuel_signal
+          last_movement = analyze_way_point(way_point, vehicle, last_movement)
+          movements << last_movement if last_movement.id.to_s != movements.last.id.to_s
+        end
       end
 
       logger.debug "Re-calculate distances for #{movements.count} movements"
