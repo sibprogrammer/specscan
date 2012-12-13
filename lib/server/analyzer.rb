@@ -170,7 +170,7 @@ class Server::Analyzer < Server::Abstract
       # ignore sensor invalid values
       return if 0 == prev_way_point.fuel_signal or 0 == way_point.fuel_signal
 
-      fuel_diff = vehicle.get_fuel_amount(prev_way_point.fuel_signal) - vehicle.get_fuel_amount(way_point.fuel_signal)
+      fuel_diff = vehicle.get_fuel_amount(prev_way_point) - vehicle.get_fuel_amount(way_point)
       return if fuel_diff.abs < 0.01
 
       prev_fuel_change = FuelChange.where(:imei => vehicle.imei, :to_timestamp.lt => way_point.timestamp).sort(:to_timestamp.desc).first
@@ -206,7 +206,7 @@ class Server::Analyzer < Server::Abstract
             before_time = prev_fuel_change ? prev_fuel_change.to_timestamp : 0
             start_way_point = way_point.find_refuel_start(before_time)
             if start_way_point.id.to_s != way_point.id.to_s
-              fuel_diff = vehicle.get_fuel_amount(start_way_point.fuel_signal) - vehicle.get_fuel_amount(way_point.fuel_signal)
+              fuel_diff = vehicle.get_fuel_amount(start_way_point) - vehicle.get_fuel_amount(way_point)
             end
           end
 
@@ -225,6 +225,8 @@ class Server::Analyzer < Server::Abstract
     end
 
     def analyze_way_point(way_point, vehicle, last_movement)
+      return last_movement if !way_point.coors_valid
+
       if (way_point.timestamp - last_movement.to_timestamp) > 10.minutes.to_i
         logger.debug "Large timespan between points: #{way_point.timestamp - last_movement.to_timestamp} sec."
         if last_movement.parking
@@ -239,7 +241,7 @@ class Server::Analyzer < Server::Abstract
 
       if last_movement.parking
         # if last was a parking
-        if (!way_point.engine_on and !way_point.sens_moving) or !way_point.coors_valid
+        if !way_point.engine_on or way_point.zero_speed?
           last_movement = add_way_point(last_movement, way_point)
         else
           distance = way_point.distance(WayPoint.get_by_timestamp(last_movement.from_timestamp, vehicle.imei, :coors_valid => true))
@@ -254,15 +256,20 @@ class Server::Analyzer < Server::Abstract
         last_movement.save
       else
         # if last was a movement
-        min_seconds_for_parking_with_engine_on = vehicle.min_parking_time? ? vehicle.min_parking_time : MIN_SECONDS_FOR_PARKING_WITH_ENGINE_ON
-        prev_way_point = WayPoint.nearest_point(way_point.timestamp - min_seconds_for_parking_with_engine_on, vehicle.imei)
-        if way_point.zero_speed? and prev_way_point and prev_way_point.timestamp > last_movement.from_timestamp and
-          (!way_point.coors_valid or prev_way_point.distance(way_point) < MIN_METERS_FOR_MOVEMENT_START)
-          last_movement = add_way_point(last_movement, prev_way_point)
+        if !way_point.engine_on
           last_movement.save
           last_movement = create_parking(vehicle.imei, last_movement, way_point)
         else
-          last_movement = add_way_point(last_movement, way_point)
+          min_seconds_for_parking_with_engine_on = vehicle.min_parking_time? ? vehicle.min_parking_time : MIN_SECONDS_FOR_PARKING_WITH_ENGINE_ON
+          prev_way_point = WayPoint.nearest_point(way_point.timestamp - min_seconds_for_parking_with_engine_on, vehicle.imei)
+          if way_point.zero_speed? and prev_way_point and prev_way_point.timestamp > last_movement.from_timestamp and
+            (!way_point.coors_valid or prev_way_point.distance(way_point) < MIN_METERS_FOR_MOVEMENT_START)
+            last_movement = add_way_point(last_movement, prev_way_point)
+            last_movement.save
+            last_movement = create_parking(vehicle.imei, last_movement, way_point)
+          else
+            last_movement = add_way_point(last_movement, way_point)
+          end
         end
 
         last_movement.save
