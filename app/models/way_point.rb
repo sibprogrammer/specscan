@@ -16,17 +16,22 @@ class WayPoint
   key :power_input_1
   key :ready
   key :height
+  key :engine_on
 
   def zero_speed?
     speed.to_f.abs < 0.1
   end
 
   def active?
-    !power_input_0.blank? and (power_input_0 > 0)
+    if power_input_0?
+      !power_input_0.blank? and (power_input_0 > 0)
+    else
+      engine_on
+    end
   end
 
   def activity_support?
-    power_input_0?
+    true
   end
 
   def distance(to_point)
