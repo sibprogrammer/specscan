@@ -357,6 +357,8 @@ $ ->
     for i in [0...activityRanges.length]
       activitiesChartData[i] = 0 if 'undefined' == typeof activitiesChartData[i]
 
+    activityTitle = if activityRanges.length then jsLocaleKeys.activity_title else ''
+
     showMovementsChart = ->
       chart = new Highcharts.Chart({
         chart: {
@@ -375,7 +377,7 @@ $ ->
           },
           max: 10,
           gridLineWidth: 0
-          categories: ['', jsLocaleKeys.parking_title, '', '', '', jsLocaleKeys.activity_title, '', '', '', jsLocaleKeys.movement_title, '']
+          categories: ['', jsLocaleKeys.parking_title, '', '', '', activityTitle, '', '', '', jsLocaleKeys.movement_title, '']
         },
         xAxis: {
           labels: {
