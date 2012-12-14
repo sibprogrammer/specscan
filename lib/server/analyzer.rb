@@ -231,7 +231,10 @@ class Server::Analyzer < Server::Abstract
     end
 
     def analyze_way_point(way_point, vehicle, last_movement)
-      return last_movement if !way_point.coors_valid
+      if !way_point.coors_valid
+        last_movement = add_way_point(last_movement, way_point)
+        return last_movement
+      end
 
       if (way_point.timestamp - last_movement.to_timestamp) > 10.minutes.to_i
         logger.debug "Large timespan between points: #{way_point.timestamp - last_movement.to_timestamp} sec."
