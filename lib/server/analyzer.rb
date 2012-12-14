@@ -250,7 +250,8 @@ class Server::Analyzer < Server::Abstract
 
       if last_movement.parking
         # if last was a parking
-        if !way_point.engine_on or way_point.zero_speed?
+        stopped_state = vehicle.has_activity_sensor? ? (!way_point.engine_on or way_point.zero_speed?) : (!way_point.engine_on and !way_point.sens_moving)
+        if stopped_state
           last_movement = add_way_point(last_movement, way_point)
         else
           distance = way_point.distance(WayPoint.get_by_timestamp(last_movement.from_timestamp, vehicle.imei, :coors_valid => true))
@@ -265,7 +266,7 @@ class Server::Analyzer < Server::Abstract
         last_movement.save
       else
         # if last was a movement
-        if !way_point.engine_on
+        if vehicle.has_activity_sensor? and !way_point.engine_on
           last_movement.save
           last_movement = create_parking(vehicle.imei, last_movement, way_point)
         else
