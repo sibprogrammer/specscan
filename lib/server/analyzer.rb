@@ -156,17 +156,26 @@ class Server::Analyzer < Server::Abstract
 
       prev_way_point = WayPoint.where(:imei => vehicle.imei, :coors_valid => true, :timestamp.lt => from_timestamp).sort(:timestamp.desc).first
 
-      way_points = WayPoint.where(:imei => vehicle.imei, :timestamp => { :$gt => from_timestamp, :$lt => to_timestamp }).sort(:timestamp)
-      logger.debug "Found way points: #{way_points.count}"
+      conditions = { :imei => vehicle.imei, :timestamp => { :$gt => from_timestamp, :$lt => to_timestamp } }
+      total_way_points = WayPoint.where(conditions).sort(:timestamp).count
+      logger.debug "Found way points: #{total_way_points} (conditions: #{conditions.inspect})"
 
-      way_points.each do |way_point|
-        movement = Movement.where(:imei => vehicle.imei, :from_timestamp.lt => way_point.timestamp, :to_timestamp.gte => way_point.timestamp).sort(:to_timestamp).first
-        next unless movement
-        movement.fuel_last_update_timestamp = way_point.timestamp
-        movement.save
-        analyze_fuel_changes(way_point, prev_way_point, vehicle, movement) if prev_way_point
-        prev_way_point = way_point unless 0 == way_point.fuel_signal
-        last_way_point = way_point
+      1.upto((total_way_points.to_f / 1000).ceil).each do
+        conditions[:timestamp] = { :$gt => from_timestamp, :$lt => to_timestamp }
+        way_points = WayPoint.where(conditions).sort(:timestamp).limit(1000)
+        logger.debug "Not processed way points: #{way_points.count}"
+
+        way_points.each do |way_point|
+          last_way_point = way_point
+          movement = Movement.where(:imei => vehicle.imei, :from_timestamp.lt => way_point.timestamp, :to_timestamp.gte => way_point.timestamp).sort(:to_timestamp).first
+          next unless movement
+          movement.fuel_last_update_timestamp = way_point.timestamp
+          movement.save
+          analyze_fuel_changes(way_point, prev_way_point, vehicle, movement) if prev_way_point
+          prev_way_point = way_point unless 0 == way_point.fuel_signal
+        end
+
+        from_timestamp = last_way_point.timestamp
       end
 
       logger.debug "Fuel changes analysis was finished."
