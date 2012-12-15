@@ -71,7 +71,7 @@ class Server::Analyzer < Server::Abstract
         logger.debug "Not processed way points: #{way_points.count}"
 
         way_points.each do |way_point|
-          update_activity_changes(way_point, vehicle)
+          update_activity_changes(way_point, vehicle) if vehicle.has_activity_sensor?
           prev_way_point = way_point unless 0 == way_point.fuel_signal
           last_movement = analyze_way_point(way_point, vehicle, last_movement)
           movements << last_movement if last_movement.id.to_s != movements.last.id.to_s
