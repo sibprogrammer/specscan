@@ -231,11 +231,6 @@ class Server::Analyzer < Server::Abstract
     end
 
     def analyze_way_point(way_point, vehicle, last_movement)
-      if !way_point.coors_valid
-        last_movement = add_way_point(last_movement, way_point)
-        return last_movement
-      end
-
       if (way_point.timestamp - last_movement.to_timestamp) > 10.minutes.to_i
         logger.debug "Large timespan between points: #{way_point.timestamp - last_movement.to_timestamp} sec."
         if last_movement.parking
@@ -251,7 +246,7 @@ class Server::Analyzer < Server::Abstract
       if last_movement.parking
         # if last was a parking
         stopped_state = vehicle.has_activity_sensor? ? (!way_point.engine_on or way_point.zero_speed?) : (!way_point.engine_on and !way_point.sens_moving)
-        if stopped_state
+        if stopped_state or !way_point.coors_valid
           last_movement = add_way_point(last_movement, way_point)
         else
           distance = way_point.distance(WayPoint.get_by_timestamp(last_movement.from_timestamp, vehicle.imei, :coors_valid => true))
