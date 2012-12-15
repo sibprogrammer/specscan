@@ -97,6 +97,15 @@ class Server::Analyzer < Server::Abstract
         return
       end
 
+      if way_point.active? and prev_activity_change.active and (way_point.timestamp - prev_activity_change.to_timestamp > 10.minutes.to_i)
+        prev_activity_change = Activity.create({
+          :imei => vehicle.imei,
+          :from_timestamp => prev_activity_change.to_timestamp,
+          :to_timestamp => prev_activity_change.to_timestamp,
+          :active => false
+        })
+      end
+
       if prev_activity_change.active != way_point.active?
         return if (way_point.timestamp - prev_activity_change.from_timestamp) < 2
         logger.debug "Activity state was changed (was: #{prev_activity_change.active}, now: #{way_point.active?}, time: #{way_point.timestamp}, #{Time.at(way_point.timestamp)})."
