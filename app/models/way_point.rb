@@ -19,7 +19,7 @@ class WayPoint
   key :engine_on
 
   def zero_speed?
-    speed.to_f.abs < 0.1
+    speed.to_f.abs < 1
   end
 
   def active?
