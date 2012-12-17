@@ -354,7 +354,7 @@ $ ->
       for i in [range[0]..range[1]]
         if (1 == range[2]) then activitiesChartData[i] = 4 else activitiesChartData[i] = 0
 
-    for i in [0...activityRanges.length]
+    for i in [0...activitiesChartData.length]
       activitiesChartData[i] = 0 if 'undefined' == typeof activitiesChartData[i]
 
     activityTitle = if activityRanges.length then jsLocaleKeys.activity_title else ''
