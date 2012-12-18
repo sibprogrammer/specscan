@@ -42,7 +42,7 @@
     .control-group
       = f.label :user, t('.field.user'), :class => 'control-label'
       .controls
-        = select 'vehicle', 'user_id', User.clients.collect { |user| [user.login, user.id] }
+        = select 'vehicle', 'user_id', User.clients.recently.collect { |user| [user.login, user.id] }
 
   - form_field f, :description, :text_area, :rows => 2
   - form_field(f, :comment, :text_area, :rows => 2) if can? :manage, @vehicle

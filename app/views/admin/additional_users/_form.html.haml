@@ -15,7 +15,7 @@
     .control-group
       = f.label :user, t('.field.owner'), :class => 'control-label'
       .controls
-        = select 'user', 'owner_id', User.clients.collect { |user| [user.login, user.id] }
+        = select 'user', 'owner_id', User.clients.recently.collect { |user| [user.login, user.id] }
 
   - form_field f, :email, :email_field
   - form_field f, :password, :password_field

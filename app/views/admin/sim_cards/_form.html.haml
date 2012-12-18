@@ -14,7 +14,7 @@
   .control-group
     = f.label :user, t('.field.vehicle'), :class => 'control-label'
     .controls
-      = select 'sim_card', 'vehicle_id', ([[t('.field.unknown_vehicle'), 0]] + Vehicle.all.collect { |vehicle| [vehicle.title, vehicle.id] })
+      = select 'sim_card', 'vehicle_id', ([[t('.field.unknown_vehicle'), 0]] + Vehicle.recently.collect { |vehicle| [vehicle.title, vehicle.id] })
 
   - form_field f, :description, :text_area, :rows => 2
 

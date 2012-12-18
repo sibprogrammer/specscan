@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   has_many :additional_users, :class_name => 'User', :foreign_key => 'owner_id', :dependent => :destroy
 
   scope :clients, where('role IN (?)', [User::ROLE_CLIENT, User::ROLE_ADMIN])
+  scope :recently, order('created_at DESC')
 
   def admin?
     ROLE_ADMIN == role

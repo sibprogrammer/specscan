@@ -25,6 +25,7 @@ class Vehicle < ActiveRecord::Base
   belongs_to :vehicle_type
 
   scope :with_imei, where("imei != ''")
+  scope :recently, order('created_at DESC')
 
   def total_way_points
     WayPoint.where(:imei => imei).count
