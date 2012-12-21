@@ -1,7 +1,7 @@
 .navbar .brand { height: 18px; background: image-url('satellite.png?1') no-repeat 10px 4px; padding: 8px 20px 12px 48px; color: white; }
 .navbar .brand .beta { color: red; }
 
-.sidebar-nav { padding: 10px 20px; }
+.sidebar-nav { padding: 10px 20px; margin-bottom: 0px; }
 .sidebar-nav h4 { white-space: nowrap; }
 
 @media (min-width: 980px) {
@@ -23,9 +23,9 @@ h4, h5, h6 { line-height: 36px; }
 img { max-width: none; }
 .uneditable-input { border-color: #FFF; box-shadow: none;  cursor: default; }
 
-ul.movements-list { list-style: none outside none; margin: 0 0 0 10px; overflow-y: auto; overflow-x: hidden; max-height: 450px; }
+ul.movements-list { list-style: none outside none; margin: 0 0 0 10px; overflow-y: auto; overflow-x: hidden; }
 .movements-list li { line-height: 22px; white-space: nowrap; }
-ul.vehicles-list { list-style: none outside none; margin: 0 0 0 10px; overflow-y: auto; overflow-x: hidden; max-height: 450px; }
+ul.vehicles-list { list-style: none outside none; margin: 0 0 0 10px; overflow-y: auto; overflow-x: hidden; }
 .vehicles-list li { line-height: 22px; white-space: nowrap; }
 
 #movements-list td { vertical-align: middle; }

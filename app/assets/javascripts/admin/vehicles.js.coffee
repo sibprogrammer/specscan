@@ -9,9 +9,21 @@ $ ->
     map.enableScrollZoom()
     map
 
-  resizeMap = ->
-    mapHeight = if ($(window).width() < 768) then $(window).height() else ($(window).height() - $('#map-canvas').offset().top - 20)
+  resizeControls = ->
+    mapHeight = if ($(window).width() < 768) then $(window).height() else ($(window).height() - $('#map-canvas').offset().top - 25)
     $('#map-canvas').height(mapHeight)
+    if ($(window).width() > 768)
+      menuHeight = $(window).height() - $('.sidebar-nav').offset().top - 45
+      if $('.movements-list').length
+        adjustSidebarHeight($('.movements-list'))
+      if $('.vehicles-list').length
+        adjustSidebarHeight($('.vehicles-list'))
+
+  adjustSidebarHeight = (element) ->
+    originalHeight = element.height()
+    newHeight = $(window).height() - $(element).offset().top - 105
+    if originalHeight > newHeight
+      element.height(newHeight)
 
   createLineStyle = ->
     style = new YMaps.Style()
@@ -97,8 +109,8 @@ $ ->
       else
         renderPlacemark(map, pointLink, lastPoint, geoPoint, vehicleIcon, options)
 
-    resizeMap()
-    $(window).resize(resizeMap)
+    resizeControls()
+    $(window).resize(resizeControls)
     map = createMap()
     map.setCenter(new YMaps.GeoPoint(82.933957, 55.007224), 12)
 
@@ -252,8 +264,8 @@ $ ->
         overlays.push(polyline)
         pointLink.data('overlays', overlays)
 
-    resizeMap()
-    $(window).resize(resizeMap)
+    resizeControls()
+    $(window).resize(resizeControls)
 
     map = createMap()
 
