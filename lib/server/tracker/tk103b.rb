@@ -34,6 +34,11 @@ class Server::Tracker::Tk103b < Server::Tracker::Abstract
         packet = parse_packet(data)
         logger.debug packet.inspect
 
+        if !packet[:coors_valid]
+          logger.debug "Ignoring way point with invalid coordinates."
+          return
+        end
+
         prev_point = @prev_points[packet[:imei]]
         unless prev_point and packet[:coors_valid] and (0 == packet[:speed].to_i) and (0 == prev_point[:speed].to_i) and (packet[:timestamp].to_i - prev_point[:timestamp].to_i) < 5.minutes
           point = WayPoint.new(packet)
