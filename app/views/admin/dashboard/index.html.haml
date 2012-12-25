@@ -26,6 +26,9 @@
         %th= t('.stats.column.way_points')
         %td= number_with_delimiter(@way_points_total, :delimiter => ' ')
       %tr
+        %th= t('.stats.column.way_points_last_day')
+        %td= number_with_delimiter(@way_points_last_day, :delimiter => ' ')
+      %tr
         %th= t('.stats.column.movements')
         %td= number_with_delimiter(@movements_total, :delimiter => ' ')
       %tr

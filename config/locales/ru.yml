@@ -119,6 +119,7 @@ ru:
             sim_cards: "SIM-карты"
             fuel_sensors: "Датчики топлива"
             way_points: "Путевые точки"
+            way_points_last_day: "Путевые точки за 24 часа"
             movements: "Перемещения"
             reports: "Отчеты"
             fuel_changes: "Заправки и сливы"
