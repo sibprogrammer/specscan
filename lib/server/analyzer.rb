@@ -27,6 +27,7 @@ class Server::Analyzer < Server::Abstract
         update_movements(vehicle)
         update_fuel_changes(vehicle) if vehicle.fuel_sensor
         update_reports(vehicle)
+        compress_movements(vehicle)
       end
 
       update_locations
@@ -459,6 +460,13 @@ class Server::Analyzer < Server::Abstract
         movement.update_locations
       end
       logger.debug "Locations update have been finished."
+    end
+
+    def compress_movements(vehicle)
+      logger.debug "Compressing movements for vehicle ##{vehicle.id} (IMEI: #{vehicle.imei})"
+      conditions = { :imei => vehicle.imei, :to_timestamp.lt => 3.months.ago.to_i, :compressed.ne => true, :parking => true }
+      movements = Movement.where(conditions).sort(:from_timestamp.desc).limit(200)
+      movements.each{ |movement| movement.compress }
     end
 
 end

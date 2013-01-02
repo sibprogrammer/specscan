@@ -85,4 +85,13 @@ class WayPoint
     rs232_1.to_i
   end
 
+  def equal(point)
+    return false if !zero_speed? or !point.zero_speed?
+    return false if (power_input_0.to_i - point.power_input_0.to_i).abs > 5000
+    %w{ imei rs232_1 coors_valid power_input_1 ready engine_on }.each do |field|
+      return false if self.send(field) != point.send(field)
+    end
+    true
+  end
+
 end

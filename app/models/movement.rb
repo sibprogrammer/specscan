@@ -13,7 +13,7 @@ class Movement
   key :distance
   key :fuel_used
   key :fuel_last_update_timestamp
-
+  key :compressed
   key :from_location, Location
   key :to_location, Location
 
@@ -74,6 +74,17 @@ class Movement
     end
   end
 
+  def compress
+    if parking
+      compress_parking
+    else
+      # TODO: remove points with difference less than one minute
+    end
+
+    self.compressed = true
+    save
+  end
+
   private
 
     def find_or_create_location(way_point)
@@ -97,6 +108,18 @@ class Movement
       distance = Geocoder.coors_to_distance_haversine(location.coors.first, location.coors.last, way_point.latitude, way_point.longitude)
       return nil if distance > 30
       location
+    end
+
+    def compress_parking
+      points = WayPoint.where(:imei => imei, :timestamp.gte => from_timestamp, :timestamp.lt => to_timestamp).sort(:timestamp).all
+      prev_point = points.shift
+      points.each do |point|
+        if point.equal(prev_point)
+          point.delete
+        else
+          prev_point = point
+        end
+      end
     end
 
 end
