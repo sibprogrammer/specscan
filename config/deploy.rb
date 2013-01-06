@@ -13,9 +13,9 @@ set :default_environment, {
   'BUNDLE_PATH' => '/usr/local/rvm/gems/ree-1.8.7-2012.02@global'
 }
 
-role :web, 'specscan.ru'
-role :app, 'specscan.ru'
-role :db, 'specscan.ru', :primary => true
+role :web, 'hs.specscan.ru'
+role :app, 'hs.specscan.ru'
+role :db, 'hs.specscan.ru', :primary => true
 
 after 'deploy:update_code', 'deploy:symlink_files'
 after 'deploy:update_code', 'deploy:precompile'
