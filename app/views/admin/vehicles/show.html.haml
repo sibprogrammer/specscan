@@ -28,6 +28,7 @@
   - readonly_field(t('admin.vehicles.form.field.description'), simple_format(@vehicle.description)) if !@vehicle.description.blank?
   - readonly_field(t('admin.vehicles.form.field.comment'), simple_format(@vehicle.comment)) if can?(:manage, @vehicle) and !@vehicle.comment.blank?
   - readonly_field(t('admin.vehicles.form.field.debt'), @vehicle.debt) if can?(:manage, @vehicle) and !@vehicle.debt.zero?
+  - readonly_field(t('admin.vehicles.form.field.retranslate'), @vehicle.retranslate) if can?(:manage, @vehicle) and @vehicle.retranslate
 
   .form-actions
     - if can? :edit, @vehicle

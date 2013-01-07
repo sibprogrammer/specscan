@@ -1,0 +1,5 @@
+- host: localhost
+  port: 6000
+# Wialon Hosting
+- host: 193.193.165.165
+  port: 20163

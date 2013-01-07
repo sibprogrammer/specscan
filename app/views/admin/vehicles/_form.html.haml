@@ -47,6 +47,7 @@
   - form_field f, :description, :text_area, :rows => 2
   - form_field(f, :comment, :text_area, :rows => 2) if can? :manage, @vehicle
   - form_field(f, :debt, :text_field) if can? :manage, @vehicle
+  - form_field(f, :retranslate, :check_box) if can? :manage, @vehicle
 
   .form-actions
     = f.submit t('.button.' + (@vehicle.new_record? ? 'create' : 'update')), :class => 'btn btn-primary'

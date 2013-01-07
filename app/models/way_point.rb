@@ -17,6 +17,8 @@ class WayPoint
   key :ready
   key :height
   key :engine_on
+  key :direction
+  key :satellites
 
   def zero_speed?
     speed.to_f.abs < 1

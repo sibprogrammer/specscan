@@ -5,7 +5,7 @@ class Server::Tracker::Galileo < Server::Tracker::Abstract
 
   CHECKSUM_BYTES = 2
   HEADER_SIZE = 3
-  ALLOWED_FIELDS = %w{ imei coors_valid timestamp longitude latitude height ready engine_on sens_moving speed rs232_1 power_input_0 power_input_1 }
+  ALLOWED_FIELDS = %w{ imei coors_valid timestamp longitude latitude height ready engine_on sens_moving speed rs232_1 power_input_0 power_input_1 satellites direction }
 
   def process_data(client)
     head_packet = read_packet(client, true)

@@ -4,6 +4,8 @@
   pid_file: "/var/run/crond.pid"
 - name: "Analyzer"
   pid_file: "tmp/pids/analyzer.pid"
+- name: "Retranslator"
+  pid_file: "tmp/pids/retranslator.pid"
 - name: "Tracker Server Galileo"
   pid_file: "tmp/pids/tracker-server-galileo.pid"
 - name: "Tracker Server Teltonika"

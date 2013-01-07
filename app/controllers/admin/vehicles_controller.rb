@@ -43,7 +43,7 @@ class Admin::VehiclesController < Admin::Base
   end
 
   def update
-    manager_only_fields = %w{ imei user_id tracker_model_id comment debt }
+    manager_only_fields = %w{ imei user_id tracker_model_id comment debt retranslate }
     manager_only_fields.each{ |field| params[:vehicle].delete(field.to_sym) } unless can? :manage, @vehicle
 
     if @vehicle.update_attributes(params[:vehicle])

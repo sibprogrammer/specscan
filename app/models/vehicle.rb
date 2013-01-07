@@ -16,7 +16,7 @@ class Vehicle < ActiveRecord::Base
 
   attr_accessible :imei, :user_id, :reg_number, :name, :description, :tracker_model_id, :fuel_norm, :fuel_tank, :fuel_tank2,
     :calibration_table, :calibration_table2, :vehicle_type_id, :fuel_calc_method, :comment, :debt, :distance_multiplier,
-    :min_parking_time
+    :min_parking_time, :retranslate
 
   belongs_to :user
   belongs_to :tracker_model
@@ -26,6 +26,7 @@ class Vehicle < ActiveRecord::Base
 
   scope :with_imei, where("imei != ''")
   scope :recently, order('created_at DESC')
+  scope :with_retranslate, where(:retranslate => true)
 
   def total_way_points
     WayPoint.where(:imei => imei).count
@@ -110,6 +111,14 @@ class Vehicle < ActiveRecord::Base
 
   def has_activity_sensor?
     tracker_model and %w{ galileo teltonika }.include?(tracker_model.code)
+  end
+
+  def points_to_retranslate(limit = 100)
+    WayPoint.where({
+      :imei => imei,
+      :coors_valid => true,
+      :timestamp.gt => 24.hours.ago.to_i
+    }).sort(:timestamp.desc).limit(limit)
   end
 
 end
