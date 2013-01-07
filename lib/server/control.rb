@@ -31,7 +31,7 @@ class Server::Control
   end
 
   def do_start(interactive = false)
-    if File.exists?(@pid_file)
+    if alive?
       puts_fail "Daemon is already running."
       exit 2
     end
@@ -50,11 +50,7 @@ class Server::Control
 
   def do_stop
     if (File.exists?(@pid_file))
-      pid = File.read(@pid_file).to_i
-
-      begin
-        Process.kill(0, pid)
-      rescue
+      unless alive?
         puts_fail "Daemon probably died."
         delete_pid_file
         return 1
@@ -78,16 +74,11 @@ class Server::Control
 
   def do_status
     if (File.exists?(@pid_file))
-      pid = File.read(@pid_file).to_i
-
-      begin
-        Process.kill(0, pid)
-      rescue
+      if alive?
+        puts_ok "Daemon is running."
+      else
         puts_fail "Daemon probably died."
-        exit 1
       end
-
-      puts_ok "Daemon is running."
     else
       puts_fail "Daemon is stopped."
       exit 1
@@ -144,5 +135,20 @@ class Server::Control
     puts "#{time} - #{message}"
     STDOUT.flush
   end
+
+  private
+
+    def alive?
+      return false unless File.exists?(@pid_file)
+
+      pid = File.read(@pid_file).to_i
+
+      begin
+        Process.kill(0, pid)
+        return true
+      rescue
+        return false
+      end
+    end
 
 end
