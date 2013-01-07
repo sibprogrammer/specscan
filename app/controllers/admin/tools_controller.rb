@@ -19,7 +19,11 @@ class Admin::ToolsController < Admin::Base
     return unless File.exists? config_file_name
     @daemons = YAML.load_file(config_file_name)
     @daemons.each do |daemon|
-      daemon['status'] = process_alive?(File.read(daemon['pid_file']).to_i)
+      if File.exists?(daemon['pid_file'])
+        daemon['status'] = process_alive?(File.read(daemon['pid_file']).to_i)
+      else
+        daemon['status'] = false
+      end
     end
   end
 
