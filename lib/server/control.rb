@@ -50,7 +50,8 @@ class Server::Control
 
   def do_stop
     if (File.exists?(@pid_file))
-      unless alive?
+      pid = File.read(@pid_file).to_i
+      unless alive?(pid)
         puts_fail "Daemon probably died."
         delete_pid_file
         return 1
@@ -58,6 +59,12 @@ class Server::Control
 
       begin
         Process.kill('TERM', pid)
+
+        # waiting for shutdown
+        1.upto(10).each do
+          sleep(1)
+          break if !alive?(pid)
+        end
       rescue
         puts_fail "Unable to stop daemon."
       end
@@ -138,10 +145,11 @@ class Server::Control
 
   private
 
-    def alive?
-      return false unless File.exists?(@pid_file)
-
-      pid = File.read(@pid_file).to_i
+    def alive?(pid = nil)
+      if pid.nil?
+        return false unless File.exists?(@pid_file)
+        pid = File.read(@pid_file).to_i
+      end
 
       begin
         Process.kill(0, pid)
