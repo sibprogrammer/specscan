@@ -80,27 +80,28 @@
     %h3= t '.header.fuel_chart'
     #fuelChangesChart{ :style => 'width: 100%; height: 200px;' }
 
-    %h3= t '.header.fuel_changes_list'
+    - if @vehicle.has_fuel_analytics?
+      %h3= t '.header.fuel_changes_list'
 
-    - if @fuel_changes.blank?
-      %p= t('.no_data')
-    - else
-      %table.table.table-bordered.table-striped
-        %thead
-          %tr
-          - %w{ type from_time to_time duration amount }.each do |column_name|
-            %th= t ".column_fuel.#{column_name}"
-
-        %tbody
-          - @fuel_changes.each do |fuel_change|
+      - if @fuel_changes.blank?
+        %p= t('.no_data')
+      - else
+        %table.table.table-bordered.table-striped
+          %thead
             %tr
-              %td
-                = image_tag "icons/#{fuel_change.refuel? ? 'plus-circle' : 'minus-circle'}.png", :class => 'inline-icon'
-                = t('.' + (fuel_change.refuel? ? 'refuel_title' : 'fuel_theft_title'))
-              %td= fuel_change.from_time.to_formatted_s(:date_time)
-              %td= fuel_change.to_time.to_formatted_s(:date_time)
-              %td= duration_human(fuel_change.elapsed_time)
-              %td= fuel_change.amount.round
+            - %w{ type from_time to_time duration amount }.each do |column_name|
+              %th= t ".column_fuel.#{column_name}"
+
+          %tbody
+            - @fuel_changes.each do |fuel_change|
+              %tr
+                %td
+                  = image_tag "icons/#{fuel_change.refuel? ? 'plus-circle' : 'minus-circle'}.png", :class => 'inline-icon'
+                  = t('.' + (fuel_change.refuel? ? 'refuel_title' : 'fuel_theft_title'))
+                %td= fuel_change.from_time.to_formatted_s(:date_time)
+                %td= fuel_change.to_time.to_formatted_s(:date_time)
+                %td= duration_human(fuel_change.elapsed_time)
+                %td= fuel_change.amount.round
 
   %h3= t '.header.movements_list'
   %table#movements-list.table.table.table-bordered.table-striped.tablesorter
