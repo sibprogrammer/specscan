@@ -238,9 +238,17 @@ ru:
           description: "Описание"
           fuel_sensor: "ДУТ"
           type: "Тип"
+          state: "Состояние"
         action:
           add_vehicle: "Добавить машину"
           overview_map: "Обзорная карта"
+      status_bar:
+        movement: "Движение"
+        parking: "Парковка"
+        satellites_available: "Есть сигнал со спутников."
+        satellites_unavailable: "Нет сигнала со спутников."
+        internet_available: "Передача данных работает."
+        internet_unavailable: "Передача данных недоступна."
       show:
         page_title: "Машина %{vehicle_title}"
         help: "Здесь представлена обзорная информация по выбранной машине."

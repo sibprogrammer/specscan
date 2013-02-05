@@ -1,0 +1,14 @@
+- address = (vehicle.last_movement and vehicle.last_movement.to_location) ? (', ' + vehicle.last_movement.to_location.address) : ''
+
+- if vehicle.last_movement and !vehicle.last_movement.parking?
+  = link_to(image_tag("icons/moving.png", :class => 'inline-icon'), day_report_admin_vehicle_path(vehicle), :title => t('.movement') + address, :rel => 'tooltip')
+- else
+  = link_to(image_tag("icons/parking.png", :class => 'inline-icon'), day_report_admin_vehicle_path(vehicle), :title => t('.parking') + address, :rel => 'tooltip')
+- if vehicle.gps_active?
+  = link_to(image_tag("icons/satellite.png", :class => 'inline-icon'), day_report_admin_vehicle_path(vehicle), :title => t('.satellites_available'), :rel => 'tooltip')
+- else
+  = link_to(image_tag("icons/satellite-inactive.png", :class => 'inline-icon'), day_report_admin_vehicle_path(vehicle), :title => t('.satellites_unavailable'), :rel => 'tooltip')
+- if vehicle.gsm_active?
+  = link_to(image_tag("icons/mobile-phone.png", :class => 'inline-icon'), day_report_admin_vehicle_path(vehicle), :title => t('.internet_available'), :rel => 'tooltip')
+- else
+  = link_to(image_tag("icons/mobile-phone-inactive.png", :class => 'inline-icon'), day_report_admin_vehicle_path(vehicle), :title => t('.internet_unavailable'), :rel => 'tooltip')

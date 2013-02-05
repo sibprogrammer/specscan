@@ -105,6 +105,22 @@ class Vehicle < ActiveRecord::Base
     WayPoint.where(:imei => imei, :coors_valid => true).sort(:timestamp.desc).limit(1).first
   end
 
+  def last_movement
+    Movement.where(:imei => imei).sort(:to_timestamp.desc).limit(1).first
+  end
+
+  def gsm_active?
+    point = last_point
+    return false unless point
+    (Time.now.to_i - point.timestamp.to_i) < 10.minutes
+  end
+
+  def gps_active?
+    point = last_point
+    return false unless point
+    gsm_active? and point.coors_valid
+  end
+
   def has_fuel_analytics?
     fuel_sensor and ('native' != fuel_sensor.fuel_sensor_model.code)
   end

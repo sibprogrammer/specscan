@@ -10,6 +10,7 @@
 %table.table.table-bordered.table-striped
   %thead
     %tr
+      %th{ :width => 75 }= t(".column.state")
       - sortable_column 'name', t(".column.name"), @sort_state
       - unless current_user.admin?
         %th= t(".column.type")
@@ -27,6 +28,7 @@
   %tbody
     - @vehicles.each do |vehicle|
       %tr
+        %td.icon= render :partial => 'status_bar', :locals => { :vehicle => vehicle }
         %td= link_to vehicle.name, day_report_admin_vehicle_path(vehicle), :title => vehicle.vehicle_type.title
         - unless current_user.admin?
           %td= vehicle.vehicle_type.title
