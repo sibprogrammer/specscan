@@ -21,7 +21,6 @@
       - if can? :manage, Vehicle
         %th= t(".column.tracker_name")
         %th= t(".column.fuel_sensor")
-        %th= t(".column.sim_card_balance")
       - sortable_column 'owner', t(".column.owner"), @sort_state if can? :manage, User
       - sortable_column 'created_at', t(".column.created_at"), @sort_state if can? :manage, Vehicle
 
@@ -41,7 +40,6 @@
         - if can? :manage, Vehicle
           %td= vehicle.tracker_name
           %td= vehicle.fuel_sensor ? link_to(vehicle.fuel_sensor.model, admin_fuel_sensor_path(vehicle.fuel_sensor)) : ''
-          %td= vehicle.sim_card ? vehicle.sim_card.balance : ''
         - if can? :manage, User
           %td= link_to vehicle.user.login, admin_user_path(vehicle.user), :title => vehicle.user.name
         - if can? :manage, Vehicle
