@@ -76,6 +76,7 @@ class Server::Tracker::Tk103b < Server::Tracker::Abstract
         packet[:latitude] = -packet[:latitude] if 'S' == fields[8]
         packet[:longitude] = coors_to_degrees(fields[9].to_f)
         packet[:longitude] = -packet[:longitude] if 'W' == fields[10]
+        packet[:coors_valid] = false if 0 == packet[:latitude].to_i or 0 == packet[:longitude].to_i
         packet[:speed] = fields[11].to_f * SPEED_KM_PER_KNOT
         packet[:engine_on] = packet[:speed] > 0.001
         packet[:sens_moving] = packet[:speed] > 0.001

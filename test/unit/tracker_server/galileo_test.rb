@@ -8,7 +8,7 @@ class Server::Tracker::Galileo
 
   def logger
     return @logger if @logger
-    @logger = TrackerServer::Logger.new(STDERR)
+    @logger = Server::Logger.new('/dev/null')
   end
 end
 

@@ -39,14 +39,16 @@ class Movement
 
   def recalculate_distance(vehicle)
     points = WayPoint.where(:imei => imei, :timestamp.gte => from_timestamp, :timestamp.lte => to_timestamp, :coors_valid => true).all
-    distance = 0
+    total_distance = 0
     prev_point = points.first
     points.each do |point|
-      distance += prev_point.distance(point)
+      added_distance = prev_point.distance(point)
+      # add only if less than 500 km
+      total_distance += added_distance if added_distance < 500000
       prev_point = point
     end
     distance_multiplier = vehicle.distance_multiplier.blank? ? 1 : vehicle.distance_multiplier
-    self.distance = distance * distance_multiplier
+    self.distance = total_distance * distance_multiplier
     save
   end
 
