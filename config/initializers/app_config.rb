@@ -1,6 +1,7 @@
 require 'ostruct'
 
 config_defaults = {
+  'version' => '1.0',
   'maps' => {
     'yandex' => {
       'api_key' => '',

@@ -39,7 +39,7 @@
 #about-box.modal.hide.fade.in
   .modal-header
     %a.close{ 'data-dismiss' => 'modal' } ×
-    %h3= t 'project.title'
+    %h3= t('project.title') + ' v' + AppConfig.version
   .modal-body
     %p= t 'about_box.intro'
     %p
