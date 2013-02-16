@@ -23,6 +23,7 @@ class Vehicle < ActiveRecord::Base
   has_one :fuel_sensor
   has_one :sim_card
   belongs_to :vehicle_type
+  has_many :drivers, :order => 'name'
 
   scope :with_imei, where("imei != ''")
   scope :recently, order('created_at DESC')

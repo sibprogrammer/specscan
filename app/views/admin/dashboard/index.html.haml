@@ -12,6 +12,12 @@
       %tr
         %th= link_to t('.stats.column.vehicles'), admin_vehicles_path
         %td= @vehicles_total
+      %tr
+        %th= link_to t('.stats.column.additional_users'), admin_additional_users_path
+        %td= @additional_users_total
+      %tr
+        %th= link_to t('.stats.column.drivers'), admin_drivers_path
+        %td= @drivers_total
       - if can? :manage, SimCard
         %tr
           %th= link_to t('.stats.column.sim_cards'), admin_sim_cards_path

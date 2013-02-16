@@ -1,0 +1,27 @@
+= form_for([:admin, @driver], :html => { :class => 'form-horizontal' }) do |f|
+  = render :partial => 'partials/form_errors', :locals => { :resource => @driver, :locale_scope => 'admin.drivers.form' }
+
+  .control-group
+  - form_field f, :name, :text_field
+
+  - if can? :manage, :all
+    .control-group
+      = f.label :owner_id, t('.field.owner'), :class => 'control-label'
+      .controls
+        = select 'driver', 'owner_id', User.clients.recently.collect { |user| [user.login, user.id] }
+
+  .control-group
+    = f.label :vehicle_id, t('.field.vehicle'), :class => 'control-label'
+    .controls
+      = select 'driver', 'vehicle_id', ([[t('.field.unknown_vehicle'), 0]] + (can?(:manage, :all) ? Vehicle : current_user.vehicles).recently.collect { |vehicle| [vehicle.title, vehicle.id] }) 
+
+  - form_field f, :birthday, :text_field, :placeholder => t('.field.date_placeholder'), :value => (@driver.birthday? ? l(@driver.birthday) : '')
+  - form_field f, :license_number, :text_field
+  - form_field f, :license_start, :text_field, :placeholder => t('.field.date_placeholder'), :value => (@driver.license_start? ? l(@driver.license_start) : '')
+  - form_field f, :license_end, :text_field, :placeholder => t('.field.date_placeholder'), :value => (@driver.license_end? ? l(@driver.license_end) : '')
+  - form_field f, :categories, :text_field
+  - form_field f, :additional_info, :text_area, :rows => 2
+
+  .form-actions
+    = f.submit t('.button.' + (@driver.new_record? ? 'create' : 'update')), :class => 'btn btn-primary'
+    = link_to t('.button.back'), admin_drivers_path, :class => 'btn'

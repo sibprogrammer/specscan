@@ -7,7 +7,7 @@
     %li= link_to t('.action.calibration'), calibration_admin_vehicle_path(@vehicle)
 
 %form.form-horizontal
-  - %w{ name vehicle_type tracker_name imei fuel_sensor reg_number distance_multiplier fuel_norm fuel_tank fuel_tank2 }.each do |field_name|
+  - %w{ name vehicle_type tracker_name imei fuel_sensor reg_number distance_multiplier fuel_norm fuel_tank fuel_tank2 drivers }.each do |field_name|
     - next if %w{ imei tracker_name fuel_sensor }.include?(field_name) and !can?(:manage, @vehicle)
     - if !@vehicle.send(field_name).blank?
       .control-group
@@ -20,6 +20,8 @@
               = link_to(@vehicle.imei, { :controller => 'admin/tools', :action => 'packets_monitor', :imei => @vehicle.imei }, :class => 'ico-packets-monitor')
             - elsif 'vehicle_type' == field_name
               = @vehicle.vehicle_type.title
+            - elsif 'drivers' == field_name
+              = @vehicle.drivers.collect{ |driver| driver.name }.join(', ')
             - else
               = @vehicle.send(field_name)
 

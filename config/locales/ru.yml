@@ -4,6 +4,9 @@ ru:
   time:
     formats:
       default: "%Y-%m-%d %H:%M"
+  date:
+    formats:
+      default: "%d.%m.%Y"
   project:
     title: "СпецСкан"
     copyright: "Авторское право © 2012-2013 СпецСкан"
@@ -57,6 +60,13 @@ ru:
               blank: "Не указан идентификационный номер."
               invalid: "Идентификационный номер должен состоять из цифр."
               taken: "Датчик с таким номером уже существует."
+        driver:
+          attributes:
+            name:
+              blank: "ФИО не должно быть пустым."
+              too_short: "ФИО слишком короткое (минимум %{count} символа)."
+            vehicle:
+              owner_mismatch: "Машина принадлежит другому владельцу."
   will_paginate:
     next_label: "→"
     previous_label: "←"
@@ -91,6 +101,7 @@ ru:
     users: "Клиенты"
     vehicles: "Машины"
     additional_users: "Пользователи"
+    drivers: "Водители"
     fuel_sensors: "Датчики топлива"
     sim_cards: "SIM-карты"
     tools: "Инструменты"
@@ -116,6 +127,8 @@ ru:
           column:
             users: "Клиенты"
             vehicles: "Машины"
+            additional_users: "Пользователи"
+            drivers: "Водители"
             sim_cards: "SIM-карты"
             fuel_sensors: "Датчики топлива"
             way_points: "Путевые точки"
@@ -201,6 +214,7 @@ ru:
           imei: "IMEI"
           tracker_name: "Трекер"
           reg_number: "Регистрационный номер"
+          drivers: "Водитель"
           user: "Владелец"
           name: "Название"
           description: "Описание"
@@ -627,3 +641,53 @@ ru:
         help: "Здесь можно отредактировать информацию по указанному пользователю. Также можно изменить только пароль."
       update:
         user_updated: "Пользователь с логином %{login} обновлен."
+    drivers:
+      index:
+        page_title: "Водители"
+        help: "Здесь представлен список зарегистрированных водителей."
+        no_data: "Нет водителей."
+        action:
+          add_driver: "Добавить водителя"
+        column:
+          name: "ФИО"
+          owner: "Владелец"
+          vehicle: "Машина"
+          categories: "Категории"
+      new:
+        page_title: "Добавление водителя"
+        help: "Для добавления нового водителя необходимо заполнить указанную форму."
+      create:
+        driver_created: "Водитель %{name} был создан."
+      edit:
+        page_title: "Редактирование водителя"
+        help: "Здесь можно отредактировать информацию по указанному водителю."
+      update:
+        driver_updated: "Информация о водителе обновлена."
+      destroy:
+        driver_deleted: "Водитель был удален."
+      show:
+        page_title: "Водитель %{name}"
+        help: "Здесь представлена информация о водителе, можно перейти к редактированию."
+        button:
+          back: "Назад"
+          edit: "Редактировать"
+          delete: "Удалить"
+          confirm_delete: "Вы действительно хотите удалить водителя?"
+      form:
+        field:
+          name: "ФИО"
+          owner: "Владелец"
+          vehicle: "Машина"
+          unknown_vehicle: "Не указана"
+          birthday: "Дата рождения"
+          license_number: "Номер вод. удостоверения"
+          license_start: "Дата выдачи удост."
+          license_end: "Дата окончания удост."
+          categories: "Категории"
+          additional_info: "Дополнительная информация"
+          date_placeholder: "ДД.ММ.ГГГГ"
+        button:
+          create: "Добавить"
+          update: "Обновить"
+          back: "Назад"
+          delete: "Удалить"

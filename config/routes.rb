@@ -34,6 +34,7 @@ Specscan::Application.routes.draw do
       post 'check_balance', :on => :member
     end
     resources :fuel_sensors
+    resources :drivers
     match "tools(/:action)", :controller => 'tools'
   end
 

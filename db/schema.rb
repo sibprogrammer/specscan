@@ -10,7 +10,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130106072549) do
+ActiveRecord::Schema.define(:version => 20130211155751) do
+
+  create_table "drivers", :force => true do |t|
+    t.string   "name"
+    t.date     "birthday"
+    t.string   "license_number"
+    t.date     "license_start"
+    t.date     "license_end"
+    t.string   "categories"
+    t.string   "additional_info"
+    t.integer  "owner_id"
+    t.integer  "vehicle_id",      :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "fuel_sensor_models", :force => true do |t|
     t.string "title"

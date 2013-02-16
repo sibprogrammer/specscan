@@ -1,0 +1,32 @@
+- @page_title = t '.page_title'
+
+- content_for :sidebar_actions do
+  - if can? :manage, Driver
+    %li= link_to t('.action.add_driver'), new_admin_driver_path
+
+- if @drivers.empty?
+  %p= t('.no_data')
+- else
+  = will_paginate @drivers
+
+  %table.table.table-bordered.table-striped
+    %thead
+      %tr
+        - @columns.each do |column|
+          - if 'owner_id' == column
+            %th= t(".column.owner")
+          - elsif 'vehicle_id' == column
+            %th= t(".column.vehicle")
+          - else
+            - sortable_column column, t(".column.#{column}"), @sort_state
+
+    %tbody
+      - @drivers.each do |driver|
+        %tr
+          %td= link_to driver.name, admin_driver_path(driver)
+          %td= driver.vehicle ? link_to(driver.vehicle.title, admin_vehicle_path(driver.vehicle)) : ''
+          %td= driver.categories
+          - if can? :manage, :all
+            %td= driver.owner.login
+
+  = will_paginate @drivers

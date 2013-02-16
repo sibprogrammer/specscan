@@ -1,0 +1,10 @@
+ivan:
+  name: "Иванов И.И."
+  owner_id: 1
+  vehicle_id: 1
+  birthday: '01.01.1980'
+  license_number: '54 02 000000'
+  license_start: '01.02.2012'
+  license_end: '01.02.2022'
+  categories: 'BC'
+  additional_info: 'additional comments'

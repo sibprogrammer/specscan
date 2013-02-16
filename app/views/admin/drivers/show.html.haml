@@ -1,0 +1,25 @@
+- @page_title = t '.page_title', :name => @driver.name
+
+%form.form-horizontal
+  - %w{ name owner vehicle birthday license_number license_start license_end categories additional_info }.each do |field_name|
+    - next if %w{ owner }.include?(field_name) and !can?(:manage, :all)
+    - if !@driver.send(field_name).blank?
+      .control-group
+        %label.control-label= t('admin.drivers.form.field.' + field_name)
+        .control
+          %span.uneditable-input
+            - if 'vehicle' == field_name
+              = @driver.vehicle.title
+            - elsif 'owner' == field_name
+              = @driver.owner.login
+            - elsif %w{ birthday license_start license_end }.include? field_name
+              = l @driver.send(field_name)
+            - else
+              = simple_format @driver.send(field_name)
+
+  .form-actions
+    - if can? :edit, @driver
+      = link_to t('.button.edit'), edit_admin_driver_path(@driver), :class => 'btn btn-primary'
+    = link_to t('.button.back'), admin_drivers_path, :class => 'btn'
+    - if can? :destroy, @driver
+      = link_to t('.button.delete'), admin_driver_path(@driver), :class => 'btn btn-danger', :method => :delete, 'data-confirm' => t('.button.confirm_delete')
