@@ -68,6 +68,13 @@ class User < ActiveRecord::Base
     user? or 0 == vehicles.count
   end
 
+  def self.authenticate(login, password)
+    user = self.find_by_login(login)
+    return false unless user
+    return false unless user.valid_password?(password)
+    user
+  end
+
   protected
 
     def email_required?

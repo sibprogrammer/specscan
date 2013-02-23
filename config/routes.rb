@@ -38,6 +38,12 @@ Specscan::Application.routes.draw do
     match "tools(/:action)", :controller => 'tools'
   end
 
+  namespace :api do
+    resources :vehicles, :only => :index do
+      get 'location', :on => :member
+    end
+  end
+
   root :to => 'admin/dashboard#index'
 
 end

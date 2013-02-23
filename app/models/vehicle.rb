@@ -110,6 +110,12 @@ class Vehicle < ActiveRecord::Base
     Movement.where(:imei => imei).sort(:to_timestamp.desc).limit(1).first
   end
 
+  def moving?
+    movement = last_movement
+    return false unless movement
+    !movement.parking? and (Time.now.to_i - movement.to_timestamp < 1.hour)
+  end
+
   def gsm_active?
     point = last_point
     return false unless point

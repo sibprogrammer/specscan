@@ -1,6 +1,6 @@
 - address = (vehicle.last_movement and vehicle.last_movement.to_location) ? (', ' + vehicle.last_movement.to_location.address) : ''
 
-- if vehicle.last_movement and !vehicle.last_movement.parking? and (Time.now.to_i - vehicle.last_movement.to_timestamp < 1.hour)
+- if vehicle.moving?
   = link_to(image_tag("icons/moving.png", :class => 'inline-icon'), day_report_admin_vehicle_path(vehicle), :title => t('.movement') + address, :rel => 'tooltip')
 - else
   = link_to(image_tag("icons/parking.png", :class => 'inline-icon'), day_report_admin_vehicle_path(vehicle), :title => t('.parking') + address, :rel => 'tooltip')

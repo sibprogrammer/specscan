@@ -21,6 +21,7 @@ gem 'digest-crc'
 gem 'cancan'
 gem 'will_paginate'
 gem 'airbrake'
+gem 'rabl'
 
 group :development do
   gem 'ruby18_source_location'
