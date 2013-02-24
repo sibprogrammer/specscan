@@ -24,9 +24,8 @@ gem 'airbrake'
 gem 'rabl'
 
 group :development do
-  gem 'ruby18_source_location'
-  gem 'pry'
-  gem 'ruby-debug'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 group :tools do
