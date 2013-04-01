@@ -1,0 +1,18 @@
+- @page_title = t '.page_title', :vehicle_title => @vehicle.title
+
+- content_for :sidebar_actions do
+  %li= link_to t('.action.day_report'), day_report_admin_vehicle_path(:date => @selected_date)
+
+- content_for :sidebar do
+  %h4= t '.date_picker'
+  %ul
+    %li= link_to @selected_date, '#', :id => 'selectedDate', 'data-datepicker' => 'datepicker'
+
+= form_for([:admin, @vehicle], :url => '/todo', :html => { :class => 'form-horizontal' }) do |f|
+  = render :partial => 'partials/form_errors', :locals => { :resource => @vehicle, :locale_scope => 'admin.vehicles.waybill' }
+
+  - form_field f, :name, :text_field
+
+  .form-actions
+    = f.submit t('.button.download'), :class => 'btn btn-primary'
+    = link_to t('.button.back'), admin_vehicle_path(@vehicle), :class => 'btn'
