@@ -274,8 +274,6 @@ class Admin::VehiclesController < Admin::Base
         last_fuel_value = fuel_value
       end
 
-      fuel_values.keys.sort.each{ |key| logger.info "fuel_values: #{fuel_values[key]}" }
-
       fuel_values[selected_date_last_minute] = last_fuel_value
       fuel_values = approximate(fuel_values) if (fuel_values.length >= 5) and ('native' == @vehicle.fuel_sensor.fuel_sensor_model.code)
 
