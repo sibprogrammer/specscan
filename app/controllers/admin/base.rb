@@ -54,11 +54,6 @@ class Admin::Base < ApplicationController
       page > 0 ? page : 1
     end
 
-    def get_map_api_key(vendor, host)
-      dev_request = AppConfig.host.development == host
-      @api_key = AppConfig.maps.send(vendor.to_s).send('api_key' + (dev_request ? '_dev' : ''))
-    end
-
     def set_billing_notifications
       return if can?(:manage, Vehicle) or (current_user.owner and current_user.owner.admin?)
       user = current_user.user? ? current_user.owner : current_user

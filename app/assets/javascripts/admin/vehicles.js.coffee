@@ -1,13 +1,99 @@
 $ ->
+
+  # center of Novosibirsk
+  defaultMapCenter = [55.00, 82.93]
+
   createMap = ->
-    map = new YMaps.Map($("#map-canvas")[0])
-    map.addControl(new YMaps.TypeControl())
-    map.addControl(new YMaps.Zoom())
-    map.addControl(new YMaps.ScaleLine())
-    map.addControl(new YMaps.ToolBar())
-    map.addControl(new YMaps.SearchControl())
-    map.enableScrollZoom()
-    map
+    map = new ymaps.Map('map-canvas', {
+      center: defaultMapCenter,
+      zoom: 12,
+      type: 'yandex#publicMap'
+    })
+    map.controls.add('typeSelector')
+    map.controls.add('mapTools')
+    map.controls.add('zoomControl')
+    map.controls.add(new ymaps.control.SearchControl({
+      provider: 'yandex#map',  useMapBounds: true
+    }))
+
+    if $('body.vehicles.overview_map').length > 0
+      $('.vehicles-list a.ico-vehicle').each (index, element) ->
+        showLastPoint(this, map, { moveMap: false })
+        $(element).on 'click', ->
+          showLastPoint(this, map, { moveMap: true })
+
+      $('a.ico-monitor').first().on 'click', ->
+        onlineMonitoring = $(this).data('onlineMonitoring')
+        onlineMonitoring = !onlineMonitoring
+        $(this).data('onlineMonitoring', onlineMonitoring)
+        if onlineMonitoring
+          $(this).parent('li').append('<img src="' + image_path('icons/monitor.gif') + '" class="inline-icon" width="16" height="16">')
+          timerId = setInterval ->
+            $('.vehicles-list a.ico-vehicle').each (index, element) ->
+              showLastPoint(this, map, { moveMap: false })
+          , 10000
+          $(this).data('timerId', timerId)
+        else
+          $(this).parent('li').find('img:last-child').remove()
+          clearInterval($(this).data('timerId'))
+
+    if $('body.vehicles.map').length > 0
+      lastPointPlacemark = null
+
+      if $('a.ico-last-point').length > 0
+        pointLink = $('a.ico-last-point').first()
+        lastPoint = pointLink.data('info')
+        geoPoint = [lastPoint.latitude, lastPoint.longitude]
+        map.setCenter(geoPoint, 12)
+
+        if !pointLink.hasClass('ico-hidden')
+          lastPointPlacemark = getPlacemark({
+            map: map, title: lastPoint.title, description: lastPoint.description,
+            geoPoint: geoPoint, bigIcon: vehicleIcon, moveMap: true
+          })
+          lastPointPlacemark.balloon.open()
+
+      $('.movements-list a.movement-info').each (index, element) ->
+        $(element).on 'click', ->
+          showMovement(map, this)
+
+      $('a.ico-show-all').first().on 'click', ->
+        $('.movements-list a.movement-info').each (index, element) ->
+          showMovement(map, element, 'show', false)
+
+      $('a.ico-hide-all').first().on 'click', ->
+        $('.movements-list a.movement-info').each (index, element) ->
+          showMovement(map, element, 'hide')
+
+      $('a.ico-last-point').first().on 'click', ->
+        lastPoint = $(this).data('info')
+        map.setCenter([lastPoint.latitude, lastPoint.longitude])
+        lastPointPlacemark.balloon.open()
+
+      $('a.ico-monitor').first().on 'click', ->
+        onlineMonitoring = $(this).data('onlineMonitoring')
+        onlineMonitoring = !onlineMonitoring
+        $(this).data('onlineMonitoring', onlineMonitoring)
+        if onlineMonitoring
+          $(this).parent('li').append('<img src="' + image_path('icons/monitor.gif') + '" class="inline-icon" width="16" height="16">')
+          map.setZoom(12)
+          updatePosition(map, vehicleId)
+          timerId = setInterval ->
+            updatePosition(map, vehicleId)
+          , 10000
+          $(this).data('timerId', timerId)
+        else
+          $(this).parent('li').find('img:last-child').remove()
+          clearInterval($(this).data('timerId'))
+          overlays = $('a.ico-last-point').first().data('overlays')
+          if overlays && overlays.length
+            for overlay in overlays
+              map.geoObjects.remove(overlay)
+            $('a.ico-last-point').first().data('overlays', null)
+
+      selectedMovementId = window.location.hash.substr(1)
+      if selectedMovementId
+        $('a[data-id="' + selectedMovementId + '"]').click()
 
   resizeControls = ->
     mapHeight = if ($(window).width() < 768) then $(window).height() else ($(window).height() - $('#map-canvas').offset().top - 25)
@@ -25,31 +111,27 @@ $ ->
     if originalHeight > newHeight
       element.height(newHeight)
 
-  createLineStyle = ->
-    style = new YMaps.Style()
-    style.polygonStyle = new YMaps.PolygonStyle()
-    style.polygonStyle.strokeColor = '0000FFA5'
-    style.polygonStyle.fillColor = '0000FFA5'
-    style.lineStyle = new YMaps.LineStyle()
-    style.lineStyle.strokeColor = '0000FFA5'
-    style.lineStyle.strokeWidth = 4
-    YMaps.Styles.add("user#routeLine", style)
+  getRouteLineStyle = ->
+    {
+      strokeColor: "0000FFA5",
+      strokeWidth: 4
+    }
 
   getIconStyle = (image) ->
-    iconStyle = new YMaps.Style();
-    iconStyle.iconStyle = new YMaps.IconStyle();
-    iconStyle.iconStyle.size = new YMaps.Point(16, 16);
-    iconStyle.iconStyle.offset = new YMaps.Point(0, -16);
-    iconStyle.iconStyle.href = image_path(image)
-    iconStyle
+    {
+      iconImageHref: image_path(image),
+      iconImageSize: [16, 16],
+      iconImageOffset: [0, -16],
+      hideIconOnBalloonOpen: false
+    }
 
   getBigIconStyle = (image) ->
-    iconStyle = new YMaps.Style();
-    iconStyle.iconStyle = new YMaps.IconStyle();
-    iconStyle.iconStyle.size = new YMaps.Point(48, 48);
-    iconStyle.iconStyle.offset = new YMaps.Point(-24, -24);
-    iconStyle.iconStyle.href = image_path(image)
-    iconStyle
+    {
+      iconImageHref: image_path(image),
+      iconImageSize: [48, 48],
+      iconImageOffset: [-24, -24],
+      hideIconOnBalloonOpen: false
+    }
 
   getPlacemark = (config) ->
     if config.bigIcon
@@ -59,16 +141,17 @@ $ ->
       icon = config.icon
       iconStyle = getIconStyle('icons/' + icon + '.png')
 
-    placemark = new YMaps.Placemark(config.geoPoint, { style: "user#" + icon, hideIcon: false })
-    YMaps.Styles.add("user#" + icon, iconStyle)
-    placemark.name = config.title || ''
-    if placemark.name and config.link
-      placemark.name = '<a href="' + config.link + '">' + placemark.name + '</a>'
-    placemark.description = config.description || ''
-    bounds = new YMaps.GeoBounds(config.geoPoint, config.geoPoint)
-    placemark.setBounds(bounds)
-    config.map.addOverlay(placemark)
-    config.map.setBounds(placemark.getBounds()) if config.moveMap
+    content = {}
+    content.balloonContent = config.title || ''
+    content.balloonContent = '<b>' + content.balloonContent + '</b>' if content.balloonContent
+    if content.balloonContent and config.link
+      content.balloonContent = '<a href="' + config.link + '">' + content.balloonContent + '</a>'
+    if config.description
+      content.balloonContent += '<br>' + config.description
+
+    placemark = new ymaps.Placemark(config.geoPoint, content, iconStyle)
+    config.map.geoObjects.add(placemark)
+    config.map.setCenter(config.geoPoint, 18) if config.moveMap
     placemark
 
   if $('body.vehicles.overview_map').length > 0
@@ -79,12 +162,12 @@ $ ->
         geoPoint: geoPoint, bigIcon: vehicleIcon, moveMap: options.moveMap, link: lastPoint.link
       })
       pointLink.data('placemark', lastPlacemark)
-      lastPlacemark.openBalloon() if options.moveMap
+      lastPlacemark.balloon.open() if options.moveMap
 
     showLastPoint = (element, map, options) ->
       pointLink = $(element).first()
       lastPoint = pointLink.data('info')
-      geoPoint = new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude)
+      geoPoint = [lastPoint.latitude, lastPoint.longitude]
       vehicleIcon = pointLink.data('icon')
       vehicleId = pointLink.data('id')
 
@@ -99,11 +182,11 @@ $ ->
           $(element).parent('li').find('img:last-child').remove()
 
           if lastPlacemark
-            map.removeOverlay(lastPlacemark)
+            map.geoObjects.remove(lastPlacemark)
 
           lastPoint.longitude = data.longitude
           lastPoint.latitude = data.latitude
-          geoPoint = new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude)
+          geoPoint = [lastPoint.latitude, lastPoint.longitude]
 
           renderPlacemark(map, pointLink, lastPoint, geoPoint, vehicleIcon, options)
       else
@@ -111,32 +194,11 @@ $ ->
 
     resizeControls()
     $(window).resize(resizeControls)
-    map = createMap()
-    map.setCenter(new YMaps.GeoPoint(82.933957, 55.007224), 12)
-
-    $('.vehicles-list a.ico-vehicle').each (index, element) ->
-      showLastPoint(this, map, { moveMap: false })
-      $(element).on 'click', ->
-        showLastPoint(this, map, { moveMap: true })
-
-    $('a.ico-monitor').first().on 'click', ->
-      onlineMonitoring = $(this).data('onlineMonitoring')
-      onlineMonitoring = !onlineMonitoring
-      $(this).data('onlineMonitoring', onlineMonitoring)
-      if onlineMonitoring
-        $(this).parent('li').append('<img src="' + image_path('icons/monitor.gif') + '" class="inline-icon" width="16" height="16">')
-        timerId = setInterval ->
-          $('.vehicles-list a.ico-vehicle').each (index, element) ->
-            showLastPoint(this, map, { moveMap: false })
-        , 10000
-        $(this).data('timerId', timerId)
-      else
-        $(this).parent('li').find('img:last-child').remove()
-        clearInterval($(this).data('timerId'))
+    ymaps.ready(createMap)
 
   if $('body.vehicles.map').length > 0
 
-    loadMovementPoints = (element, move, moveMap) ->
+    loadMovementPoints = (map, element, move, moveMap) ->
       $(element).parent('li').append('<img src="' + image_path('icons/loading.gif') + '" class="inline-icon" width="16" height="16">')
       $.ajax({
         url: '/admin/vehicles/' + move.vehicle_id + '/get_movement_points?movement_id=' + move.movement_id,
@@ -144,9 +206,9 @@ $ ->
       }).done (data) ->
         $(element).parent('li').find('img:last-child').remove()
         move.points = data
-        renderMovementPoints(element, move, moveMap)
+        renderMovementPoints(map, element, move, moveMap)
 
-    renderMovementPoints = (element, move, moveMap) ->
+    renderMovementPoints = (map, element, move, moveMap) ->
       overlays = []
 
       firstPointDescription = lastPointDescription = move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration
@@ -155,14 +217,14 @@ $ ->
       if move.to_location
         lastPointDescription += "<br/>" + move.to_location
 
-      firstGeoPoint = new YMaps.GeoPoint(move.first_point.longitude, move.first_point.latitude)
+      firstGeoPoint = [move.first_point.latitude, move.first_point.longitude]
       placemark = getPlacemark({
         map: map, title: move.title, description: firstPointDescription,
         geoPoint: firstGeoPoint, icon: 'flag_green', moveMap: false
       })
       overlays.push(placemark)
 
-      lastGeoPoint = new YMaps.GeoPoint(move.last_point.longitude, move.last_point.latitude)
+      lastGeoPoint = [move.last_point.latitude, move.last_point.longitude]
       placemark = getPlacemark({
         map: map, title: move.title, description: lastPointDescription,
         geoPoint: lastGeoPoint, icon: 'flag_finish', moveMap: false
@@ -171,27 +233,49 @@ $ ->
 
       mapPoints = []
       $(move.points).each (index, point) ->
-        geoPoint = new YMaps.GeoPoint(point[1], point[0])
+        geoPoint = [point[0], point[1]]
         geoPoint.description = jsLocaleKeys.time.replace('%time%', point[2]) + '<br>' + jsLocaleKeys.speed.replace('%speed%', point[3])
         mapPoints.push(geoPoint)
 
-      polyline = new PolylineWithArrows(mapPoints, { style: 'user#routeLine' })
-      polyline.name = move.title
-      polyline.description = move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration + "<br/>" + move.distance
+      balloonContent = '<b>' + move.title + '</b><br/>'
+      balloonContent += move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration + "<br/>" + move.distance
 
       if move.from_location
-        polyline.description += "<br/>" + move.from_location + "<br/>" + move.to_location
+        balloonContent += "<br/>" + move.from_location + "<br/>" + move.to_location
 
-      map.addOverlay(polyline)
+      polyline = new ymaps.Polyline(mapPoints, { balloonContent: balloonContent }, getRouteLineStyle())
+
+      map.geoObjects.add(polyline)
       if moveMap
-        bounds = new YMaps.GeoCollectionBounds(mapPoints)
-        map.setBounds(bounds)
-        polyline.openBalloon()
+        if move.from_location
+          bounds = getAreaBounds([firstGeoPoint, lastGeoPoint])
+          map.setBounds(bounds)
+        else
+          map.setCenter(firstGeoPoint)
+        polyline.balloon.open()
       overlays.push(polyline)
 
       $(element).data('overlays', overlays)
 
-    showMovement = (element, state, moveMap = true) ->
+    getAreaBounds = (points) ->
+      south = points[0][0]
+      west = points[0][1]
+      north = points[0][0]
+      east = points[0][1]
+
+      for index, point of points
+        if south < point[0]
+          south = point[0]
+        if north > point[0]
+          north = point[0]
+        if west > point[1]
+          west = point[1]
+        if east < point[1]
+          east = point[1]
+
+      [[south, west], [north, east]]
+
+    showMovement = (map, element, state, moveMap = true) ->
       $(element).parent('li').toggleClass('ico-watch')
       $(element).parent('li').addClass('ico-watch') if 'show' == state
       $(element).parent('li').removeClass('ico-watch') if 'hide' == state
@@ -206,7 +290,7 @@ $ ->
 
       if overlays.length && !$(element).parent('li').hasClass('ico-watch')
         for overlay in overlays
-          map.removeOverlay(overlay)
+          map.geoObjects.remove(overlay)
         $(element).data('overlays', null)
         return
 
@@ -216,42 +300,42 @@ $ ->
 
       if !move.parking && 0 == move.points.length
         $(element).data('overlays', null)
-        loadMovementPoints(element, move, moveMap)
+        loadMovementPoints(map, element, move, moveMap)
         return
 
       if move.parking
         point = move.first_point
-        geoPoint = new YMaps.GeoPoint(point.longitude, point.latitude)
+        geoPoint = [point.latitude, point.longitude]
         description = move.from_time + "<br/>" + move.to_time + "<br/>" + move.duration + '<br/>' + move.from_location
 
         placemark = getPlacemark({
           map: map, title: move.title, description: description,
           geoPoint: geoPoint, icon: 'parking', moveMap: moveMap
         })
-        placemark.openBalloon() if moveMap
+        placemark.balloon.open() if moveMap
         overlays.push(placemark)
         $(element).data('overlays', overlays)
       else
-        renderMovementPoints(element, move, moveMap)
+        renderMovementPoints(map, element, move, moveMap)
 
     updatePosition = (map, vehicleId) ->
       pointLink = $('a.ico-last-point').first()
       lastPoint = pointLink.data('info')
       lastPlacemark = pointLink.data('placemark')
-      oldGeoPoint = new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude)
+      oldGeoPoint = [lastPoint.latitude, lastPoint.longitude]
 
       overlays = pointLink.data('overlays')
       overlays = [] unless overlays
 
       if lastPlacemark
-        map.removeOverlay(lastPlacemark)
+        map.geoObjects.remove(lastPlacemark)
 
       $.ajax({
         url: '/admin/vehicles/' + vehicleId + '/get_last_point'
       }).done (data) ->
         lastPoint.longitude = data.longitude
         lastPoint.latitude = data.latitude
-        newGeoPoint = new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude)
+        newGeoPoint = [lastPoint.latitude, lastPoint.longitude]
 
         lastPlacemark = getPlacemark({
           map: map, title: lastPoint.title, description: lastPoint.description,
@@ -260,76 +344,13 @@ $ ->
         pointLink.data('placemark', lastPlacemark)
 
         polyline = new PolylineWithArrows([oldGeoPoint, newGeoPoint], { style: 'user#routeLine' })
-        map.addOverlay(polyline)
+        map.geoObjects.add(polyline)
         overlays.push(polyline)
         pointLink.data('overlays', overlays)
 
     resizeControls()
     $(window).resize(resizeControls)
-
-    map = createMap()
-
-    lastPointPlacemark = null
-
-    if $('a.ico-last-point').length > 0
-      pointLink = $('a.ico-last-point').first()
-      lastPoint = pointLink.data('info')
-      geoPoint = new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude)
-      map.setCenter(geoPoint, 12)
-
-      if !pointLink.hasClass('ico-hidden')
-        lastPointPlacemark = getPlacemark({
-          map: map, title: lastPoint.title, description: lastPoint.description,
-          geoPoint: geoPoint, bigIcon: vehicleIcon, moveMap: true
-        })
-        lastPointPlacemark.openBalloon()
-    else
-      # center of Novosibirsk
-      map.setCenter(new YMaps.GeoPoint(82.933957, 55.007224), 12)
-
-    createLineStyle()
-
-    $('.movements-list a.movement-info').each (index, element) ->
-      $(element).on 'click', ->
-        showMovement(this)
-
-    $('a.ico-show-all').first().on 'click', ->
-      $('.movements-list a.movement-info').each (index, element) ->
-        showMovement(element, 'show', false)
-
-    $('a.ico-hide-all').first().on 'click', ->
-      $('.movements-list a.movement-info').each (index, element) ->
-        showMovement(element, 'hide')
-
-    $('a.ico-last-point').first().on 'click', ->
-      lastPoint = $(this).data('info')
-      map.setCenter(new YMaps.GeoPoint(lastPoint.longitude, lastPoint.latitude))
-      lastPointPlacemark.openBalloon()
-
-    $('a.ico-monitor').first().on 'click', ->
-      onlineMonitoring = $(this).data('onlineMonitoring')
-      onlineMonitoring = !onlineMonitoring
-      $(this).data('onlineMonitoring', onlineMonitoring)
-      if onlineMonitoring
-        $(this).parent('li').append('<img src="' + image_path('icons/monitor.gif') + '" class="inline-icon" width="16" height="16">')
-        map.setZoom(12)
-        updatePosition(map, vehicleId)
-        timerId = setInterval ->
-          updatePosition(map, vehicleId)
-        , 10000
-        $(this).data('timerId', timerId)
-      else
-        $(this).parent('li').find('img:last-child').remove()
-        clearInterval($(this).data('timerId'))
-        overlays = $('a.ico-last-point').first().data('overlays')
-        if overlays && overlays.length
-          for overlay in overlays
-            map.removeOverlay(overlay)
-          $('a.ico-last-point').first().data('overlays', null)
-
-    selectedMovementId = window.location.hash.substr(1)
-    if selectedMovementId
-      $('a[data-id="' + selectedMovementId + '"]').click()
+    ymaps.ready(createMap)
 
 
   if $.grep(['waybill', 'map', 'day_report'], (item) ->

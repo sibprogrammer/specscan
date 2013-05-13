@@ -58,7 +58,6 @@ class Admin::VehiclesController < Admin::Base
     @selected_date = time.to_formatted_s(:date)
     @show_last_point = Date.today.to_time == time
 
-    @api_key = get_map_api_key :yandex, request.host
     @movements = Movement.where(:imei => @vehicle.imei, :from_timestamp.gte => time.to_i, :from_timestamp.lt => time.to_i + 86400).
       sort(:from_timestamp)
     @last_point = WayPoint.where(:imei => @vehicle.imei, :coors_valid => true, :timestamp.lt => time.to_i + 86400).sort(:timestamp.desc).first
@@ -67,8 +66,6 @@ class Admin::VehiclesController < Admin::Base
   end
 
   def overview_map
-    @api_key = get_map_api_key :yandex, request.host
-
     if can?(:manage, Vehicle) or (current_user.owner and current_user.owner.admin?)
       @vehicles = Vehicle.all(:order => 'name')
     else

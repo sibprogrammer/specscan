@@ -2,13 +2,6 @@ require 'ostruct'
 
 config_defaults = {
   'version' => '1.0',
-  'maps' => {
-    'yandex' => {
-      'api_key' => '',
-      'api_key_dev' => '',
-      'url' => '',
-    },
-  },
   'host' => {
     'development' => '',
     'site_url' => 'http://example.com',

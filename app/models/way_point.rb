@@ -44,7 +44,7 @@ class WayPoint
   end
 
   def time
-    Time.at(timestamp)
+    Time.at(timestamp.to_i)
   end
 
   def self.get_by_timestamp(timestamp, imei, conditions = {})
