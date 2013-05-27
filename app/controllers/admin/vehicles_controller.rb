@@ -3,7 +3,7 @@ class Admin::VehiclesController < Admin::Base
   before_filter :check_manage_permission, :only => [:new, :create, :destroy, :calibration, :calibration_save, :clear, :clear_do]
   before_filter :check_edit_permission, :only => [:edit, :update]
   before_filter :set_selected_vehicle, :only => [:show, :edit, :update, :map, :reports, :day_report, :destroy, :get_movement_points,
-    :calibration, :calibration_save, :get_last_point, :clear, :clear_do]
+    :calibration, :calibration_save, :get_last_point, :clear, :clear_do, :waybill]
 
   def index
     @columns = %w{ name reg_number imei owner created_at }
@@ -172,6 +172,16 @@ class Admin::VehiclesController < Admin::Base
       Movement.unset({ :imei => @vehicle.imei }, :fuel_used)
     end
     redirect_to(admin_vehicle_path(@vehicle), :notice => t('admin.vehicles.clear_do.cleared'))
+  end
+
+  def waybill
+    time = params.key?(:date) ? Time.parse(params[:date]) : Date.today.to_time
+    @selected_date = time.to_formatted_s(:date)
+
+    respond_to do |format|
+      format.html
+      format.xls if params[:format] == 'xls'
+    end
   end
 
   private

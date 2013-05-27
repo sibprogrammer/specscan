@@ -28,6 +28,7 @@ Specscan::Application.routes.draw do
       put 'calibration_save', :on => :member
       get 'clear', :on => :member
       put 'clear_do', :on => :member
+      get 'waybill', :on => :member
     end
     match "profile" => "users#profile"
     resources :sim_cards do

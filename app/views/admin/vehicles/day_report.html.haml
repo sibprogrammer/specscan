@@ -14,6 +14,7 @@
   %li= link_to t('.action.reports'), reports_admin_vehicle_path
   %li= link_to t('.action.details'), admin_vehicle_path
   %li= link_to t('.action.download'), day_report_admin_vehicle_path(:format => :xls, :date => @selected_date)
+  %li= link_to t('.action.waybill'), waybill_admin_vehicle_path(:date => @selected_date) 
 
 - content_for :sidebar do
   %h4= t '.date_picker'
