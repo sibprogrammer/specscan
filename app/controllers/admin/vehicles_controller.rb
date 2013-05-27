@@ -177,6 +177,11 @@ class Admin::VehiclesController < Admin::Base
   def waybill
     time = params.key?(:date) ? Time.parse(params[:date]) : Date.today.to_time
     @selected_date = time.to_formatted_s(:date)
+
+    respond_to do |format|
+      format.html
+      format.xls if params[:format] == 'xls'
+    end
   end
 
   private

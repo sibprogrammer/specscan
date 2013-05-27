@@ -388,6 +388,10 @@ ru:
         page_title: "Путевой лист - %{vehicle_title}"
         help: "Здесь можно сформировать путевой лист на указанную дату по выбранной машине."
         date_picker: "Выбранная дата"
+        field:
+          name: "Машина"
+        sheet:
+          waybill: "Путевой лист"
         button:
           back: "Назад"
           download: "Скачать"

@@ -8,7 +8,7 @@
   %ul
     %li= link_to @selected_date, '#', :id => 'selectedDate', 'data-datepicker' => 'datepicker'
 
-= form_for([:admin, @vehicle], :url => '/todo', :html => { :class => 'form-horizontal' }) do |f|
+= form_for([:admin, @vehicle], :url => waybill_admin_vehicle_path(:format => :xls, :date => @selected_date), :method => 'get', :html => { :class => 'form-horizontal' }) do |f|
   = render :partial => 'partials/form_errors', :locals => { :resource => @vehicle, :locale_scope => 'admin.vehicles.waybill' }
 
   - form_field f, :name, :text_field
