@@ -177,10 +177,21 @@ class Admin::VehiclesController < Admin::Base
   def waybill
     time = params.key?(:date) ? Time.parse(params[:date]) : Date.today.to_time
     @selected_date = time.to_formatted_s(:date)
+    @waybill_types = get_waybill_types
 
     respond_to do |format|
       format.html
-      format.xls if params[:format] == 'xls'
+      format.doc do
+        waybill_file = 'car.xml'
+        waybill_file = 'truck.xml' if 'truck' == params[:waybill_type]
+        waybill_file = 'bus.xml' if 'bus' == params[:waybill_type]
+        waybill_file = 'special.xml' if 'special' == params[:waybill_type]
+        content = File.read(Rails.root.join('app', 'assets', 'files', 'waybills', waybill_file))
+        content.gsub!('%org%', @vehicle.user.name)
+        content.gsub!('%vehicle-name%', @vehicle.name)
+        content.gsub!('%vehicle-reg-number%', @vehicle.reg_number)
+        render :text => content
+      end
     end
   end
 
@@ -335,6 +346,15 @@ class Admin::VehiclesController < Admin::Base
       end
 
       approx_data
+    end
+
+    def get_waybill_types
+      [
+        { :name => :car, :title => t('admin.vehicles.waybill.type.car') },
+        { :name => :truck, :title => t('admin.vehicles.waybill.type.truck') },
+        { :name => :bus, :title => t('admin.vehicles.waybill.type.bus') },
+        { :name => :special, :title => t('admin.vehicles.waybill.type.special') }
+      ]
     end
 
 end

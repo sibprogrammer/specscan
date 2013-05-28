@@ -8,10 +8,16 @@
   %ul
     %li= link_to @selected_date, '#', :id => 'selectedDate', 'data-datepicker' => 'datepicker'
 
-= form_for([:admin, @vehicle], :url => waybill_admin_vehicle_path(:format => :xls, :date => @selected_date), :method => 'get', :html => { :class => 'form-horizontal' }) do |f|
+= form_for([:admin, @vehicle], :url => waybill_admin_vehicle_path(:format => :doc, :date => @selected_date), :method => 'get', :html => { :class => 'form-horizontal' }) do |f|
   = render :partial => 'partials/form_errors', :locals => { :resource => @vehicle, :locale_scope => 'admin.vehicles.waybill' }
 
-  - form_field f, :name, :text_field
+  - readonly_field(t('.field.name'), @vehicle.name)
+  - readonly_field(t('.field.reg_number'), @vehicle.reg_number)
+
+  .control-group
+    = f.label :waybill_type, t('.field.waybill_type'), :class => 'control-label'
+    .controls
+      = select_tag(:waybill_type, options_for_select(@waybill_types.collect { |type| [type[:title], type[:name]] }))
 
   .form-actions
     = f.submit t('.button.download'), :class => 'btn btn-primary'
