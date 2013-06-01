@@ -144,4 +144,11 @@ class Vehicle < ActiveRecord::Base
     }).sort(:timestamp.desc).limit(limit)
   end
 
+  def waybill_type
+    return 'bus' if ['bus'].include?(vehicle_type.code)
+    return 'car' if ['car'].include?(vehicle_type.code)
+    return 'truck' if ['truck', 'tipper'].include?(vehicle_type.code)
+    'special'
+  end
+
 end

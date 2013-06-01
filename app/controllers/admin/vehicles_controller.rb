@@ -350,8 +350,8 @@ class Admin::VehiclesController < Admin::Base
 
     def get_waybill_types
       [
-        { :name => :car, :title => t('admin.vehicles.waybill.type.car') },
         { :name => :truck, :title => t('admin.vehicles.waybill.type.truck') },
+        { :name => :car, :title => t('admin.vehicles.waybill.type.car') },
         { :name => :bus, :title => t('admin.vehicles.waybill.type.bus') },
         { :name => :special, :title => t('admin.vehicles.waybill.type.special') }
       ]

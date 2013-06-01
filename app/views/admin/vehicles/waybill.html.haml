@@ -17,7 +17,7 @@
   .control-group
     = f.label :waybill_type, t('.field.waybill_type'), :class => 'control-label'
     .controls
-      = select_tag(:waybill_type, options_for_select(@waybill_types.collect { |type| [type[:title], type[:name]] }))
+      = select_tag(:waybill_type, options_for_select(@waybill_types.collect { |type| [type[:title], type[:name]] }, @vehicle.waybill_type))
 
   .form-actions
     = f.submit t('.button.download'), :class => 'btn btn-primary'
