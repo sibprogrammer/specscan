@@ -178,6 +178,11 @@ class Admin::VehiclesController < Admin::Base
     time = params.key?(:date) ? Time.parse(params[:date]) : Date.today.to_time
     @selected_date = time.to_formatted_s(:date)
     @waybill_types = get_waybill_types
+    @drivers = @vehicle.user.drivers.collect{ |driver| [driver.name, driver.id] }
+    @drivers = [[t('admin.vehicles.waybill.field.unknown_driver'), 0]] + @drivers
+    @default_driver = @vehicle.drivers.first
+    @selected_driver = params.key?(:driver) ? Driver.find_by_id(params[:driver]) : nil
+    @selected_driver = nil if @selected_driver and @selected_driver.owner.id != @vehicle.user.id 
 
     respond_to do |format|
       format.html
@@ -190,6 +195,15 @@ class Admin::VehiclesController < Admin::Base
         content.gsub!('%org%', @vehicle.user.name)
         content.gsub!('%vehicle-name%', @vehicle.name)
         content.gsub!('%vehicle-reg-number%', @vehicle.reg_number)
+        if @selected_driver
+          content.gsub!('%driver-name%', @selected_driver.name)
+          content.gsub!('%driver-license%', @selected_driver.license_number)
+          content.gsub!('%driver-categories%', @selected_driver.categories)
+        else
+          content.gsub!('%driver-name%', '')
+          content.gsub!('%driver-license%', '')
+          content.gsub!('%driver-categories%', '')
+        end
         render :text => content
       end
     end

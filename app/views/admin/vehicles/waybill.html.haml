@@ -19,6 +19,11 @@
     .controls
       = select_tag(:waybill_type, options_for_select(@waybill_types.collect { |type| [type[:title], type[:name]] }, @vehicle.waybill_type))
 
+  .control-group
+    = f.label :driver, t('.field.driver'), :class => 'control-label'
+    .controls
+      = select_tag(:driver, options_for_select(@drivers, @default_driver ? @default_driver.id : 0))
+
   .form-actions
     = f.submit t('.button.download'), :class => 'btn btn-primary'
     = link_to t('.button.back'), admin_vehicle_path(@vehicle), :class => 'btn'
