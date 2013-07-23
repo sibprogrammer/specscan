@@ -5,7 +5,7 @@
 
   - form_field f, :login, :text_field, :required => true, :autofocus => true
   - form_field f, :password, :password_field, :required => true
-  - form_field f, :remember_me, :check_box
+  - form_field f, :remember_me, :check_box, :checked => true
 
   .form-actions
     = f.submit t('login.button_login'), :class => 'btn btn-primary'
