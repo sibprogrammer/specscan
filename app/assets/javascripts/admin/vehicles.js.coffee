@@ -4,12 +4,19 @@ $ ->
   defaultMapCenter = [55.00, 82.93]
 
   createMap = ->
+    mapType = $.cookie('mapType') || 'yandex#publicMap'
+
     map = new ymaps.Map('map-canvas', {
       center: defaultMapCenter,
       zoom: 12,
-      type: 'yandex#publicMap'
+      type: mapType
     })
-    map.controls.add('typeSelector')
+
+    typeSelector = new ymaps.control.TypeSelector()
+    typeSelector.events.group().add 'collapse', ->
+      $.cookie('mapType', map.getType())
+    map.controls.add(typeSelector)
+
     map.controls.add('mapTools')
     map.controls.add('zoomControl')
     map.controls.add(new ymaps.control.SearchControl({

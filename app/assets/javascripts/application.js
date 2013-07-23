@@ -6,6 +6,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require external/jquery.cookie
 //= require twitter/bootstrap
 //= require_directory .
 //= require_directory ./admin
