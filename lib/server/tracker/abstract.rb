@@ -30,22 +30,23 @@ class Server::Tracker::Abstract < Server::Abstract
 
     loop do
       Thread.start(@server.accept) do |client|
-        logger.debug "#{client} connected."
-
-        port, ip = Socket.unpack_sockaddr_in(client.getpeername)
-        logger.debug "Client address: #{ip}:#{port}"
 
         begin
+          logger.debug "#{client} connected."
+          port, ip = Socket.unpack_sockaddr_in(client.getpeername)
+          logger.debug "Client address: #{ip}:#{port}"
+
           process_data client
+
+          linger = [1,0].pack('ii')
+          client.setsockopt(Socket::SOL_SOCKET, Socket::SO_LINGER, linger)
+          client.close
+          logger.debug "#{client} connection closed."
         rescue Exception => e
           logger.debug "Error: #{e.message}"
           logger.debug "Backtrace: #{e.backtrace.join('; ')}"
         end
 
-        linger = [1,0].pack('ii')
-        client.setsockopt(Socket::SOL_SOCKET, Socket::SO_LINGER, linger)
-        client.close
-        logger.debug "#{client} connection closed."
       end
     end
   end
