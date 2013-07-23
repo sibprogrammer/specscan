@@ -350,7 +350,7 @@ $ ->
         })
         pointLink.data('placemark', lastPlacemark)
 
-        polyline = new PolylineWithArrows([oldGeoPoint, newGeoPoint], { style: 'user#routeLine' })
+        polyline = new ymaps.Polyline([oldGeoPoint, newGeoPoint], {}, getRouteLineStyle())
         map.geoObjects.add(polyline)
         overlays.push(polyline)
         pointLink.data('overlays', overlays)
@@ -361,7 +361,7 @@ $ ->
 
 
   if $.grep(['waybill', 'map', 'day_report'], (item) ->
-    return $('body.vehicles.' + item).length > 0;
+    return $('body.vehicles.' + item).length > 0
   ).length > 0
 
     $('#selectedDate').on 'custom:dateChanged', ->
