@@ -11,7 +11,7 @@
         .controls
           %span.uneditable-input
             - if 'vehicle' == field_name
-              = @fuel_sensor.vehicle.title
+              = link_to @fuel_sensor.vehicle.title, admin_vehicle_path(@fuel_sensor.vehicle)
             - else
               = @fuel_sensor.send(field_name)
 
