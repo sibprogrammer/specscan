@@ -175,6 +175,8 @@ ru:
         action:
           add_user: "Добавить клиента"
           impersonation: "Вход"
+          additional_users: "Дополнительные пользователи"
+          drivers: "Водители"
         hint:
           locked: "заблокирован"
           admin: "администратор"
@@ -714,3 +716,11 @@ ru:
           update: "Обновить"
           back: "Назад"
           delete: "Удалить"
+    search:
+      results:
+        no_data: "Ничего не найдено"
+        object_type:
+          vehicle: "Машина"
+          client: "Клиент"
+          sim_card: "SIM-карта"
+          fuel_sensor: "Датчик топлива"

@@ -1,0 +1,7 @@
+- if @results.blank?
+  %li= t('.no_data')
+- else
+  - @results.each do |result|
+    %li
+      = result[:object_type] + ':'
+      = link_to result[:title], result[:link]

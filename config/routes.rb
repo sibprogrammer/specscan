@@ -30,13 +30,14 @@ Specscan::Application.routes.draw do
       put 'clear_do', :on => :member
       get 'waybill', :on => :member
     end
-    match "profile" => "users#profile"
     resources :sim_cards do
       post 'check_balance', :on => :member
     end
     resources :fuel_sensors
     resources :drivers
+    match "profile" => "users#profile"
     match "tools(/:action)", :controller => 'tools'
+    match "search" => "search#results"
   end
 
   namespace :api do

@@ -1,7 +1,7 @@
 class Admin::Base < ApplicationController
 
   layout 'admin'
-  before_filter :authenticate_user!, :set_menu, :set_search, :set_sidebar_actions, :set_billing_notifications
+  before_filter :authenticate_user!, :set_menu, :set_sidebar_actions, :set_billing_notifications
 
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to root_url, :alert => t('admin.dashboard.index.access_denied')
@@ -18,17 +18,14 @@ class Admin::Base < ApplicationController
       @menu << { :name => 'overview', :controller => 'admin/dashboard', :link => '/' } if current_user.admin?
       @menu << { :name => 'users', :controller => 'admin/users', :link => '/admin/users' } if can? :manage, User
       @menu << { :name => 'vehicles', :controller => 'admin/vehicles', :link => '/admin/vehicles' }
-      @menu << { :name => 'additional_users', :controller => 'admin/additional_users', :link => '/admin/additional_users' } if can? :manage_additional_users, User
-      @menu << { :name => 'drivers', :controller => 'admin/drivers', :link => '/admin/drivers' }
+      unless current_user.admin?
+        @menu << { :name => 'additional_users', :controller => 'admin/additional_users', :link => '/admin/additional_users' } if can? :manage_additional_users, User
+        @menu << { :name => 'drivers', :controller => 'admin/drivers', :link => '/admin/drivers' }
+      end
       @menu << { :name => 'fuel_sensors', :controller => 'admin/fuel_sensors', :link => '/admin/fuel_sensors' } if can? :manage, FuelSensor
       @menu << { :name => 'sim_cards', :controller => 'admin/sim_cards', :link => '/admin/sim_cards' } if can? :manage, SimCard
       @menu << { :name => 'tools', :controller => 'admin/tools', :link => '/admin/tools' } if current_user.admin?
       @menu.each{ |item| item[:active] = true if params[:controller] == item[:controller] }
-    end
-
-    def set_search
-      # TODO: implement
-      @show_search = false
     end
 
     def set_sidebar_actions

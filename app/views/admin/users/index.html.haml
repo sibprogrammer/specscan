@@ -2,6 +2,8 @@
 
 - content_for :sidebar_actions do
   %li= link_to t('.action.add_user'), new_admin_user_path
+  %li= link_to t('.action.additional_users'), admin_additional_users_path
+  %li= link_to t('.action.drivers'), admin_drivers_path
 
 = will_paginate @users
 

@@ -31,6 +31,9 @@
           %ul.nav
             - @menu.each do |menu_item|
               %li{ :class => menu_item[:active] ? 'active' : '' }= link_to t('menu.' + menu_item[:name]), menu_item[:link]
+          %form.navbar-search.pull-left
+            %input.seach-query.span2{ :type => 'text', :placeholder => t('menu.search'), :autocomplete => 'off' }
+            %ul.dropdown-menu.search-results
       - else
         .nav-collapse.pull-right
           %ul.nav
