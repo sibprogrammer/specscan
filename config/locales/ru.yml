@@ -194,6 +194,8 @@ ru:
           list: "Список клиентов"
           edit: "Редактировать"
           add_vehicle: "Добавить машину"
+        vehicles:
+          title: "Машины"
       new:
         page_title: "Добавление клиента"
         help: "Для добавления нового клиента необходимо заполнить указанную форму. Логин должен быть уникальным."
@@ -243,18 +245,6 @@ ru:
         page_title: "Машины"
         help: "Здесь представлен список машин, можно добавить новую, посмотреть информацию о существующей, треки, отчеты."
         debt_notice: "Долг по абонетской плате составляет %{debt} руб."
-        column:
-          imei: "IMEI"
-          tracker_name: "Трекер"
-          sim_card_balance: "SIM-карта, р."
-          reg_number: "Гос. номер"
-          owner: "Владелец"
-          created_at: "Дата создания"
-          name: "Название"
-          description: "Описание"
-          fuel_sensor: "ДУТ"
-          type: "Тип"
-          state: "Состояние"
         action:
           add_vehicle: "Добавить машину"
           overview_map: "Обзорная карта"
@@ -724,3 +714,17 @@ ru:
           client: "Клиент"
           sim_card: "SIM-карта"
           fuel_sensor: "Датчик топлива"
+  partials:
+    vehicles_list:
+      column:
+          imei: "IMEI"
+          tracker_name: "Трекер"
+          sim_card_balance: "SIM-карта, р."
+          reg_number: "Гос. номер"
+          owner: "Владелец"
+          created_at: "Дата создания"
+          name: "Название"
+          description: "Описание"
+          fuel_sensor: "ДУТ"
+          type: "Тип"
+          state: "Состояние"

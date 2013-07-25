@@ -15,7 +15,10 @@
         .controls
           %span.uneditable-input
             - if 'fuel_sensor' == field_name
-              = @vehicle.fuel_sensor.fuel_sensor_model.title
+              - if can?(:manage, @vehicle)
+                = link_to "#{@vehicle.fuel_sensor.code} (#{@vehicle.fuel_sensor.fuel_sensor_model.title})", admin_fuel_sensor_path(@vehicle.fuel_sensor)
+              - else
+                = @vehicle.fuel_sensor.fuel_sensor_model.title
             - elsif 'imei' == field_name
               = link_to(@vehicle.imei, { :controller => 'admin/tools', :action => 'packets_monitor', :imei => @vehicle.imei }, :class => 'ico-packets-monitor')
             - elsif 'vehicle_type' == field_name
@@ -26,7 +29,9 @@
               = @vehicle.send(field_name)
 
   - readonly_field(t('admin.vehicles.form.field.min_parking_time'), @vehicle.min_parking_time) if can?(:manage, @vehicle) and !@vehicle.min_parking_time.blank?
-  - readonly_field(t('admin.vehicles.form.field.user'), @vehicle.user.login) if can? :manage, @vehicle
+  - if can?(:manage, @vehicle) and @vehicle.sim_card
+    - readonly_field(t('admin.vehicles.form.field.sim_card'), link_to(number_to_phone(@vehicle.sim_card.phone), admin_sim_card_path(@vehicle.sim_card)))
+  - readonly_field(t('admin.vehicles.form.field.user'), link_to(@vehicle.user.login, admin_user_path(@vehicle.user))) if can? :manage, @vehicle
   - readonly_field(t('admin.vehicles.form.field.description'), simple_format(@vehicle.description)) if !@vehicle.description.blank?
   - readonly_field(t('admin.vehicles.form.field.comment'), simple_format(@vehicle.comment)) if can?(:manage, @vehicle) and !@vehicle.comment.blank?
   - readonly_field(t('admin.vehicles.form.field.debt'), @vehicle.debt) if can?(:manage, @vehicle) and !@vehicle.debt.zero?

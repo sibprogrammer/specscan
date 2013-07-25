@@ -14,7 +14,7 @@
             - elsif 'mobile_operator' == field_name
               = @sim_card.mobile_operator.title
             - elsif 'vehicle' == field_name
-              = @sim_card.vehicle.title
+              = link_to @sim_card.vehicle.title, admin_vehicle_path(@sim_card.vehicle)
             - elsif 'description' == field_name
               = simple_format @sim_card.description
             - else

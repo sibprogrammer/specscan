@@ -29,6 +29,10 @@ class Admin::UsersController < Admin::Base
   end
 
   def show
+    @columns = %w{ name reg_number imei owner created_at }
+    @sort_state = get_list_sort_state(@columns, :user_vehicles_admin_list, :dir => 'desc', :field => 'created_at')
+    order = "#{@sort_state[:field]} #{@sort_state[:dir]}"
+    @vehicles = @user.vehicles.reorder(order) if @user.vehicles.length > 0
   end
 
   def edit

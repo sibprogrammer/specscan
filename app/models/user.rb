@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   has_many :additional_users, :class_name => 'User', :foreign_key => 'owner_id', :dependent => :destroy
   has_many :drivers, :foreign_key => 'owner_id', :dependent => :destroy
 
-  scope :clients, where('role IN (?)', [User::ROLE_CLIENT, User::ROLE_ADMIN])
+  scope :clients, where('role IN (?)', [User::ROLE_CLIENT, User::ROLE_ADMIN]).order('login') 
   scope :recently, order('created_at DESC')
 
   def admin?

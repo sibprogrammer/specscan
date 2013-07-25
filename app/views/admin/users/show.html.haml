@@ -26,3 +26,8 @@
       = link_to t('.button.unlock'), unlock_admin_user_path(@user), :class => 'btn btn-success', :method => :post
     - if @user.deletable?
       = link_to t('.button.delete'), admin_user_path(@user), :class => 'btn btn-danger', :method => :delete, 'data-confirm' => t('.button.confirm_delete')
+
+- if can?(:manage, Vehicle) and @user.vehicles.length > 0
+  %h2= t('.vehicles.title')
+
+  = render :partial => 'partials/vehicles_list', :locals => { :vehicles => @vehicles, :sort_state => @sort_state }

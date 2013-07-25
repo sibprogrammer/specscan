@@ -1,0 +1,37 @@
+%table.table.table-bordered.table-striped
+  %thead
+    %tr
+      %th{ :width => 75 }= t(".column.state")
+      - sortable_column 'name', t(".column.name"), sort_state
+      - unless current_user.admin?
+        %th= t(".column.type")
+      - sortable_column 'reg_number', t(".column.reg_number"), sort_state
+      - unless can? :manage, Vehicle
+        %th= t(".column.description")
+      - sortable_column 'imei', t(".column.imei"), sort_state if can? :manage, Vehicle
+      - if can? :manage, Vehicle
+        %th= t(".column.tracker_name")
+        %th= t(".column.fuel_sensor")
+      - sortable_column 'owner', t(".column.owner"), sort_state if can? :manage, User
+      - sortable_column 'created_at', t(".column.created_at"), sort_state if can? :manage, Vehicle
+
+  %tbody
+    - vehicles.each do |vehicle|
+      %tr
+        %td.icon= render :partial => 'admin/vehicles/status_bar', :locals => { :vehicle => vehicle }
+        %td= link_to vehicle.name, day_report_admin_vehicle_path(vehicle), :title => vehicle.vehicle_type.title
+        - unless current_user.admin?
+          %td= vehicle.vehicle_type.title
+        %td= vehicle.reg_number
+        - unless can? :manage, Vehicle
+          %td= vehicle.description
+        - if can? :manage, Vehicle
+          %td
+            = link_to(vehicle.imei, { :controller => 'admin/tools', :action => 'packets_monitor', :imei => vehicle.imei }, :class => 'ico-packets-monitor') unless vehicle.imei.blank?
+        - if can? :manage, Vehicle
+          %td= vehicle.tracker_name
+          %td= vehicle.fuel_sensor ? link_to(vehicle.fuel_sensor.model, admin_fuel_sensor_path(vehicle.fuel_sensor)) : ''
+        - if can? :manage, User
+          %td= link_to vehicle.user.login, admin_user_path(vehicle.user), :title => vehicle.user.name
+        - if can? :manage, Vehicle
+          %td= l vehicle.created_at.localtime
