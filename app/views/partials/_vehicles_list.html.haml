@@ -27,7 +27,9 @@
           %td= vehicle.description
         - if can? :manage, Vehicle
           %td
-            = link_to(vehicle.imei, { :controller => 'admin/tools', :action => 'packets_monitor', :imei => vehicle.imei }, :class => 'ico-packets-monitor') unless vehicle.imei.blank?
+            - unless vehicle.imei.blank?
+              = link_to(image_tag('icons/application-monitor.png'), { :controller => 'admin/tools', :action => 'packets_monitor', :imei => vehicle.imei })
+              = vehicle.imei
         - if can? :manage, Vehicle
           %td= vehicle.tracker_name
           %td= vehicle.fuel_sensor ? link_to(vehicle.fuel_sensor.model, admin_fuel_sensor_path(vehicle.fuel_sensor)) : ''

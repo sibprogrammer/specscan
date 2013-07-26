@@ -20,7 +20,8 @@
               - else
                 = @vehicle.fuel_sensor.fuel_sensor_model.title
             - elsif 'imei' == field_name
-              = link_to(@vehicle.imei, { :controller => 'admin/tools', :action => 'packets_monitor', :imei => @vehicle.imei }, :class => 'ico-packets-monitor')
+              = link_to(image_tag('icons/application-monitor.png'), { :controller => 'admin/tools', :action => 'packets_monitor', :imei => @vehicle.imei })
+              = @vehicle.imei
             - elsif 'vehicle_type' == field_name
               = @vehicle.vehicle_type.title
             - elsif 'drivers' == field_name
