@@ -19,7 +19,10 @@
     - vehicles.each do |vehicle|
       %tr
         %td.icon= render :partial => 'admin/vehicles/status_bar', :locals => { :vehicle => vehicle }
-        %td= link_to vehicle.name, day_report_admin_vehicle_path(vehicle), :title => vehicle.vehicle_type.title
+        %td
+          - if can? :manage, Vehicle
+            = link_to(image_tag('icons/wrench.png'), admin_vehicle_path(vehicle))
+          = link_to vehicle.name, day_report_admin_vehicle_path(vehicle), :title => vehicle.vehicle_type.title
         - unless current_user.admin?
           %td= vehicle.vehicle_type.title
         %td= vehicle.reg_number
