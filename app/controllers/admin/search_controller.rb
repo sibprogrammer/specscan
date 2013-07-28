@@ -43,7 +43,7 @@ class Admin::SearchController < Admin::Base
 
       return items if items.length > 10
 
-      conditions = ['phone LIKE ?', "%#{term}%"]
+      conditions = ['phone LIKE ? or identity LIKE ?', "%#{term}%", "%#{term}%"]
       sim_cards = SimCard.find(:all, :limit => 10, :conditions => conditions)
 
       sim_cards.each do |sim_card|

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130211155751) do
+ActiveRecord::Schema.define(:version => 20130728131126) do
 
   create_table "drivers", :force => true do |t|
     t.string   "name"
@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(:version => 20130211155751) do
     t.boolean  "last_check_error",   :default => false
     t.string   "pin_code"
     t.string   "puk_code"
+    t.string   "identity"
   end
 
   create_table "tracker_models", :force => true do |t|

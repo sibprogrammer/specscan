@@ -485,6 +485,7 @@ ru:
           helper_password: "Пароль в Интернет-помощник"
           pin_code: "PIN код"
           puk_code: "PUK код"
+          identity: "Идентификатор"
           vehicle: "Машина"
           unknown_vehicle: "Не указана"
           description: "Примечание"

@@ -10,7 +10,7 @@ class SimCard < ActiveRecord::Base
   validates :pin_code, :allow_blank => true, :numericality => true
   validates :puk_code, :allow_blank => true, :numericality => true
 
-  attr_accessible :phone, :helper_password, :mobile_operator_id, :description, :vehicle_id, :pin_code, :puk_code
+  attr_accessible :phone, :helper_password, :mobile_operator_id, :description, :vehicle_id, :pin_code, :puk_code, :identity
 
   belongs_to :mobile_operator
   belongs_to :vehicle
