@@ -3,15 +3,20 @@
 - content_for :sidebar_actions do
   - if can? :manage, Vehicle
     %li= link_to t('.action.add_vehicle'), new_admin_vehicle_path(:user_id => @user)
+    %li= link_to t('.action.update_balance'), update_balance_admin_user_path(:user_id => @user)
 
 %form.form-horizontal
-  - %w{ login name email role contact_name phone additional_info comment created_at updated_at }.each do |field_name|
+  - %w{ login name balance email role contact_name phone additional_info comment created_at updated_at }.each do |field_name|
     - if %w{ role created_at updated_at }.include?(field_name) or !@user.send(field_name).blank?
       .control-group
         %label.control-label= t('admin.users.form.field.' + field_name)
         .control
           - if 'role' == field_name
             %span.uneditable-input= t('admin.users.form.field.role_' + @user.send(field_name + '_name'))
+          - elsif 'email' == field_name
+            %span.uneditable-input= mail_to @user.email
+          - elsif 'balance' == field_name
+            %span.uneditable-input= @user.balance
           - elsif %w{ created_at updated_at }.include? field_name
             %span.uneditable-input= l @user.send(field_name).localtime
           - else

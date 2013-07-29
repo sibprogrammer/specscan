@@ -1,10 +1,10 @@
 class Admin::UsersController < Admin::Base
 
   before_filter :check_manage_permission, :except => [:profile, :update, :destroy, :impersonate, :impersonation_logout]
-  before_filter :set_selected_user, :only => [:show, :edit, :update, :lock, :unlock, :destroy, :impersonate]
+  before_filter :set_selected_user, :only => [:show, :edit, :update, :lock, :unlock, :destroy, :impersonate, :update_balance]
 
   def index
-    @columns = %w{ login name email vehicles_total created_at }
+    @columns = %w{ login name balance vehicles_total created_at }
     @sort_state = get_list_sort_state(@columns, :users_list, :dir => 'desc', :field => 'created_at')
     @users = User.page(get_list_page).
       joins("LEFT JOIN vehicles ON users.id = vehicles.user_id").
@@ -90,6 +90,15 @@ class Admin::UsersController < Admin::Base
     user = User.find(session[:impersonated_user_id])
     session.delete(:impersonated_user_id)
     relogin(user)
+  end
+
+  def update_balance
+    if request.post?
+      amount = params[:amount].to_i
+      @user.balance += amount
+      @user.save
+      redirect_to(admin_user_path(@user), :notice => t('admin.users.update_balance.updated', :login => @user.login, :amount => amount))
+    end
   end
 
   private

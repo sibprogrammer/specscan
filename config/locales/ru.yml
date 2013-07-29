@@ -146,6 +146,7 @@ ru:
           login: "Логин"
           name: "Название / ФИО"
           email: "E-mail"
+          balance: "Баланс, р."
           password: "Пароль"
           password_confirmation: "Подтверждение"
           role: "Роль"
@@ -168,7 +169,7 @@ ru:
         column:
           login: "Логин"
           name: "Название"
-          email: "E-mail"
+          balance: "Баланс, р."
           vehicles_total: "Машины"
           created_at: "Дата создания"
           impersonation: "Вход"
@@ -194,8 +195,19 @@ ru:
           list: "Список клиентов"
           edit: "Редактировать"
           add_vehicle: "Добавить машину"
+          update_balance: "Зачислить платеж"
         vehicles:
           title: "Машины"
+      update_balance:
+        page_title: "Зачисление платежа для %{login}"
+        help: "Здесь можно зачислить платеж на баланс клиента. Будте внимательны при указании суммы."
+        updated: "Клиенту %{login} был зачислен платеж на сумму %{amount} р."
+        form:
+          field:
+            amount: "Сумма платежа, р."
+        button:
+          update: "Зачислить"
+          back: "Назать"
       new:
         page_title: "Добавление клиента"
         help: "Для добавления нового клиента необходимо заполнить указанную форму. Логин должен быть уникальным."

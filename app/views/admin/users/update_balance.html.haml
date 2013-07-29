@@ -1,0 +1,18 @@
+- @page_title = t '.page_title', :login => @user.login
+
+= form_for([:admin, @user], :url => update_balance_admin_user_path(@user), :method => 'post', :html => { :class => 'form-horizontal' }) do |f|
+
+  - %w{ login name balance }.each do |field_name|
+    .control-group
+      %label.control-label= t('admin.users.form.field.' + field_name)
+      .controls
+        %span.uneditable-input= @user.send(field_name)
+
+  .control-group
+    %label.control-label= t('.form.field.amount')
+    .controls
+      = text_field_tag 'amount'
+
+  .form-actions
+    = f.submit t('.button.update'), :class => 'btn btn-primary'
+    = link_to t('.button.back'), admin_user_path(@user), :class => 'btn'

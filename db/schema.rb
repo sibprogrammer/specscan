@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130728131126) do
+ActiveRecord::Schema.define(:version => 20130729131951) do
 
   create_table "drivers", :force => true do |t|
     t.string   "name"
@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(:version => 20130728131126) do
     t.string   "comment"
     t.boolean  "locked",                                :default => false
     t.integer  "owner_id",                              :default => 0
+    t.decimal  "balance",                               :default => 0.0
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

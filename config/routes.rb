@@ -12,6 +12,8 @@ Specscan::Application.routes.draw do
       post 'unlock', :on => :member
       get 'impersonate', :on => :member
       get 'impersonation_logout', :on => :collection
+      get 'update_balance', :on => :member
+      post 'update_balance', :on => :member
     end
     resources :additional_users do
       post 'lock', :on => :member

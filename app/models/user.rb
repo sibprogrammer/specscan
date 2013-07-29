@@ -10,9 +10,10 @@ class User < ActiveRecord::Base
   validates :password, :presence => true, :confirmation => true, :on => :create,
     :length => { :minimum => 6, :maximum => 25 }, :format => { :with => /^[a-zA-Z\d]+$/ }
   validates :role, :presence => true
+  validates :balance, :numericality => true
   devise :database_authenticatable, :rememberable, :trackable, :validatable
   attr_accessible :login, :name, :email, :password, :password_confirmation, :remember_me, :role, :contact_name,
-    :phone, :additional_info, :comment, :owner_id
+    :phone, :additional_info, :comment, :owner_id, :balance
 
   has_many :vehicles, :order => 'name'
   belongs_to :owner, :class_name => 'User', :foreign_key => 'owner_id'

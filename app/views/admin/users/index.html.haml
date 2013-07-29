@@ -24,7 +24,7 @@
             = image_tag "icons/star.png", :class => 'inline-icon', :title => t('.hint.admin')
           = link_to user.login, admin_user_path(user)
         %td= user.name
-        %td= mail_to user.email
+        %td= user.balance
         %td= user.vehicles.count
         %td= l user.created_at.localtime
         %td
