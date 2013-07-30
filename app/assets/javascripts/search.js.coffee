@@ -29,12 +29,6 @@ $ ->
       clearTimeout(timer)
     $('.search-results').hide()
 
-  # focus search on S key
-  $(document.body).on 'keydown', (event) ->
-    if 83 == event.which && !searchField.is(':focus')
-      searchField.focus()
-      event.preventDefault()
-
   searchField.on 'keyup', (event) ->
     if ([13, 37, 38, 39, 40].indexOf(event.which) != -1)
       return
