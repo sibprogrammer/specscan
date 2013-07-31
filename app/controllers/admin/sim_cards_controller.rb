@@ -21,6 +21,7 @@ class Admin::SimCardsController < Admin::Base
     @sim_card = SimCard.new(params[:sim_card])
 
     if @sim_card.save
+      action_log(:create_sim_card, :sim_card => @sim_card.phone)
       redirect_to(admin_sim_cards_path, :notice => t('admin.sim_cards.create.sim_card_created'))
     else
       render :action => 'new'
@@ -34,6 +35,7 @@ class Admin::SimCardsController < Admin::Base
     params[:sim_card].delete(:helper_password) if params[:sim_card][:helper_password].blank?
 
     if @sim_card.update_attributes(params[:sim_card])
+      action_log(:update_sim_card, :sim_card => @sim_card.phone)
       redirect_to(admin_sim_cards_path, :notice => t('admin.sim_cards.update.sim_card_updated', :phone => @sim_card.phone))
     else
       render :action => 'edit'
@@ -51,6 +53,7 @@ class Admin::SimCardsController < Admin::Base
 
   def destroy
     @sim_card.destroy
+    action_log(:destroy_sim_card, :sim_card => @sim_card.phone)
     redirect_to(admin_sim_cards_path, :notice => t('admin.sim_cards.destroy.sim_card_deleted'))
   end
 

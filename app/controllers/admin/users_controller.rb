@@ -22,6 +22,7 @@ class Admin::UsersController < Admin::Base
     @user = User.new(params[:user])
 
     if @user.save
+      action_log(:create_user, :login => @user.login)
       redirect_to(admin_users_path, :notice => t('admin.users.create.user_created', :login => @user.login))
     else
       render :action => 'new'
@@ -55,6 +56,7 @@ class Admin::UsersController < Admin::Base
     params[:user].delete(:role) unless can? :manage, @user
 
     if @user.update_attributes(params[:user])
+      action_log(:update_user, :login => @user.login)
       if params.key?(:profile)
         redirect_to(admin_profile_path, :notice => t('admin.profile.updated'))
       else
@@ -67,16 +69,19 @@ class Admin::UsersController < Admin::Base
 
   def lock
     @user.lock
+    action_log(:lock_user, :login => @user.login)
     redirect_to(admin_user_path(@user), :notice => t('admin.users.lock.locked', :login => @user.login))
   end
 
   def unlock
     @user.unlock
+    action_log(:unlock_user, :login => @user.login)
     redirect_to(admin_user_path(@user), :notice => t('admin.users.unlock.unlocked', :login => @user.login))
   end
 
   def destroy
     @user.destroy
+    action_log(:destroy_user, :login => @user.login)
     redirect_to(admin_users_path, :notice => t('admin.users.destroy.user_deleted'))
   end
 
@@ -97,6 +102,7 @@ class Admin::UsersController < Admin::Base
       amount = params[:amount].to_i
       @user.balance += amount
       @user.save
+      action_log(:update_balance, :login => @user.login, :amount => amount)
       redirect_to(admin_user_path(@user), :notice => t('admin.users.update_balance.updated', :login => @user.login, :amount => amount))
     end
   end

@@ -17,6 +17,8 @@ class Admin::DashboardController < Admin::Base
     @fuel_changes_total = FuelChange.count
     @activities_total = Activity.count
     @locations_total = Location.count
+
+    @events = ActionLog.sort(:$natural.desc).limit(4).all
   end
 
 end

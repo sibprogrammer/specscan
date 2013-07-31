@@ -25,6 +25,7 @@ class Admin::DriversController < Admin::Base
     @driver.owner = current_user unless can? :manage, :all
 
     if @driver.save
+      action_log(:create_driver, :driver => @driver.name, :owner => @driver.owner.login)
       redirect_to(admin_drivers_path, :notice => t('admin.drivers.create.driver_created', :name => @driver.name))
     else
       render :action => 'new'
@@ -38,6 +39,7 @@ class Admin::DriversController < Admin::Base
     params[:driver].delete(:owner_id) unless can? :manage, :all
 
     if @driver.update_attributes(params[:driver])
+      action_log(:update_driver, :driver => @driver.name, :owner => @driver.owner.login)
       redirect_to(admin_drivers_path, :notice => t('admin.drivers.update.driver_updated'))
     else
       render :action => 'edit'
@@ -46,6 +48,7 @@ class Admin::DriversController < Admin::Base
 
   def destroy
     @driver.destroy
+    action_log(:destroy_driver, :driver => @driver.name, :owner => @driver.owner.login)
     redirect_to(admin_drivers_path, :notice => t('admin.drivers.destroy.driver_deleted'))
   end
 

@@ -1,0 +1,12 @@
+%table.table.table-striped
+  %tr
+    %th{ :width => 100 }= t('.column.date')
+    %th{ :width => 100 }= t('.column.actor')
+    %th= t('.column.event_type')
+    %th= t('.column.params')
+  - events.each do |event|
+    %tr
+      %td= Time.at(event.date).to_formatted_s(:date_time)
+      %td= event.actor
+      %td= t('.event_type.' + event.event_type)
+      %td= event.params.collect { |k,v| k.to_s + ': ' + v.to_s  }.join(', ')

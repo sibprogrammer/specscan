@@ -21,6 +21,7 @@ class Admin::FuelSensorsController < Admin::Base
     @fuel_sensor = FuelSensor.new(params[:fuel_sensor])
 
     if @fuel_sensor.save
+      action_log(:create_fuel_sensor, :fuel_sensor => @fuel_sensor.code)
       redirect_to(admin_fuel_sensors_path, :notice => t('admin.fuel_sensors.create.fuel_sensor_created'))
     else
       render :action => 'new'
@@ -29,6 +30,7 @@ class Admin::FuelSensorsController < Admin::Base
 
   def update
     if @fuel_sensor.update_attributes(params[:fuel_sensor])
+      action_log(:update_fuel_sensor, :fuel_sensor => @fuel_sensor.code)
       redirect_to(admin_fuel_sensor_path(@fuel_sensor), :notice => t('admin.fuel_sensors.update.fuel_sensor_updated', :title => @fuel_sensor.code))
     else
       render :action => 'edit'
@@ -37,6 +39,7 @@ class Admin::FuelSensorsController < Admin::Base
 
   def destroy
     @fuel_sensor.destroy
+    action_log(:destroy_fuel_sensor, :fuel_sensor => @fuel_sensor.code)
     redirect_to(admin_fuel_sensors_path, :notice => t('admin.fuel_sensors.destroy.fuel_sensor_deleted'))
   end
 

@@ -49,3 +49,7 @@
       %tr
         %th= t('.stats.column.locations')
         %td= number_with_delimiter(@locations_total, :delimiter => ' ')
+
+%h3= t '.action_log_title'
+
+= render :partial => 'partials/action_logs_list', :locals => { :events => @events }

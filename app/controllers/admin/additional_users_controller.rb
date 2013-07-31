@@ -23,6 +23,7 @@ class Admin::AdditionalUsersController < Admin::Base
     @user.owner = current_user unless can? :manage, :all
 
     if @user.save
+      action_log(:create_additional_user, :user => @user.login, :owner => @user.owner.login)
       redirect_to(admin_additional_users_path, :notice => t('admin.additional_users.create.user_created', :login => @user.login))
     else
       render :action => 'new'
@@ -46,6 +47,7 @@ class Admin::AdditionalUsersController < Admin::Base
     params[:user].delete(:owner_id) unless can? :manage, :all
 
     if @user.update_attributes(params[:user])
+      action_log(:update_additional_user, :user => @user.login, :owner => @user.owner.login)
       redirect_to(admin_additional_users_path, :notice => t('admin.additional_users.update.user_updated', :login => @user.login))
     else
       render :action => 'edit'
@@ -54,16 +56,19 @@ class Admin::AdditionalUsersController < Admin::Base
 
   def lock
     @user.lock
+    action_log(:lock_additional_user, :user => @user.login, :owner => @user.owner.login)
     redirect_to(admin_additional_user_path(@user), :notice => t('admin.additional_users.lock.locked', :login => @user.login))
   end
 
   def unlock
     @user.unlock
+    action_log(:unlock_additional_user, :user => @user.login, :owner => @user.owner.login)
     redirect_to(admin_additional_user_path(@user), :notice => t('admin.additional_users.unlock.unlocked', :login => @user.login))
   end
 
   def destroy
     @user.destroy
+    action_log(:destroy_additional_user, :user => @user.login, :owner => @user.owner.login)
     redirect_to(admin_additional_users_path, :notice => t('admin.additional_users.destroy.user_deleted'))
   end
 

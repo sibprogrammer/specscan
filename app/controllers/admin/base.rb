@@ -59,4 +59,8 @@ class Admin::Base < ApplicationController
       flash.now[:alert] = t('admin.vehicles.index.debt_notice', :debt => debt) if debt >= AppConfig.billing.debt_notification_limit
     end
 
+    def action_log(event_type, params = {})
+      ActionLog.log(@current_user, event_type, params)
+    end
+
 end

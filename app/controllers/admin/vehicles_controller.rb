@@ -33,6 +33,7 @@ class Admin::VehiclesController < Admin::Base
     @vehicle = Vehicle.new(params[:vehicle])
 
     if @vehicle.save
+      action_log(:create_vehicle, :vehicle => @vehicle.name, :user => @vehicle.user.login)
       redirect_to(admin_vehicles_path, :notice => t('admin.vehicles.create.vehicle_created'))
     else
       render :action => 'new'
@@ -47,6 +48,7 @@ class Admin::VehiclesController < Admin::Base
     manager_only_fields.each{ |field| params[:vehicle].delete(field.to_sym) } unless can? :manage, @vehicle
 
     if @vehicle.update_attributes(params[:vehicle])
+      action_log(:update_vehicle, :vehicle => @vehicle.name)
       redirect_to(admin_vehicle_path(@vehicle), :notice => t('admin.vehicles.update.vehicle_updated'))
     else
       render :action => 'edit'
@@ -136,6 +138,7 @@ class Admin::VehiclesController < Admin::Base
 
   def destroy
     @vehicle.destroy
+    action_log(:destroy_vehicle, :vehicle => @vehicle.name)
     redirect_to(admin_vehicles_path, :notice => t('admin.vehicles.destroy.vehicle_deleted'))
   end
 
@@ -168,6 +171,7 @@ class Admin::VehiclesController < Admin::Base
       Movement.unset({ :imei => @vehicle.imei }, :fuel_last_update_timestamp)
       Movement.unset({ :imei => @vehicle.imei }, :fuel_used)
     end
+    action_log(:clear_data_vehicle, :vehicle => @vehicle.name)
     redirect_to(admin_vehicle_path(@vehicle), :notice => t('admin.vehicles.clear_do.cleared'))
   end
 

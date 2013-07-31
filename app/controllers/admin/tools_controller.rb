@@ -27,6 +27,10 @@ class Admin::ToolsController < Admin::Base
     end
   end
 
+  def action_log
+    @events = ActionLog.sort(:$natural.desc).limit(100).all
+  end
+
   private
 
     def check_manage_permission

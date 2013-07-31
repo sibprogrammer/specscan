@@ -122,6 +122,7 @@ ru:
       index:
         page_title: "Обзор"
         help: "Здесь представлена статистика использования сервиса."
+        action_log_title: "Последние события"
         stats_title: "Статистика"
         stats:
           column:
@@ -599,6 +600,8 @@ ru:
           packets_monitor_help: "Просмотр пакетов, поступающих на сервер с трекеров."
           daemons_status: "Статус демонов"
           daemons_status_help: "Состояние демонов, являющимися компонентами системы"
+          action_log: "Журнал событий"
+          action_log_help: "Журнал событий, произошедших в системе."
       packets_monitor:
         page_title: "Монитор пакетов"
         help: "Монитор пакетов позволяет отследить пакеты, которые поступают на сервер с трекеров. Можно фильтровать данные по IMEI. Кроме того вывод можно ограничить, указав через пробел список только необходимых тегов."
@@ -616,6 +619,9 @@ ru:
         column:
           status: "Статус"
           daemon: "Демон"
+      action_log:
+        page_title: "Журнал событий"
+        help: "Здесь отображается информация о событиях, произошедших в обратном хронологическом порядке."
     additional_users:
       index:
         page_title: "Дополнительные пользователи"
@@ -731,14 +737,46 @@ ru:
   partials:
     vehicles_list:
       column:
-          imei: "IMEI"
-          tracker_name: "Трекер"
-          sim_card_balance: "SIM-карта, р."
-          reg_number: "Гос. номер"
-          owner: "Владелец"
-          created_at: "Дата создания"
-          name: "Название"
-          description: "Описание"
-          fuel_sensor: "ДУТ"
-          type: "Тип"
-          state: "Состояние"
+        imei: "IMEI"
+        tracker_name: "Трекер"
+        sim_card_balance: "SIM-карта, р."
+        reg_number: "Гос. номер"
+        owner: "Владелец"
+        created_at: "Дата создания"
+        name: "Название"
+        description: "Описание"
+        fuel_sensor: "ДУТ"
+        type: "Тип"
+        state: "Состояние"
+    action_logs_list:
+      column:
+        date: "Дата"
+        actor: "Пользователь"
+        event_type: "Тип события"
+        params: "Параметры"
+      event_type:
+        update_balance: "Обновление баланса"
+        login: "Вход в систему"
+        create_user: "Создание клиента"
+        update_user: "Обновление клиента"
+        destroy_user: "Удаление клиента"
+        lock_user: "Блокировка клиента"
+        unlock_user: "Разблокировка клиента"
+        create_vehicle: "Создание машины"
+        update_vehicle: "Обновление машины"
+        destroy_vehicle: "Удаление машины"
+        clear_data_vehicle: "Очистка данных машины"
+        create_sim_card: "Создание SIM-карты"
+        update_sim_card: "Обновление SIM-карты"
+        destroy_sim_card: "Удаление SIM-карты"
+        create_fuel_sensor: "Создание датчика топлива"
+        update_fuel_sensor: "Обновление датчика топлива"
+        destroy_fuel_sensor: "Удаление датчика топлива"
+        create_driver: "Создание водителя"
+        update_driver: "Обновление водителя"
+        destroy_driver: "Удаление водителя"
+        create_additional_user: "Создание дополнительного пользователя"
+        update_additional_user: "Обновление дополнительного пользователя"
+        destroy_additional_user: "Удаление дополнительного пользователя"
+        lock_additional_user: "Блокировка дополнительного пользователя"
+        unlock_additional_user: "Разблокировка дополнительного пользователя"
