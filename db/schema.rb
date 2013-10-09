@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130729131951) do
+ActiveRecord::Schema.define(:version => 20130801153946) do
 
   create_table "drivers", :force => true do |t|
     t.string   "name"
@@ -44,6 +44,15 @@ ActiveRecord::Schema.define(:version => 20130729131951) do
   create_table "mobile_operators", :force => true do |t|
     t.string "title"
     t.string "code"
+  end
+
+  create_table "plans", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.decimal  "price"
+    t.integer  "billing_period"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sim_cards", :force => true do |t|

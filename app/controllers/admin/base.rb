@@ -24,6 +24,7 @@ class Admin::Base < ApplicationController
       end
       @menu << { :name => 'fuel_sensors', :controller => 'admin/fuel_sensors', :link => '/admin/fuel_sensors' } if can? :manage, FuelSensor
       @menu << { :name => 'sim_cards', :controller => 'admin/sim_cards', :link => '/admin/sim_cards' } if can? :manage, SimCard
+      @menu << { :name => 'plans', :controller => 'admin/plans', :link => '/admin/plans' } if can? :manage, Plan
       @menu << { :name => 'tools', :controller => 'admin/tools', :link => '/admin/tools' } if current_user.admin?
       @menu.each{ |item| item[:active] = true if params[:controller] == item[:controller] }
     end

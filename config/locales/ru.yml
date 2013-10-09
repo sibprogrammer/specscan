@@ -104,6 +104,7 @@ ru:
     drivers: "Водители"
     fuel_sensors: "Датчики топлива"
     sim_cards: "SIM-карты"
+    plans: "Тарифы"
     tools: "Инструменты"
     impersonation_logout: "Вернуться к администрированию"
     profile: "Профиль"
@@ -128,6 +129,7 @@ ru:
           column:
             users: "Клиенты"
             vehicles: "Машины"
+            plans: "Тарифы"
             additional_users: "Пользователи"
             drivers: "Водители"
             sim_cards: "SIM-карты"
@@ -734,6 +736,49 @@ ru:
           client: "Клиент"
           sim_card: "SIM-карта"
           fuel_sensor: "Датчик топлива"
+    plans:
+      index:
+        page_title: "Список тарифов"
+        help: "Здесь представлен список тарифных планов на обслуживание."
+        no_data: "Нет тарифов."
+        action:
+          add_plan: "Добавить тариф"
+        column:
+          name: "Название"
+          price: "Цена, р."
+          billing_period: "Платежный период"
+      new:
+        page_title: "Добавление тарифа"
+        help: "Для добавления нового тарифа необходимо заполнить указанную форму."
+      create:
+        plan_created: "Тариф %{name} был создан."
+      edit:
+        page_title: "Редактирование тарифа"
+        help: "Здесь можно отредактировать информацию по указанному тарифу."
+      update:
+        plan_updated: "Информация о тарифе обновлена."
+      destroy:
+        plan_deleted: "Тариф был удален."
+      show:
+        page_title: "Тариф %{name}"
+        help: "Здесь представлена информация о тарифе, можно перейти к редактированию."
+        button:
+          back: "Назад"
+          edit: "Редактировать"
+          delete: "Удалить"
+          confirm_delete: "Вы действительно хотите удалить тариф?"
+      form:
+        field:
+          name: "Название"
+          price: "Цена, р."
+          billing_period: "Платежный перод"
+          bill_per_month: "месяц"
+          bill_per_year: "год"
+        button:
+          create: "Добавить"
+          update: "Обновить"
+          back: "Назад"
+          delete: "Удалить"
   partials:
     vehicles_list:
       column:
@@ -780,3 +825,6 @@ ru:
         destroy_additional_user: "Удаление дополнительного пользователя"
         lock_additional_user: "Блокировка дополнительного пользователя"
         unlock_additional_user: "Разблокировка дополнительного пользователя"
+        create_plan: "Создание тарифа"
+        update_plan: "Обновление тарифа"
+        destroy_plan: "Удаление тарифа"

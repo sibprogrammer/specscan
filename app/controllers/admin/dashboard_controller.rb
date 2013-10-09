@@ -5,6 +5,7 @@ class Admin::DashboardController < Admin::Base
 
     @clients_total = User.where(:role => User::ROLE_CLIENT).count if can? :manage, User
     @vehicles_total = can?(:manage, Vehicle) ? Vehicle.count(:all) : current_user.vehicles.count
+    @plans_total = Plan.count(:all) if can? :manager, Plan
     @additional_users_total = User.where(:role => User::ROLE_USER).count if can? :manage, User
     @drivers_total = Driver.count(:all) if can? :manage, User
     @sim_cards_total = SimCard.count(:all) if can? :manage, SimCard

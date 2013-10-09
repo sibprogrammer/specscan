@@ -13,6 +13,9 @@
         %th= link_to t('.stats.column.vehicles'), admin_vehicles_path
         %td= @vehicles_total
       %tr
+        %th= link_to t('.stats.column.plans'), admin_plans_path
+        %td= @plans_total
+      %tr
         %th= link_to t('.stats.column.additional_users'), admin_additional_users_path
         %td= @additional_users_total
       %tr

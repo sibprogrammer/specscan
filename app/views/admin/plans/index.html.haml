@@ -1,0 +1,24 @@
+- @page_title = t '.page_title'
+
+- content_for :sidebar_actions do
+  %li= link_to t('.action.add_plan'), new_admin_plan_path
+
+- if @plans.empty?
+  %p= t('.no_data')
+- else
+  = will_paginate @plans
+
+  %table.table.table-bordered.table-striped
+    %thead
+      %tr
+        - @columns.each do |column|
+          - sortable_column column, t(".column.#{column}"), @sort_state
+
+    %tbody
+      - @plans.each do |plan|
+        %tr
+          %td= link_to plan.name, admin_plan_path(plan)
+          %td= plan.price
+          %td= billing_period_title(plan)
+
+  = will_paginate @plans

@@ -37,6 +37,7 @@ Specscan::Application.routes.draw do
     end
     resources :fuel_sensors
     resources :drivers
+    resources :plans
     match "profile" => "users#profile"
     match "tools(/:action)", :controller => 'tools'
     match "search" => "search#results"

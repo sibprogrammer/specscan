@@ -44,6 +44,11 @@ module ApplicationHelper
     'development' == Rails.env
   end
 
+  def billing_period_title(plan)
+    return t('admin.plans.form.field.bill_per_month') if 1 == plan.billing_period
+    t('admin.plans.form.field.bill_per_year')
+  end
+
   private
 
     def get_locale_section_for_context

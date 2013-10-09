@@ -1,0 +1,14 @@
+= form_for([:admin, @plan], :html => { :class => 'form-horizontal' }) do |f|
+  = render :partial => 'partials/form_errors', :locals => { :resource => @plan, :locale_scope => 'admin.plans.form' }
+
+  - form_field f, :name, :text_field
+  - form_field f, :price, :text_field
+
+  .control-group
+    = f.label :user, t('.field.billing_period'), :class => 'control-label'
+    .controls
+      = select 'plan', 'billing_period', [[t('.field.bill_per_month'), 1], [t('.field.bill_per_year'), 2]]
+ 
+  .form-actions
+    = f.submit t('.button.' + (@plan.new_record? ? 'create' : 'update')), :class => 'btn btn-primary'
+    = link_to t('.button.back'), admin_plans_path, :class => 'btn'

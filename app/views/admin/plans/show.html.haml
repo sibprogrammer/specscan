@@ -1,0 +1,12 @@
+- @page_title = t '.page_title', :name => @plan.name
+
+%form.form-horizontal
+
+  - readonly_field(t('admin.plans.form.field.name'), @plan.name)
+  - readonly_field(t('admin.plans.form.field.price'), @plan.price)
+  - readonly_field(t('admin.plans.form.field.billing_period'), billing_period_title(@plan))
+
+  .form-actions
+    = link_to t('.button.edit'), edit_admin_plan_path(@plan), :class => 'btn btn-primary'
+    = link_to t('.button.back'), admin_plans_path, :class => 'btn'
+    = link_to t('.button.delete'), admin_plan_path(@plan), :class => 'btn btn-danger', :method => :delete, 'data-confirm' => t('.button.confirm_delete')
