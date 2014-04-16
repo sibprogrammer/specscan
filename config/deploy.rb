@@ -5,6 +5,14 @@ set :deploy_via, :remote_cache
 set :deploy_to, '/var/www/panel'
 set :user, 'deployer'
 
+set :default_environment, {
+  'PATH' => "/usr/local/rvm/gems/ree-1.8.7-2012.02/bin:/usr/local/rvm/gems/ree-1.8.7-2012.02@global/bin:/usr/local/rvm/rubies/ree-1.8.7-2012.02/bin:/usr/local/rvm/bin:$PATH",
+  'RUBY_VERSION' => 'ruby 1.8.7',
+  'GEM_HOME' => '/usr/local/rvm/gems/ree-1.8.7-2012.02',
+  'GEM_PATH' => '/usr/local/rvm/gems/ree-1.8.7-2012.02:/usr/local/rvm/gems/ree-1.8.7-2012.02@global',
+  'BUNDLE_PATH' => '/usr/local/rvm/gems/ree-1.8.7-2012.02@global'
+}
+
 role :web, 'vs.specscan.ru'
 role :app, 'vs.specscan.ru'
 role :db, 'vs.specscan.ru', :primary => true
